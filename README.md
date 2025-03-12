@@ -54,7 +54,7 @@ The following is how the network simulator works when a packet is received:
 3. generate a NodeReply using the configuration
 4. check whether a reply should be sent
 4a. If no, abort
-5. if yes, create a NodeReply package using libtins
+5. if yes, create a NodeReply packet using libtins
 6. write the packet to the socket of the TAP device
 
 ## Configuration file
@@ -91,7 +91,7 @@ The log level can have one of the following values:
 - `error`
 - `fatal`
 
-For production, `info` or lower is empheolen.
+For production, "info" or lower is recommended.
 
 The device name is the name of the TAP interface that crazytrace creates.
 
