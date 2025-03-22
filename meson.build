@@ -1,6 +1,7 @@
 project(
     'crazytrace',
     'cpp',
+    version: '1.0.3',
     license: ['GPL-3.0-or-later'],
     default_options: [
         'buildtype=release',
@@ -79,7 +80,7 @@ if cppcheck.found()
         '--enable=warning,style,information,missingInclude',
         '--error-exitcode=1',
         '--inline-suppr',
-        '--project=' + join_paths(meson.build_root(), 'compile_commands.json')
+        '--project=' + join_paths(meson.current_build_dir(), 'compile_commands.json')
     ])
 endif
 
