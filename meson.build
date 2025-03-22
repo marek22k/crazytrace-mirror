@@ -79,6 +79,7 @@ if cppcheck.found()
 
         '--enable=warning,style,information,missingInclude',
         '--error-exitcode=1',
+        '--check-level=exhaustive',
         '--inline-suppr',
         '--project=' + join_paths(meson.current_build_dir(), 'compile_commands.json')
     ])
