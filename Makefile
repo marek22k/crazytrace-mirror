@@ -31,11 +31,17 @@ check: cppcheck flawfinder clangtidy
 cppcheck: setup
 	meson compile -C build cppcheck
 
+infer: setup
+	meson compile -C build infer
+
 flawfinder: setup
 	meson compile -C build flawfinder
 
 clangtidy: setup
 	ninja -C build clang-tidy
+
+scanbuild: setup
+	ninja -C build scan-build
 
 test: setup
 	meson test -C build

@@ -1,13 +1,16 @@
 project(
     'crazytrace',
     'cpp',
+    version: '1.0.3',
     license: ['GPL-3.0-or-later'],
     default_options: [
         'buildtype=release',
         'optimization=2',
         'warning_level=3',
         'werror=true',
-        'cpp_std=c++20'
+        'cpp_std=c++20',
+        'b_lto=true',
+        'b_pie=true'
     ]
 )
 
@@ -78,8 +81,19 @@ if cppcheck.found()
 
         '--enable=warning,style,information,missingInclude',
         '--error-exitcode=1',
+        # '--check-level=exhaustive', - not yet in debian
         '--inline-suppr',
-        '--project=' + join_paths(meson.build_root(), 'compile_commands.json')
+        '--project=' + join_paths(meson.current_build_dir(), 'compile_commands.json')
+    ])
+endif
+
+infer = find_program('infer', required: false)
+if infer.found()
+    run_target('infer', command: [
+        infer,
+        'run',
+        '--compilation-database',
+        join_paths(meson.current_build_dir(), 'compile_commands.json')
     ])
 endif
 

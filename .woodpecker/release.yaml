@@ -3,6 +3,11 @@ when:
 
 steps:
   - name: release
+    environment:
+      CODEBERG_GIT_USERNAME:
+        from_secret: codeberg_git_username
+      CODEBERG_GIT_PASSWORD:
+        from_secret: codeberg_git_password
     image: codeberg.org/mark22k/ci:latest
     pull: true
     commands:
@@ -11,6 +16,3 @@ steps:
         for FILE in ../crazytrace_*.deb; do
           curl --user $CODEBERG_GIT_USERNAME:$CODEBERG_GIT_PASSWORD --upload-file $FILE https://codeberg.org/api/packages/mark22k/debian/pool/stable/main/upload
         done
-    secrets:
-      - codeberg_git_username
-      - codeberg_git_password

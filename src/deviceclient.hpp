@@ -10,7 +10,7 @@ template<int BUFFER_SIZE> class DeviceClient
 {
     public:
         explicit DeviceClient(
-            boost::asio::any_io_executor ex,
+            const boost::asio::any_io_executor ex,
             int native_handler,
             std::function<void(boost::system::error_code, std::string)>
                 packet_handler,
