@@ -87,6 +87,16 @@ if cppcheck.found()
     ])
 endif
 
+infer = find_program('infer', required: false)
+if infer.found()
+    run_target('infer', command: [
+        infer,
+        'run',
+        '--compilation-database',
+        join_paths(meson.current_build_dir(), 'compile_commands.json')
+    ])
+endif
+
 flawfinder = find_program('flawfinder', required: false)
 if flawfinder.found()
     run_target('flawfinder', command: [

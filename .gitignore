@@ -43,3 +43,7 @@ debian/crazytrace/
 debian/debhelper-build-stamp
 *.deb
 .debhelper/
+
+# Infer
+.cache/
+infer-out/
