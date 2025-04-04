@@ -9,6 +9,7 @@ project(
         'warning_level=3',
         'werror=true',
         'cpp_std=c++20',
+        'b_asneeded=true',
         'b_lto=true',
         'b_pie=true'
     ]
@@ -91,9 +92,9 @@ infer = find_program('infer', required: false)
 if infer.found()
     run_target('infer', command: [
         infer,
-        'run',
         '--compilation-database',
-        join_paths(meson.current_build_dir(), 'compile_commands.json')
+        join_paths(meson.current_build_dir(), 'compile_commands.json'),
+        '--fail-on-issue'
     ])
 endif
 
