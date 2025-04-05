@@ -14,6 +14,7 @@ project(
         'b_pie=true'
     ]
 )
+cpp_compiler = meson.get_compiler('cpp')
 
 main_file = files('src/main.cpp')
 sources = files(
@@ -51,7 +52,12 @@ tests_sources = files(
     'tests/randomgenerator_test.cpp'
 )
 
-cpp_compiler = meson.get_compiler('cpp')
+
+if get_option('native')
+    native_flags = ['-march=native', '-mtune=native']
+
+    add_project_arguments(cpp_compiler.get_supported_arguments(native_flags), language: 'cpp')
+endif
 
 if not cpp_compiler.has_header('unistd.h')
     error('crazytrace requires unistd.h')

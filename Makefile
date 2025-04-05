@@ -8,6 +8,9 @@ setup:
 sanitizer:
 	meson setup --reconfigure --debug -Db_sanitize=address,undefined build
 
+native:
+	meson setup --reconfigure -Dnative=true build
+
 setupcoverage:
 	meson setup --reconfigure -Db_coverage=true build
 
