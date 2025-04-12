@@ -15,7 +15,7 @@
 class NodeContainer
 {
     public:
-        NodeReply get_reply(const NodeRequest& request);
+        [[nodiscard]] NodeReply get_reply(const NodeRequest& request);
         void add_node(std::shared_ptr<NodeInfo> node) noexcept;
         [[nodiscard]] std::size_t max_depth() const;
 

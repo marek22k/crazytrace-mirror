@@ -37,7 +37,7 @@ crazytrace uses several libraries and tricks to create a virtual TAP adapter beh
 - [libtins](https://libtins.github.io/): This library is used for packet parsing and crafting.
 - [yaml-cpp](https://github.com/jbeder/yaml-cpp/): This library is used to read the configuration file in YAML format.
 - [Boost.log](https://www.boost.org/): This library is used as a logger. Various log levels can be set in the configuration file.
-- [Boost.Asio](https://www.boost.org/): This library is used to communicate with the socket of the TAP device and to receive and send several packets simultaneously (asynchronously).
+- [Boost.Asio](https://www.boost.org/): This library is used to communicate with the socket of the TAP device and to receive and send several packets asynchronously.
 
 Here is how the program works:
 1. reading the configuration file

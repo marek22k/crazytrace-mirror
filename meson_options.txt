@@ -1,1 +1,2 @@
 option('install_systemd_unit', type: 'boolean', description: 'Install systemd unit file (default: false)', value: false)
+option('native', type: 'boolean', description: 'Optimize build for local CPU architecture (default: false)', value: false)
