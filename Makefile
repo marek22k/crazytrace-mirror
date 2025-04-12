@@ -29,7 +29,7 @@ install: setup compile
 debian:
 	dpkg-buildpackage -b
 
-check: cppcheck flawfinder clangtidy
+check: flawfinder cppcheck scanbuild clangtidy
 
 cppcheck: setup
 	meson compile -C build cppcheck
