@@ -14,6 +14,7 @@ project(
         'b_pie=true'
     ]
 )
+
 cpp_compiler = meson.get_compiler('cpp')
 
 main_file = files('src/main.cpp')
@@ -59,8 +60,9 @@ if get_option('native')
     add_project_arguments(cpp_compiler.get_supported_arguments(native_flags), language: 'cpp')
 endif
 
-if not cpp_compiler.has_header('unistd.h')
-    error('crazytrace requires unistd.h')
+if not cpp_compiler.has_header('unistd.h') or
+   not cpp_compiler.has_function('dup', prefix: '#include <unistd.h>')
+    error('crazytrace requires unistd.h and the dup function')
 endif
 
 libtuntap_dep = dependency('libtuntap', required: false, include_type: 'system')
