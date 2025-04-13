@@ -53,14 +53,13 @@ tests_sources = files(
     'tests/randomgenerator_test.cpp'
 )
 
-
 if get_option('native')
     native_flags = ['-march=native', '-mtune=native']
 
     add_project_arguments(cpp_compiler.get_supported_arguments(native_flags), language: 'cpp')
 endif
 
-if not cpp_compiler.has_header('unistd.h') or
+if not cpp_compiler.has_header('unistd.h') or \
    not cpp_compiler.has_function('dup', prefix: '#include <unistd.h>')
     error('crazytrace requires unistd.h and the dup function')
 endif
