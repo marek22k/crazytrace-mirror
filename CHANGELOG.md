@@ -3,6 +3,7 @@
 ## Release 1.0.3
 
 - Various minor performance improvements
+- Set the ndebug flag in release builds to disable asserts and thus improve speed
 
 ## Release 1.0.2
 

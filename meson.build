@@ -11,9 +11,11 @@ project(
         'cpp_std=c++20',
         'b_asneeded=true',
         'b_lto=true',
+        'b_ndebug=if-release',
         'b_pie=true'
     ]
 )
+
 cpp_compiler = meson.get_compiler('cpp')
 
 main_file = files('src/main.cpp')
@@ -52,15 +54,15 @@ tests_sources = files(
     'tests/randomgenerator_test.cpp'
 )
 
-
 if get_option('native')
     native_flags = ['-march=native', '-mtune=native']
 
     add_project_arguments(cpp_compiler.get_supported_arguments(native_flags), language: 'cpp')
 endif
 
-if not cpp_compiler.has_header('unistd.h')
-    error('crazytrace requires unistd.h')
+if not cpp_compiler.has_header('unistd.h') or \
+   not cpp_compiler.has_function('dup', prefix: '#include <unistd.h>')
+    error('crazytrace requires unistd.h and the dup function')
 endif
 
 libtuntap_dep = dependency('libtuntap', required: false, include_type: 'system')
