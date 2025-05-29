@@ -11,6 +11,7 @@ project(
         'cpp_std=c++20',
         'b_asneeded=true',
         'b_lto=true',
+        'b_ndebug=if-release',
         'b_pie=true'
     ]
 )
