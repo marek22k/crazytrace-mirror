@@ -58,7 +58,7 @@ int main(int argc, char * argv[])
         const Crazytrace ct(
             io.get_executor(), ::dup(dev.native_handler()), nodecontainer);
 
-        config.get_postup_commands().execute_commands();
+        config.get_postup_commands().execute_commands(io.get_executor());
 
         io.run();
     }
