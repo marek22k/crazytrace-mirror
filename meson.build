@@ -115,6 +115,17 @@ if flawfinder.found()
     ])
 endif
 
+lizard = find_program('lizard', required: false)
+if lizard.found()
+    run_target('lizard', command: [
+        lizard,
+        '--CCN', '15',
+        '--length', '400',
+        '--arguments', '10',
+        sources + tests_sources + headers
+    ])
+endif
+
 if get_option('install_systemd_unit')
     install_data(
         'systemd/crazytrace@.service',

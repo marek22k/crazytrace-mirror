@@ -1,4 +1,4 @@
-.PHONY: all setup addresssanitizer leaksanitizer undefinedsanitizer clean compile coverage install debian check cppcheck flawfinder clangtidy test clangformat
+.PHONY: all setup addresssanitizer leaksanitizer undefinedsanitizer clean compile coverage install debian check cppcheck flawfinder lizard clangtidy test clangformat
 
 all: setup compile
 
@@ -29,7 +29,7 @@ install: setup compile
 debian:
 	dpkg-buildpackage -b
 
-check: flawfinder cppcheck scanbuild clangtidy
+check: flawfinder cppcheck scanbuild clangtidy lizard
 
 cppcheck: setup
 	meson compile -C build cppcheck
@@ -39,6 +39,9 @@ infer: setup
 
 flawfinder: setup
 	meson compile -C build flawfinder
+
+lizard: setup
+	meson compile -C build lizard
 
 clangtidy: setup
 	ninja -C build clang-tidy
