@@ -32,8 +32,12 @@
 *.out
 *.app
 
+# IDE
+.vscode/
+
 # Meson
 build/
+builddir/
 
 # cppcheck
 cppcheck-cppcheck-build-dir/

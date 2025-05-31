@@ -11,6 +11,7 @@ steps:
     image: codeberg.org/mark22k/ci:latest
     pull: true
     commands:
+      - export PATH="$HOME/.local/bin:$PATH"
       - make debian
       - |
         for FILE in ../crazytrace_*.deb; do
