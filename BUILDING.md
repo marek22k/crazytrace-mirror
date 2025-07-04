@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 Marek Küthe <m.k@mk16.de>
+
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Building
 
 crazytrace uses meson as a build system. However, there is also a Makefile that contains frequently used routines.

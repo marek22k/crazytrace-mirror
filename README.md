@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 Marek Küthe <m.k@mk16.de>
+
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Crazy traceroute
 
 [![pipeline badge](https://ci.codeberg.org/api/badges/13147/status.svg)](https://ci.codeberg.org/repos/13147)
