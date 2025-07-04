@@ -49,6 +49,12 @@ clangtidy: setup
 scanbuild: setup
 	ninja -C build scan-build
 
+reuse-annotate:
+	meson compile -C build reuse-annotate
+
+reuse-download:
+	meson compile -C build reuse-download
+
 test: setup
 	meson test -C build
 

@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2024 Marek Küthe <m.k@mk16.de>
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 #ifndef NODEREQUEST_HPP
 #define NODEREQUEST_HPP
 

@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2024 Marek Küthe <m.k@mk16.de>
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 #include "tun_tap.hpp"
 
 tun_tap::tun_tap(const std::string& ifname, tun_tap_mode mode) :

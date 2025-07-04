@@ -53,6 +53,7 @@ tests_sources = files(
     'tests/noderequest_test.cpp',
     'tests/randomgenerator_test.cpp'
 )
+all_sources = main_file + sources + headers + tests_sources
 
 if get_option('native')
     native_flags = ['-march=native', '-mtune=native']
@@ -111,7 +112,7 @@ if flawfinder.found()
     run_target('flawfinder', command: [
         flawfinder,
         '--error-level=0',
-        sources + tests_sources + headers
+        all_sources
     ])
 endif
 
@@ -122,7 +123,26 @@ if lizard.found()
         '--CCN', '15',
         '--length', '400',
         '--arguments', '10',
-        sources + tests_sources + headers
+        all_sources
+    ])
+endif
+
+reuse = find_program('reuse', required: false)
+if reuse.found()
+    run_target('reuse-annotate', command: [
+        reuse,
+        'annotate',
+        '--copyright', 'Marek Küthe <m.k@mk16.de>',
+        '--license', 'GPL-3.0-or-later',
+        '--year', '2024',
+        '--merge-copyrights',
+        '--multi-line',
+        all_sources
+    ])
+    run_target('reuse-download', command: [
+        reuse,
+        'download',
+        '--all'
     ])
 endif
 
