@@ -1,8 +1,6 @@
-/*
- * SPDX-FileCopyrightText: 2024 Marek Küthe <m.k@mk16.de>
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+// SPDX-FileCopyrightText: 2024 Marek Küthe <m.k@mk16.de>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 #ifndef CRAZYTRACE_HPP
 #define CRAZYTRACE_HPP

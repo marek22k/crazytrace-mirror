@@ -139,9 +139,11 @@ if reuse.found()
         '--copyright', 'Marek Küthe <m.k@mk16.de>',
         '--license', 'GPL-3.0-or-later',
         '--year', '2024',
+        '--copyright-prefix', 'spdx-string-c',
         '--merge-copyrights',
-        '--multi-line',
-        all_sources
+        '--recursive',
+        '--skip-unrecognised',
+        meson.current_source_dir()
     ])
     run_target('reuse-download', command: [
         reuse,
