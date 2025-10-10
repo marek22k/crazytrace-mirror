@@ -7,12 +7,7 @@
 
 #include <span>
 #include <boost/log/trivial.hpp>
-#ifdef BOOST_PROCESS_V1
-    #include <boost/process/v1/child.hpp>
-    #include <boost/process/v1/io.hpp>
-#else
-    #include <boost/process.hpp>
-#endif
+#include <boost/process.hpp>
 
 class PostupCommands
 {

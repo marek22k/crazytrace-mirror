@@ -18,10 +18,10 @@ void PostupCommands::execute_commands() const
         BOOST_LOG_TRIVIAL(debug)
             << "Execute post up command: " << postup_command << std::endl;
         std::error_code ec;
-        boost::process::v1::child child(
+        boost::process::child child(
             postup_command,
-            boost::process::v1::std_out > boost::process::v1::null,
-            boost::process::v1::std_err > boost::process::v1::null,
+            boost::process::std_out > boost::process::null,
+            boost::process::std_err > boost::process::null,
             ec);
         child.wait();
         BOOST_LOG_TRIVIAL(debug)
