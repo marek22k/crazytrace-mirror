@@ -78,7 +78,7 @@ endif
 # Workaround for https://github.com/boostorg/process/issues/494#issuecomment-3392312248
 boost_dep = dependency('boost', modules: ['log', 'process', 'filesystem'], required: false, include_type: 'system')
 if not boost_dep.found()
-    boost_dep = dependency('boost', modules: ['log', 'filesystem'], include_type: 'system')
+    boost_dep = dependency('boost', modules: ['log'], include_type: 'system')
     add_project_arguments('-DBOOST_PROCESS_V1', language: 'cpp')
 endif
 libtins_dep = dependency('libtins', include_type: 'system')
