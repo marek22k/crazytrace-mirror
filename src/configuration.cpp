@@ -16,7 +16,6 @@ Configuration::Configuration(const std::string& filename) :
     this->validate_node_depth();
 }
 
-
 void Configuration::load(const std::string& filename)
 {
     try
