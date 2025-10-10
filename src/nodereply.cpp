@@ -179,7 +179,7 @@ std::string NodeReply::to_packet() const
                         packet.serialize();
                     const std::string raw_packet(serialized_packet.begin(),
                                                  serialized_packet.end());
-                    return std::move(raw_packet);
+                    return raw_packet;
                 }
                 default:
                     [[unlikely]] throw std::runtime_error(

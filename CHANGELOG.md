@@ -1,5 +1,10 @@
 # Changelog
 
+## Release 1.0.4
+
+- Various minor performance improvements
+- Use of the new Boost Process Library, compatibility with boost88+
+
 ## Release 1.0.3
 
 - Various minor performance improvements
