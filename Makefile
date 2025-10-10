@@ -1,4 +1,8 @@
-.PHONY: all setup addresssanitizer leaksanitizer undefinedsanitizer clean compile coverage install debian check cppcheck flawfinder clangtidy test clangformat
+# SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+.PHONY: all setup addresssanitizer leaksanitizer undefinedsanitizer clean compile coverage install debian check cppcheck flawfinder lizard clangtidy reuse-annotate reuse-download reuse-lint reuse-fix reuse test clangformat
 
 all: setup compile
 
@@ -29,7 +33,7 @@ install: setup compile
 debian:
 	dpkg-buildpackage -b
 
-check: flawfinder cppcheck scanbuild clangtidy
+check: flawfinder cppcheck scanbuild clangtidy lizard reuse
 
 cppcheck: setup
 	meson compile -C build cppcheck
@@ -40,11 +44,27 @@ infer: setup
 flawfinder: setup
 	meson compile -C build flawfinder
 
+lizard: setup
+	meson compile -C build lizard
+
 clangtidy: setup
 	ninja -C build clang-tidy
 
 scanbuild: setup
 	ninja -C build scan-build
+
+reuse-annotate: setup
+	meson compile -C build reuse-annotate
+
+reuse-download: setup
+	meson compile -C build reuse-download
+
+reuse-lint: setup
+	meson compile -C build reuse-lint
+
+reuse-fix: reuse-annotate reuse-download
+
+reuse: reuse-lint
 
 test: setup
 	meson test -C build

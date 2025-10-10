@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "nodeinfo.hpp"
 
 NodeInfo::NodeInfo() : _hoplimit(64), _randomgenerator(0), _addressadded(false)
@@ -62,7 +66,7 @@ const Tins::IPv6Address& NodeInfo::get_address()
         this->_addressadded = false;
     }
     const std::size_t address_number = this->_randomgenerator.generate();
-    return this->_addresses[address_number];
+    return this->_addresses.at(address_number);
 }
 
 std::size_t NodeInfo::max_depth() const

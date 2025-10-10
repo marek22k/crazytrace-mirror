@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "nodereply.hpp"
 
 NodeReply::NodeReply(NodeReplyType type) :

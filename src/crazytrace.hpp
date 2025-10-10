@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef CRAZYTRACE_HPP
 #define CRAZYTRACE_HPP
 
@@ -19,9 +23,10 @@ class Crazytrace
                             std::shared_ptr<NodeContainer> nodecontainer);
 
     private:
-        void _handle_error(const boost::system::error_code& error) const;
+        void _handle_error(
+            const boost::system::error_code& error) const noexcept;
         void _handle_packet(const boost::system::error_code error,
-                            const std::string& packet_data);
+                            const std::string& packet_data) noexcept;
 
         std::shared_ptr<NodeContainer> _nodecontainer;
         DeviceClient<1520> _client;

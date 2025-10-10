@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "configuration.hpp"
 
 // NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
@@ -16,6 +20,7 @@ void Configuration::load(const std::string& filename)
 {
     try
     {
+        // NOLINTBEGIN(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         const YAML::Node config = YAML::LoadFile(filename);
         this->load_log_level(config["log_level"]);
 
@@ -29,6 +34,7 @@ void Configuration::load(const std::string& filename)
 
         const YAML::Node nodes_config = config["nodes"];
         this->load_nodes(nodes_config, this->_node_container);
+        // NOLINTEND(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
     }
     catch (const YAML::Exception& e)
     {
@@ -93,6 +99,8 @@ void Configuration::load_nodes(const YAML::Node& nodes_config,
             if (!node_config.IsMap())
                 throw std::runtime_error(
                     "Failed to load configuration file: Node is not a map.");
+
+            // NOLINTBEGIN(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
             if (!node_config["addresses"].IsDefined())
                 throw std::runtime_error("Failed to load configuration file: "
                                          "Missing addresses attribute.");
@@ -122,6 +130,7 @@ void Configuration::load_nodes(const YAML::Node& nodes_config,
 
             load_nodes(node_config["nodes"], node, false);
             nodes->add_node(node);
+            // NOLINTEND(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         }
     }
 }

@@ -1,4 +1,17 @@
+<!--
+SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Changelog
+
+## Release 1.0.4
+
+- Fixing an error that could lead to buffer invalidation
+- Use another send function so that a complete response is always sent.
+- Various minor performance improvements
+- Use of the new Boost process library, if available, compatibility with boost88+
 
 ## Release 1.0.3
 

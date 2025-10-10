@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 project(
     'crazytrace',
     'cpp',
@@ -8,7 +12,7 @@ project(
         'optimization=2',
         'warning_level=3',
         'werror=true',
-        'cpp_std=c++20',
+        'cpp_std=c++26',
         'b_asneeded=true',
         'b_lto=true',
         'b_ndebug=if-release',
@@ -53,6 +57,7 @@ tests_sources = files(
     'tests/noderequest_test.cpp',
     'tests/randomgenerator_test.cpp'
 )
+all_sources = main_file + sources + headers + tests_sources
 
 if get_option('native')
     native_flags = ['-march=native', '-mtune=native']
@@ -70,7 +75,12 @@ if not libtuntap_dep.found()
     libtuntap_dep = cpp_compiler.find_library('libtuntap', has_headers: ['tuntap.h'], required: true)
 endif
 
-boost_dep = dependency('boost', modules: ['log'], include_type: 'system')
+# Workaround for https://github.com/boostorg/process/issues/494#issuecomment-3392312248
+boost_dep = dependency('boost', modules: ['log', 'process', 'filesystem'], required: false, include_type: 'system')
+if not boost_dep.found()
+    boost_dep = dependency('boost', modules: ['log', 'filesystem'], include_type: 'system')
+    add_project_arguments('-DBOOST_PROCESS_V1', language: 'cpp')
+endif
 libtins_dep = dependency('libtins', include_type: 'system')
 yamlcpp_dep = dependency('yaml-cpp', include_type: 'system')
 gtest_dep = dependency('gtest', main: true, required: false, include_type: 'system')
@@ -90,7 +100,7 @@ if cppcheck.found()
 
         '--enable=warning,style,information,missingInclude',
         '--error-exitcode=1',
-        # '--check-level=exhaustive', - not yet in debian
+        '--check-level=exhaustive',
         '--inline-suppr',
         '--project=' + join_paths(meson.current_build_dir(), 'compile_commands.json')
     ])
@@ -111,7 +121,43 @@ if flawfinder.found()
     run_target('flawfinder', command: [
         flawfinder,
         '--error-level=0',
-        sources + tests_sources + headers
+        all_sources
+    ])
+endif
+
+lizard = find_program('lizard', required: false)
+if lizard.found()
+    run_target('lizard', command: [
+        lizard,
+        '--CCN', '15',
+        '--length', '400',
+        '--arguments', '10',
+        all_sources
+    ])
+endif
+
+reuse = find_program('reuse', required: false)
+if reuse.found()
+    run_target('reuse-annotate', command: [
+        reuse,
+        'annotate',
+        '--copyright', 'Marek Küthe <m.k@mk16.de>',
+        '--license', 'GPL-3.0-or-later',
+        '--year', '2024',
+        '--copyright-prefix', 'spdx-string-c',
+        '--merge-copyrights',
+        '--recursive',
+        '--skip-unrecognised',
+        meson.current_source_dir()
+    ])
+    run_target('reuse-download', command: [
+        reuse,
+        'download',
+        '--all'
+    ])
+    run_target('reuse-lint', command: [
+        reuse,
+        'lint'
     ])
 endif
 

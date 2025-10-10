@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef DEVICECLIENT_HPP
 #define DEVICECLIENT_HPP
 
@@ -23,16 +27,20 @@ template<int BUFFER_SIZE> class DeviceClient
             this->read(); // flawfinder: ignore
         }
 
-        void write(const std::string& data,
+        void write(const std::string_view data,
                    const std::function<void(boost::system::error_code,
                                             std::size_t bytes_transferred)>
                        write_handler,
                    const std::function<void(boost::system::error_code)>
                        write_error_handler)
         {
-            this->_device.async_write_some(
-                boost::asio::buffer(data, data.size()),
-                [write_handler, write_error_handler](
+            const std::shared_ptr<std::string> sdata =
+                std::make_shared<std::string>(data);
+
+            boost::asio::async_write(
+                this->_device,
+                boost::asio::buffer(*sdata),
+                [sdata, write_handler, write_error_handler](
                     boost::system::error_code ec, size_t bytes_transferred)
                 {
                     if (ec)

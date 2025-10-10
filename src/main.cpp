@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include <memory>
 #include <span>
 #include <sstream>
@@ -20,7 +24,7 @@ int main(int argc, char * argv[])
         if (args.size() != 2)
             throw std::runtime_error("A configuration file must be specified.");
 
-        const std::string filename(args[1]);
+        const std::string filename(args.at(1));
         const Configuration config(filename);
         config.get_log_level().apply();
 
@@ -58,7 +62,11 @@ int main(int argc, char * argv[])
         const Crazytrace ct(
             io.get_executor(), ::dup(dev.native_handler()), nodecontainer);
 
+#ifdef BOOST_PROCESS_V1
         config.get_postup_commands().execute_commands();
+#else
+        config.get_postup_commands().execute_commands(io.get_executor());
+#endif
 
         io.run();
     }

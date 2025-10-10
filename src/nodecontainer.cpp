@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "nodecontainer.hpp"
 
 NodeReply NodeContainer::get_reply(const NodeRequest& request)
@@ -21,7 +25,7 @@ NodeReply NodeContainer::get_reply(const NodeRequest& request)
                 static_cast<std::size_t>(hoplimit) >= route.size())
             {
                 /* target reached */
-                const std::shared_ptr<NodeInfo>& reached_node = route[0];
+                const std::shared_ptr<NodeInfo>& reached_node = route.at(0);
 
                 // Both variables undergo a value check during initialization so
                 // that neither is greater than 255. It is therefore safe to
@@ -75,7 +79,7 @@ NodeReply NodeContainer::get_reply(const NodeRequest& request)
                 const int reached_node_number =
                     static_cast<int>(route.size()) - request.get_hoplimit();
                 const std::shared_ptr<NodeInfo>& reached_node =
-                    route[reached_node_number];
+                    route.at(reached_node_number);
 
                 const int reply_hoplimit =
                     reached_node->get_hoplimit() - hoplimit + 1;

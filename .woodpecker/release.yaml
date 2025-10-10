@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 when:
   - event: tag
 
@@ -11,6 +15,7 @@ steps:
     image: codeberg.org/mark22k/ci:latest
     pull: true
     commands:
+      - export PATH="$HOME/.local/bin:$PATH"
       - make debian
       - |
         for FILE in ../crazytrace_*.deb; do
