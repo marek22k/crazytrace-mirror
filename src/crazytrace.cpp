@@ -23,14 +23,15 @@ Crazytrace::Crazytrace(boost::asio::any_io_executor ex,
 {
 }
 
-void Crazytrace::_handle_error(const boost::system::error_code& error) const
+void Crazytrace::_handle_error(
+    const boost::system::error_code& error) const noexcept
 {
     BOOST_LOG_TRIVIAL(fatal)
         << "Error in handle_packet: " << error.message() << std::endl;
 }
 
 void Crazytrace::_handle_packet(const boost::system::error_code,
-                                const std::string& packet_data)
+                                const std::string& packet_data) noexcept
 {
     BOOST_LOG_TRIVIAL(trace)
         << "Received packet of size: " << packet_data.size() << std::endl;
