@@ -9,6 +9,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ## Release 1.0.4
 
 - Fixing an error that could lead to buffer invalidation
+- Use another send function so that a complete response is always sent.
 
 ## Release 1.0.3
 
