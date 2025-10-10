@@ -289,7 +289,7 @@ std::ostream& operator<<(std::ostream& os, NodeReply const & nodereply)
                << " Payload:" << std::hex;
             for (const auto& byte : nodereply._payload)
             {
-                os << std::format(" {:02}", static_cast<int>(byte));
+                os << std::format(" {:02x}", static_cast<int>(byte));
             }
             break;
         }
