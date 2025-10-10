@@ -132,8 +132,6 @@ const Tins::RawPDU::payload_type& NodeRequest::get_payload() const noexcept
 
 std::ostream& operator<<(std::ostream& os, NodeRequest const & noderequest)
 {
-    const auto os_flags = os.flags();
-
     std::string type_string;
     switch (noderequest._type)
     {
@@ -165,8 +163,7 @@ std::ostream& operator<<(std::ostream& os, NodeRequest const & noderequest)
                << " Payload:" << std::hex;
             for (const auto& byte : noderequest._payload)
             {
-                os << " " << std::setfill('0') << std::setw(2)
-                   << static_cast<int>(byte);
+                os << std::format(" {:02}", static_cast<int>(byte));
             }
             break;
         }
@@ -182,6 +179,5 @@ std::ostream& operator<<(std::ostream& os, NodeRequest const & noderequest)
             break;
     }
 
-    os.flags(os_flags);
     return os;
 }

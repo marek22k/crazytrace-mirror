@@ -137,14 +137,13 @@ NodeReply NodeContainer::get_reply(const NodeRequest& request)
             if (request.get_hoplimit() < 1)
                 return NodeReply(NodeReplyType::NOREPLY);
 
-            if (const auto found_node =
-                    std::find_if(this->_nodes.begin(),
-                                 this->_nodes.end(),
-                                 [&](const std::shared_ptr<NodeInfo>& node)
-                                 {
-                                     return node->has_address(
-                                         request.get_destination_address());
-                                 });
+            if (const auto found_node = std::ranges::find_if(
+                    this->_nodes,
+                    [&](const std::shared_ptr<NodeInfo>& node)
+                    {
+                        return node->has_address(
+                            request.get_destination_address());
+                    });
                 found_node != this->_nodes.end())
             {
                 /* We have found a node with the corresponding MAC address.
@@ -220,14 +219,12 @@ void NodeContainer::print(std::ostream& os) const
 
 bool NodeContainer::operator==(const NodeContainer& other) const
 {
-    return std::equal(this->_nodes.begin(),
-                      this->_nodes.end(),
-                      other._nodes.begin(),
-                      other._nodes.end(),
-                      [](const auto& a, const auto& b)
-                      {
-                          return *a == *b;
-                      });
+    return std::ranges::equal(this->_nodes,
+                              other._nodes,
+                              [](const auto& a, const auto& b)
+                              {
+                                  return *a == *b;
+                              });
 }
 
 std::ostream& operator<<(std::ostream& os, const NodeContainer& nodecontainer)

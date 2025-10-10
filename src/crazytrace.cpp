@@ -31,7 +31,7 @@ void Crazytrace::_handle_error(
 }
 
 void Crazytrace::_handle_packet(const boost::system::error_code,
-                                const std::string& packet_data) noexcept
+                                const std::string_view packet_data) noexcept
 {
     BOOST_LOG_TRIVIAL(trace)
         << "Received packet of size: " << packet_data.size() << std::endl;
