@@ -163,7 +163,7 @@ std::ostream& operator<<(std::ostream& os, NodeRequest const & noderequest)
                << " Payload:" << std::hex;
             for (const auto& byte : noderequest._payload)
             {
-                os << std::format(" {:02}", static_cast<int>(byte));
+                os << std::format(" {:02x}", static_cast<int>(byte));
             }
             break;
         }
