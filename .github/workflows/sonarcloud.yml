@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo add-apt-repository --yes ppa:mhier/libboost-latest
-          sudo apt-get install --yes build-essential git meson ninja-build cmake libboost1.83-dev libboost-log1.83-dev libyaml-cpp-dev libpcap-dev libtins-dev googletest gcovr
+          sudo apt-get install --yes build-essential git meson ninja-build cmake libboost1.88-dev libboost-log1.88-dev libyaml-cpp-dev libpcap-dev libtins-dev googletest gcovr
           git clone https://github.com/LaKabane/libtuntap.git /tmp/libtuntap/
           cd /tmp/
           cmake -DCMAKE_BUILD_TYPE=Release -B build -S "libtuntap"
