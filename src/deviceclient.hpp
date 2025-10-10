@@ -27,16 +27,18 @@ template<int BUFFER_SIZE> class DeviceClient
             this->read(); // flawfinder: ignore
         }
 
-        void write(const std::string& data,
+        void write(const std::string data,
                    const std::function<void(boost::system::error_code,
                                             std::size_t bytes_transferred)>
                        write_handler,
                    const std::function<void(boost::system::error_code)>
                        write_error_handler)
         {
+            std::shared_ptr<std::string> sdata = std::make_shared<std::string>(std::move(data));
+
             this->_device.async_write_some(
-                boost::asio::buffer(data, data.size()),
-                [write_handler, write_error_handler](
+                boost::asio::buffer(*sdata),
+                [sdata, write_handler, write_error_handler](
                     boost::system::error_code ec, size_t bytes_transferred)
                 {
                     if (ec)

@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## Release 1.0.4
+
+- Fixing an error that could lead to buffer invalidation
+
 ## Release 1.0.3
 
 - Various minor performance improvements
