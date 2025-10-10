@@ -75,7 +75,7 @@ if not libtuntap_dep.found()
     libtuntap_dep = cpp_compiler.find_library('libtuntap', has_headers: ['tuntap.h'], required: true)
 endif
 
-boost_dep = dependency('boost', modules: ['log'], include_type: 'system')
+boost_dep = dependency('boost', modules: ['log', 'process'], include_type: 'system')
 libtins_dep = dependency('libtins', include_type: 'system')
 yamlcpp_dep = dependency('yaml-cpp', include_type: 'system')
 gtest_dep = dependency('gtest', main: true, required: false, include_type: 'system')

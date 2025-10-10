@@ -10,6 +10,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 - Fixing an error that could lead to buffer invalidation
 - Use another send function so that a complete response is always sent.
+- Various minor performance improvements
+- Use of the new Boost Process Library, compatibility with boost88+
 
 ## Release 1.0.3
 
