@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "postup_commands.hpp"
-#include <boost/process.hpp>
 
 void PostupCommands::add_postup_command(const std::string& command)
 {
@@ -17,16 +16,18 @@ void PostupCommands::execute_commands(
     {
         BOOST_LOG_TRIVIAL(debug)
             << "Execute post up command: " << postup_command << std::endl;
-        boost::process::shell postup_shell(postup_command);
+        const boost::process::shell postup_shell(postup_command);
+        const auto postup_command_args = std::span(
+            postup_shell.argv(), static_cast<std::size_t>(postup_shell.argc()));
 
-        if (postup_shell.argc() == 0)
+        if (postup_command_args.empty())
         {
             throw std::runtime_error("Failed to execute post up command since "
                                      "there is no command to execute.");
         }
 
-        std::string_view exe(postup_shell.argv()[0]);
-        bool is_path_to_file = (exe.find('/') != decltype(exe)::npos);
+        const std::string_view exe(postup_command_args[0]);
+        const bool is_path_to_file = (exe.find('/') != decltype(exe)::npos);
 
         boost::process::process child(
             ex,

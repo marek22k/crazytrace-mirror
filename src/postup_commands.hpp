@@ -5,6 +5,7 @@
 #ifndef POSTUP_COMMANDS_HPP
 #define POSTUP_COMMANDS_HPP
 
+#include <span>
 #include <boost/log/trivial.hpp>
 #include <boost/process.hpp>
 
