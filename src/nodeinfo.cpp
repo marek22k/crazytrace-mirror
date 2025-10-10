@@ -25,8 +25,7 @@ const Tins::HWAddress<6>& NodeInfo::get_mac_address() const noexcept
 
 bool NodeInfo::has_address(const Tins::IPv6Address& address)
 {
-    return std::binary_search(
-        this->_addresses.begin(), this->_addresses.end(), address);
+    return std::ranges::binary_search(this->_addresses, address);
 }
 
 void NodeInfo::set_hoplimit(int hoplimit)
@@ -62,7 +61,7 @@ const Tins::IPv6Address& NodeInfo::get_address()
         max_address--;
 
         this->_randomgenerator = RandomGenerator(max_address);
-        std::sort(this->_addresses.begin(), this->_addresses.end());
+        std::ranges::sort(this->_addresses);
         this->_addressadded = false;
     }
     const std::size_t address_number = this->_randomgenerator.generate();
@@ -124,14 +123,12 @@ bool NodeInfo::operator==(const NodeInfo& other) const
     return this->_addresses == other._addresses &&
            this->_mac_address == other._mac_address &&
            this->_hoplimit == other._hoplimit &&
-           std::equal(this->_nodes.begin(),
-                      this->_nodes.end(),
-                      other._nodes.begin(),
-                      other._nodes.end(),
-                      [](const auto& a, const auto& b)
-                      {
-                          return *a == *b;
-                      });
+           std::ranges::equal(this->_nodes,
+                              other._nodes,
+                              [](const auto& a, const auto& b)
+                              {
+                                  return *a == *b;
+                              });
 }
 
 std::ostream& operator<<(std::ostream& os, NodeInfo const & nodeinfo)

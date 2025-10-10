@@ -252,7 +252,6 @@ std::ostream& operator<<(std::ostream& os, NodeReply const & nodereply)
         os << "NOREPLY";
         return os;
     }
-    const auto os_flags = os.flags();
 
     std::string type_string;
     switch (nodereply._type)
@@ -290,8 +289,7 @@ std::ostream& operator<<(std::ostream& os, NodeReply const & nodereply)
                << " Payload:" << std::hex;
             for (const auto& byte : nodereply._payload)
             {
-                os << " " << std::setfill('0') << std::setw(2)
-                   << static_cast<int>(byte);
+                os << std::format(" {:02}", static_cast<int>(byte));
             }
             break;
         }
@@ -312,6 +310,5 @@ std::ostream& operator<<(std::ostream& os, NodeReply const & nodereply)
             break;
     }
 
-    os.flags(os_flags);
     return os;
 }

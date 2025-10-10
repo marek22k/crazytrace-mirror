@@ -34,8 +34,7 @@ template<int BUFFER_SIZE> class DeviceClient
                    const std::function<void(boost::system::error_code)>
                        write_error_handler)
         {
-            const std::shared_ptr<std::string> sdata =
-                std::make_shared<std::string>(data);
+            const auto sdata = std::make_shared<std::string>(data);
 
             boost::asio::async_write(
                 this->_device,

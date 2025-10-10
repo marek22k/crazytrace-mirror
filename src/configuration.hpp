@@ -32,10 +32,9 @@ class Configuration
         void load(const std::string& filename);
         void load_log_level(const YAML::Node& node);
         void load_postup_commands(const YAML::Node& node);
-        template<typename T,
-                 typename std::enable_if_t<std::is_same_v<T, NodeInfo> ||
-                                               std::is_same_v<T, NodeContainer>,
-                                           int> = 0>
+        template<typename T>
+            requires(std::same_as<T, NodeInfo> ||
+                     std::same_as<T, NodeContainer>)
         void load_nodes(const YAML::Node& nodes_config,
                         std::shared_ptr<T> nodes,
                         bool mac = true);
