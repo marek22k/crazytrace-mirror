@@ -11,13 +11,19 @@ void PostupCommands::add_postup_command(const std::string& command)
     this->_postup_commands.push_back(command);
 }
 
-void PostupCommands::execute_commands(const boost::asio::any_io_executor ex) const
+void PostupCommands::execute_commands(
+    const boost::asio::any_io_executor ex) const
 {
     for (const auto& postup_command : this->_postup_commands)
     {
         BOOST_LOG_TRIVIAL(debug)
             << "Execute post up command: " << postup_command << std::endl;
-        boost::process::process child(ex, postup_command, {}, boost::process::process_stdio{.in=nullptr, .out=nullptr, .err=nullptr});
+        boost::process::process child(
+            ex,
+            postup_command,
+            {},
+            boost::process::process_stdio{
+                .in = nullptr, .out = nullptr, .err = nullptr});
         boost::system::error_code ec;
         child.wait(ec);
         BOOST_LOG_TRIVIAL(debug)

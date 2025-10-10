@@ -37,7 +37,8 @@ template<int BUFFER_SIZE> class DeviceClient
             std::shared_ptr<std::string> sdata =
                 std::make_shared<std::string>(std::move(data));
 
-            this->_device.async_write(
+            boost::asio::async_write(
+                this->_device,
                 boost::asio::buffer(*sdata),
                 [sdata, write_handler, write_error_handler](
                     boost::system::error_code ec, size_t bytes_transferred)
