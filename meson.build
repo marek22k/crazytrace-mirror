@@ -12,7 +12,7 @@ project(
         'optimization=2',
         'warning_level=3',
         'werror=true',
-        'cpp_std=c++26',
+        'cpp_std=gnu++26',
         'b_asneeded=true',
         'b_lto=true',
         'b_ndebug=if-release',
