@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "postup_commands.hpp"
-#include <boost/process/v2/process.hpp>
-#include <boost/process/v2/stdio.hpp>
+#include <boost/process.hpp>
 
 void PostupCommands::add_postup_command(const std::string& command)
 {
@@ -18,10 +17,11 @@ void PostupCommands::execute_commands(
     {
         BOOST_LOG_TRIVIAL(debug)
             << "Execute post up command: " << postup_command << std::endl;
+        boost::process::shell postup_shell(postup_command);
         boost::process::process child(
             ex,
-            postup_command,
-            {},
+            postup_shell.exe(),
+            postup_shell.args(),
             boost::process::process_stdio{
                 .in = nullptr, .out = nullptr, .err = nullptr});
         boost::system::error_code ec;
