@@ -18,9 +18,19 @@ void PostupCommands::execute_commands(
         BOOST_LOG_TRIVIAL(debug)
             << "Execute post up command: " << postup_command << std::endl;
         boost::process::shell postup_shell(postup_command);
+
+        if (postup_shell.argc() == 0)
+        {
+            throw std::runtime_error("Failed to execute post up command since "
+                                     "there is no command to execute.");
+        }
+
+        std::string_view exe(postup_shell.argv()[0]);
+        bool is_path_to_file = (exe.find('/') != decltype(exe)::npos);
+
         boost::process::process child(
             ex,
-            postup_shell.exe(),
+            (is_path_to_file ? exe : postup_shell.exe()),
             postup_shell.args(),
             boost::process::process_stdio{
                 .in = nullptr, .out = nullptr, .err = nullptr});
