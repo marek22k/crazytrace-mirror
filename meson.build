@@ -75,7 +75,12 @@ if not libtuntap_dep.found()
     libtuntap_dep = cpp_compiler.find_library('libtuntap', has_headers: ['tuntap.h'], required: true)
 endif
 
-boost_dep = dependency('boost', modules: ['log', 'process', 'filesystem'], include_type: 'system')
+# Workaround for https://github.com/boostorg/process/issues/494#issuecomment-3392312248
+boost_dep = dependency('boost', modules: ['log', 'process', 'filesystem'], required: false, include_type: 'system')
+if not boost_dep.found()
+    boost_dep = dependency('boost', modules: ['log', 'filesystem'], include_type: 'system')
+    add_project_arguments('-DBOOST_PROCESS_V1', language: 'cpp')
+endif
 libtins_dep = dependency('libtins', include_type: 'system')
 yamlcpp_dep = dependency('yaml-cpp', include_type: 'system')
 gtest_dep = dependency('gtest', main: true, required: false, include_type: 'system')

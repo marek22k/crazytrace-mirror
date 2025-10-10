@@ -62,7 +62,11 @@ int main(int argc, char * argv[])
         const Crazytrace ct(
             io.get_executor(), ::dup(dev.native_handler()), nodecontainer);
 
+#ifdef BOOST_PROCESS_V1
+        config.get_postup_commands().execute_commands();
+#else
         config.get_postup_commands().execute_commands(io.get_executor());
+#endif
 
         io.run();
     }

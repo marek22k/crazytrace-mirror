@@ -9,6 +9,38 @@ void PostupCommands::add_postup_command(const std::string& command)
     this->_postup_commands.push_back(command);
 }
 
+#ifdef BOOST_PROCESS_V1
+
+void PostupCommands::execute_commands() const
+{
+    for (const auto& postup_command : this->_postup_commands)
+    {
+        BOOST_LOG_TRIVIAL(debug)
+            << "Execute post up command: " << postup_command << std::endl;
+        std::error_code ec;
+        boost::process::v1::child child(
+            postup_command,
+            boost::process::v1::std_out > boost::process::v1::null,
+            boost::process::v1::std_err > boost::process::v1::null,
+            ec);
+        child.wait();
+        BOOST_LOG_TRIVIAL(debug)
+            << "Post up command result: " << child.exit_code() << std::endl;
+        if (child.exit_code() != 0 || ec)
+        {
+            if (ec)
+            {
+                BOOST_LOG_TRIVIAL(fatal)
+                    << "Failed to execute post up command: " << ec.message()
+                    << std::endl;
+            }
+            throw std::runtime_error("Failed to execute post up command.");
+        }
+    }
+}
+
+#else
+
 void PostupCommands::execute_commands(
     const boost::asio::any_io_executor ex) const
 {
@@ -51,3 +83,5 @@ void PostupCommands::execute_commands(
         }
     }
 }
+
+#endif
