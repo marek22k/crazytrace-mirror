@@ -66,7 +66,7 @@ const Tins::IPv6Address& NodeInfo::get_address()
         this->_addressadded = false;
     }
     const std::size_t address_number = this->_randomgenerator.generate();
-    return this->_addresses[address_number];
+    return this->_addresses.at(address_number);
 }
 
 std::size_t NodeInfo::max_depth() const

@@ -24,7 +24,7 @@ int main(int argc, char * argv[])
         if (args.size() != 2)
             throw std::runtime_error("A configuration file must be specified.");
 
-        const std::string filename(args[1]);
+        const std::string filename(args.at(1));
         const Configuration config(filename);
         config.get_log_level().apply();
 

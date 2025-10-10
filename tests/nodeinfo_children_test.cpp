@@ -109,13 +109,13 @@ TEST_F(NodeInfoChildrenTest, GetRouteTo)
 {
     auto route1 = child_node3->get_route_to(Tins::IPv6Address("fd00::3:2:1"));
     EXPECT_EQ(route1.size(), 2);
-    EXPECT_EQ(route1[1], child_node3_child2);
-    EXPECT_EQ(route1[0], child_node3_child2_child1);
+    EXPECT_EQ(route1.at(1), child_node3_child2);
+    EXPECT_EQ(route1.at(0), child_node3_child2_child1);
 
     auto route2 = child_node1->get_route_to(Tins::IPv6Address("fd00::12"));
     EXPECT_EQ(route2.size(), 0);
 
     auto route3 = root_node->get_route_to(Tins::IPv6Address("fd00::12"));
     EXPECT_EQ(route3.size(), 1);
-    EXPECT_EQ(route3[0], child_node1);
+    EXPECT_EQ(route3.at(0), child_node1);
 }
