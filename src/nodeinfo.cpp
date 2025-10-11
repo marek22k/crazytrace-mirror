@@ -123,7 +123,7 @@ bool NodeInfo::operator==(const NodeInfo& other) const
     return this->_addresses == other._addresses &&
            this->_mac_address == other._mac_address &&
            this->_hoplimit == other._hoplimit &&
-           std::ranges::equal(this->_nodes,
+           std::ranges::equal(this->_nodes, // flawfinder: ignore
                               other._nodes,
                               [](const auto& a, const auto& b)
                               {
