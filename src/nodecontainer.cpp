@@ -219,7 +219,7 @@ void NodeContainer::print(std::ostream& os) const
 
 bool NodeContainer::operator==(const NodeContainer& other) const
 {
-    return std::ranges::equal(this->_nodes,
+    return std::ranges::equal(this->_nodes, // flawfinder: ignore
                               other._nodes,
                               [](const auto& a, const auto& b)
                               {
