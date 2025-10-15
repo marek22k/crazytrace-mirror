@@ -12,7 +12,7 @@ crazytrace uses meson as a build system. However, there is also a Makefile that 
 
 The libraries used are listed in the README. To install them on Debian, the following command can be used:
 ```
-$ sudo apt-get --yes install build-essential git meson ninja-build libboost1.81-all-dev libyaml-cpp-dev libtins-dev
+$ sudo apt-get --yes install build-essential git meson ninja-build libboost1.88-all-dev libyaml-cpp-dev libtins-dev
 ```
 
 The following packages are required to analyze, lint and format the code:
