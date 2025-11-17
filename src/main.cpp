@@ -66,9 +66,6 @@ int main(int argc, char * argv[])
         BOOST_LOG_TRIVIAL(debug) << "Set the TUN device up.";
         dev.up();
 
-        const Crazytrace ct(
-            io.get_executor(), ::dup(dev.native_handler()), nodecontainer);
-
 #ifdef BOOST_PROCESS_V1
         config.get_postup_commands().execute_commands();
 #else
@@ -78,6 +75,9 @@ int main(int argc, char * argv[])
 #if defined(HAVE_LIBCAPNG)
     CapabilityManagment::drop_all_capabilies();
 #endif
+
+        const Crazytrace ct(
+            io.get_executor(), ::dup(dev.native_handler()), nodecontainer);
 
         io.run();
     }
