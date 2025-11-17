@@ -24,6 +24,7 @@ cpp_compiler = meson.get_compiler('cpp')
 
 main_file = files('src/main.cpp')
 sources = files(
+    'src/capability_managment.cpp',
     'src/configuration.cpp',
     'src/crazytrace.cpp',
     'src/loglevel.cpp',
@@ -36,6 +37,7 @@ sources = files(
     'src/tun_tap.cpp'
 )
 headers = files(
+    'src/capability_managment.hpp',
     'src/configuration.hpp',
     'src/crazytrace.hpp',
     'src/deviceclient.hpp',
