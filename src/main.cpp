@@ -45,7 +45,7 @@ int main(int argc, char * argv[])
             << TINS_VERSION_MINOR << "." << TINS_VERSION_PATCH;
 #endif
 
-#if defined(HAVE_LIBCAPNG)
+#ifdef HAVE_LIBCAPNG
         CapabilityManagment::check_for_capabilites();
         CapabilityManagment::drop_capabilies();
 #endif
@@ -72,7 +72,7 @@ int main(int argc, char * argv[])
         config.get_postup_commands().execute_commands(io.get_executor());
 #endif
 
-#if defined(HAVE_LIBCAPNG)
+#ifdef HAVE_LIBCAPNG
         CapabilityManagment::drop_all_capabilies();
 #endif
 

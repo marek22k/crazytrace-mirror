@@ -1,7 +1,7 @@
 #ifndef CAPABILITY_HPP
 #define CAPABILITY_HPP
 
-#if defined(HAVE_LIBCAPNG)
+#ifdef HAVE_LIBCAPNG
     #include <stdexcept>
     #include <cap-ng.h>
     #include <boost/log/trivial.hpp>

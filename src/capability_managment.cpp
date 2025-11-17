@@ -1,6 +1,6 @@
 #include "capability_managment.hpp"
 
-#if defined(HAVE_LIBCAPNG)
+#ifdef HAVE_LIBCAPNG
 
 void CapabilityManagment::check_for_capabilites()
 {
