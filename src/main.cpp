@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+#include <fstream>
 #include <memory>
 #include <span>
 #include <sstream>
 #include <system_error>
 #include <stdexcept>
 #include <cstdlib>
-#include <fstream>
 #include <boost/asio.hpp>
 #include <boost/log/trivial.hpp>
 #include <unistd.h>
@@ -73,7 +73,7 @@ int main(int argc, char * argv[])
 #endif
 
 #if defined(HAVE_LIBCAPNG)
-    CapabilityManagment::drop_all_capabilies();
+        CapabilityManagment::drop_all_capabilies();
 #endif
 
         const Crazytrace ct(
