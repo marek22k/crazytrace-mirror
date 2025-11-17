@@ -83,9 +83,15 @@ if not boost_dep.found()
     boost_dep = dependency('boost', modules: ['log'], include_type: 'system')
     add_project_arguments('-DBOOST_PROCESS_V1', language: 'cpp')
 endif
+
 libcapng_dep = dependency('libcap-ng', required: false)
 if libcapng_dep.found()
     add_project_arguments('-DHAVE_LIBCAPNG', language: 'cpp')
+endif
+
+seccomp_dep = dependency('libseccomp', required: false)
+if seccomp_dep.found()
+    add_project_arguments('-DHAVE_SECCOMP', language: 'cpp')
 endif
 
 libtins_dep = dependency('libtins', include_type: 'system')
@@ -175,7 +181,7 @@ if get_option('install_systemd_unit')
     )
 endif
 
-deps = [libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep]
+deps = [libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep, seccomp_dep]
 
 if gtest_dep.found()
     gtest = executable('gtest', sources + tests_sources, dependencies: [gtest_dep] + deps, include_directories: ['src/'])

@@ -18,6 +18,10 @@
 #include "nodecontainer.hpp"
 #include "tun_tap.hpp"
 
+#ifdef HAVE_SECCOMP
+#include <seccomp.h>
+#endif
+
 int main(int argc, char * argv[])
 {
     try
@@ -75,6 +79,44 @@ int main(int argc, char * argv[])
 
 #ifdef HAVE_LIBCAPNG
         CapabilityManagment::drop_all_capabilies();
+#endif
+
+#ifdef HAVE_SECCOMP
+        scmp_filter_ctx ctx = seccomp_init(SCMP_ACT_KILL);
+        if (ctx == nullptr)
+            throw std::runtime_error("Failed to initialize seccomp.");
+        
+        int rule_status;
+        
+        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(dup), 0);
+        if (rule_status != 0)
+            throw std::runtime_error("Failed to add rule.");
+        
+        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(epoll_ctl), 0);
+        if (rule_status != 0)
+            throw std::runtime_error("Failed to add rule.");
+        
+        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(epoll_wait), 0);
+        if (rule_status != 0)
+            throw std::runtime_error("Failed to add rule.");
+        
+        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(fcntl), 0);
+        if (rule_status != 0)
+            throw std::runtime_error("Failed to add rule.");
+        
+        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(read), 0);
+        if (rule_status != 0)
+            throw std::runtime_error("Failed to add rule.");
+        
+        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(write), 0);
+        if (rule_status != 0)
+            throw std::runtime_error("Failed to add rule.");
+
+        int load_status = seccomp_load(ctx);
+        if (load_status != 0)
+            throw std::runtime_error("Failed to load seccomp filter.");
+
+        seccomp_release(ctx);
 #endif
 
         const Crazytrace ct(
