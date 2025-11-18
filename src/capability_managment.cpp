@@ -62,8 +62,6 @@ void CapabilityManagment::drop_all_capabilies()
 
     if (capng_apply(CAPNG_SELECT_ALL) != 0)
         throw std::runtime_error("Failed to apply capabilities.");
-
-    BOOST_LOG_TRIVIAL(debug) << "All capabilities dropped.";
 }
 
 #endif
