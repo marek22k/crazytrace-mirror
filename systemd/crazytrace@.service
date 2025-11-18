@@ -23,14 +23,14 @@ ProtectControlGroups=true
 ProtectKernelModules=true
 PrivateTmp=true
 ProcSubset=pid
-SystemCallFilter=~@clock @cpu-emulation @debug @module @mount @obsolete @privileged @raw-io @reboot @resources @swap
+SystemCallFilter=~@clock @cpu-emulation @debug @module @mount @obsolete @raw-io @reboot @resources @swap
 
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_SETPCAP
-AmbientCapabilities=
+AmbientCapabilities=CAP_NET_ADMIN CAP_SETPCAP
 ConfigurationDirectory=crazytrace
 
 ExecStart=/usr/bin/crazytrace %E/crazytrace/%i.yaml
-Restart=on-failue
+Restart=on-failure
 TimeoutStopSec=5
 
 [Install]
