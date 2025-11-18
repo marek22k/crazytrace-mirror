@@ -22,6 +22,12 @@ int main(int argc, char * argv[])
 {
     try
     {
+#ifdef HAVE_LIBCAPNG
+        CapabilityManagment::check_for_capabilites();
+        CapabilityManagment::lock();
+        CapabilityManagment::drop_capabilies();
+#endif
+
         const auto args = std::span(argv, static_cast<std::size_t>(argc));
         if (args.size() != 2)
             throw std::runtime_error("A configuration file must be specified.");
@@ -43,11 +49,6 @@ int main(int argc, char * argv[])
         BOOST_LOG_TRIVIAL(info)
             << "libtins version: " << TINS_VERSION_MAJOR << "."
             << TINS_VERSION_MINOR << "." << TINS_VERSION_PATCH;
-#endif
-
-#ifdef HAVE_LIBCAPNG
-        CapabilityManagment::check_for_capabilites();
-        CapabilityManagment::drop_capabilies();
 #endif
 
         const std::shared_ptr<NodeContainer> nodecontainer =

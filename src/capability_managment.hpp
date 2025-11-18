@@ -12,6 +12,7 @@
 
 namespace CapabilityManagment
 {
+    void lock();
     void check_for_capabilites();
     void drop_capabilies();
     void drop_all_capabilies();
