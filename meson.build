@@ -34,6 +34,7 @@ sources = files(
     'src/nodereply.cpp',
     'src/noderequest.cpp',
     'src/randomgenerator.cpp',
+    'src/seccomp.cpp',
     'src/tun_tap.cpp'
 )
 headers = files(
@@ -48,6 +49,7 @@ headers = files(
     'src/nodereply.hpp',
     'src/noderequest.hpp',
     'src/randomgenerator.hpp',
+    'src/seccomp.hpp',
     'src/tun_tap.hpp'
 )
 tests_sources = files(

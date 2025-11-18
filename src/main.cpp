@@ -16,11 +16,8 @@
 #include "configuration.hpp"
 #include "crazytrace.hpp"
 #include "nodecontainer.hpp"
+#include "seccomp.hpp"
 #include "tun_tap.hpp"
-
-#ifdef HAVE_SECCOMP
-#include <seccomp.h>
-#endif
 
 int main(int argc, char * argv[])
 {
@@ -82,41 +79,46 @@ int main(int argc, char * argv[])
 #endif
 
 #ifdef HAVE_SECCOMP
-        scmp_filter_ctx ctx = seccomp_init(SCMP_ACT_KILL);
-        if (ctx == nullptr)
-            throw std::runtime_error("Failed to initialize seccomp.");
-        
-        int rule_status;
-        
-        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(dup), 0);
-        if (rule_status != 0)
-            throw std::runtime_error("Failed to add rule.");
-        
-        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(epoll_ctl), 0);
-        if (rule_status != 0)
-            throw std::runtime_error("Failed to add rule.");
-        
-        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(epoll_wait), 0);
-        if (rule_status != 0)
-            throw std::runtime_error("Failed to add rule.");
-        
-        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(fcntl), 0);
-        if (rule_status != 0)
-            throw std::runtime_error("Failed to add rule.");
-        
-        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(read), 0);
-        if (rule_status != 0)
-            throw std::runtime_error("Failed to add rule.");
-        
-        rule_status = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(write), 0);
-        if (rule_status != 0)
-            throw std::runtime_error("Failed to add rule.");
+        SeccompFilterContext seccomp_context(SCMP_ACT_KILL);
+        seccomp_context.allow(SCMP_SYS(dup));
 
-        int load_status = seccomp_load(ctx);
-        if (load_status != 0)
-            throw std::runtime_error("Failed to load seccomp filter.");
+    #if defined(BOOST_ASIO_HAS_IO_URING_AS_DEFAULT)
+        BOOST_LOG_TRIVIAL(debug) << "boost uses io uring backend";
+        seccomp_context.allow(SCMP_SYS(io_uring_setup));
+        seccomp_context.allow(SCMP_SYS(io_uring_enter));
+        seccomp_context.allow(SCMP_SYS(io_uring_register));
+    #elif defined(BOOST_ASIO_HAS_EPOLL)
+        BOOST_LOG_TRIVIAL(debug) << "boost uses epoll backend";
+        seccomp_context.allow(SCMP_SYS(epoll_create));
+        seccomp_context.allow(SCMP_SYS(epoll_create1));
+        seccomp_context.allow(SCMP_SYS(epoll_ctl));
+        seccomp_context.allow(SCMP_SYS(epoll_wait));
+        seccomp_context.allow(SCMP_SYS(epoll_pwait));
+        seccomp_context.allow(SCMP_SYS(epoll_pwait2));
+    #else
+        seccomp_context.allow(SCMP_SYS(select));
+    #endif
 
-        seccomp_release(ctx);
+    #ifdef BOOST_ASIO_HAS_EVENTFD
+        BOOST_LOG_TRIVIAL(debug) << "boost uses eventfd backend";
+        seccomp_context.allow(SCMP_SYS(eventfd));
+        seccomp_context.allow(SCMP_SYS(eventfd2));
+    #else
+        seccomp_context.allow(SCMP_SYS(pipe));
+        seccomp_context.allow(SCMP_SYS(pipe2));
+    #endif
+
+    #ifdef BOOST_ASIO_HAS_TIMERFD
+        BOOST_LOG_TRIVIAL(debug) << "boost uses timerfd backend";
+        seccomp_context.allow(SCMP_SYS(timerfd_create));
+        seccomp_context.allow(SCMP_SYS(timerfd_settime));
+        seccomp_context.allow(SCMP_SYS(timerfd_gettime));
+    #endif
+        seccomp_context.allow(SCMP_SYS(fcntl));
+        seccomp_context.allow(SCMP_SYS(read));
+        seccomp_context.allow(SCMP_SYS(write));
+
+        seccomp_context.load();
 #endif
 
         const Crazytrace ct(
