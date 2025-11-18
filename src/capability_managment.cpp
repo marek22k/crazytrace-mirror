@@ -14,10 +14,10 @@ void CapabilityManagment::lock()
 
 void CapabilityManagment::check_for_capabilites()
 {
-    if (!capng_have_capability(CAPNG_PERMITTED, CAP_NET_ADMIN))
+    if (capng_have_capability(CAPNG_PERMITTED, CAP_NET_ADMIN) != 1)
         throw std::runtime_error("Missing CAP_NET_ADMIN capability.");
 
-    if (!capng_have_capability(CAPNG_PERMITTED, CAP_SETPCAP))
+    if (capng_have_capability(CAPNG_PERMITTED, CAP_SETPCAP) != 1)
         throw std::runtime_error("Missing CAP_SETPCAP capability.");
 }
 
