@@ -91,7 +91,11 @@ IncludeCategories:
     Priority:        61
   - Regex:           '^<yaml-cpp/.*>'
     Priority:        62
+  - Regex:           '^<cap-ng.h>'
+    Priority:        66
   - Regex:           '^<unistd.h>'
+    Priority:        67
+  - Regex:           '^<seccomp.h>'
     Priority:        70
   - Regex:           '^<io.h>'
     Priority:        71

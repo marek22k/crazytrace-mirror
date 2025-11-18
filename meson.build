@@ -24,6 +24,7 @@ cpp_compiler = meson.get_compiler('cpp')
 
 main_file = files('src/main.cpp')
 sources = files(
+    'src/capability_managment.cpp',
     'src/configuration.cpp',
     'src/crazytrace.cpp',
     'src/loglevel.cpp',
@@ -33,9 +34,11 @@ sources = files(
     'src/nodereply.cpp',
     'src/noderequest.cpp',
     'src/randomgenerator.cpp',
+    'src/seccomp.cpp',
     'src/tun_tap.cpp'
 )
 headers = files(
+    'src/capability_managment.hpp',
     'src/configuration.hpp',
     'src/crazytrace.hpp',
     'src/deviceclient.hpp',
@@ -46,6 +49,7 @@ headers = files(
     'src/nodereply.hpp',
     'src/noderequest.hpp',
     'src/randomgenerator.hpp',
+    'src/seccomp.hpp',
     'src/tun_tap.hpp'
 )
 tests_sources = files(
@@ -81,6 +85,17 @@ if not boost_dep.found()
     boost_dep = dependency('boost', modules: ['log'], include_type: 'system')
     add_project_arguments('-DBOOST_PROCESS_V1', language: 'cpp')
 endif
+
+libcapng_dep = dependency('libcap-ng', required: false)
+if libcapng_dep.found()
+    add_project_arguments('-DHAVE_LIBCAPNG', language: 'cpp')
+endif
+
+seccomp_dep = dependency('libseccomp', required: false)
+if seccomp_dep.found()
+    add_project_arguments('-DHAVE_SECCOMP', language: 'cpp')
+endif
+
 libtins_dep = dependency('libtins', include_type: 'system')
 yamlcpp_dep = dependency('yaml-cpp', include_type: 'system')
 gtest_dep = dependency('gtest', main: true, required: false, include_type: 'system')
@@ -168,7 +183,7 @@ if get_option('install_systemd_unit')
     )
 endif
 
-deps = [libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep]
+deps = [libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep, seccomp_dep]
 
 if gtest_dep.found()
     gtest = executable('gtest', sources + tests_sources, dependencies: [gtest_dep] + deps, include_directories: ['src/'])

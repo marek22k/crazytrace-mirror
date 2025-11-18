@@ -6,6 +6,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## Release 1.0.5
+
+- Adding capability management on Linux for improved security
+- Add a seccomp filter to prevent unwanted syscalls
+
 ## Release 1.0.4
 
 - Fixing an error that could lead to buffer invalidation
