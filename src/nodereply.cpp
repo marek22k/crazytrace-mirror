@@ -286,7 +286,7 @@ std::ostream& operator<<(std::ostream& os, NodeReply const & nodereply)
             os << " Hoplimit=" << nodereply._hoplimit
                << ": ID=" << nodereply._icmp_identifier
                << " SEQ=" << nodereply._icmp_sequence
-               << " Payload:" << std::hex;
+               << " Payload:";
             for (const auto& byte : nodereply._payload)
             {
                 os << std::format(" {:02x}", static_cast<int>(byte));

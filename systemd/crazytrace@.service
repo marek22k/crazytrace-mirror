@@ -25,8 +25,8 @@ PrivateTmp=true
 ProcSubset=pid
 SystemCallFilter=~@clock @cpu-emulation @debug @module @mount @obsolete @privileged @raw-io @reboot @resources @swap
 
-CapabilityBoundingSet=CAP_NET_ADMIN
-AmbientCapabilities=CAP_NET_ADMIN
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_SETPCAP
+AmbientCapabilities=
 ConfigurationDirectory=crazytrace
 
 ExecStart=/usr/bin/crazytrace %E/crazytrace/%i.yaml
