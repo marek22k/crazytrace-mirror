@@ -130,7 +130,7 @@ void SeccompFilterContext::kill_debug()
 void SeccompFilterContext::kill_others()
 {
     // #lizard forgives
-    
+
     #ifdef SYS_open_by_handle_at
     seccomp_context.kill(SCMP_SYS(open_by_handle_at)); // flawfinder: ignore
     #endif
@@ -300,7 +300,7 @@ void SeccompFilterContext::kill_ipc()
 void SeccompFilterContext::kill_keyring()
 {
     // #lizard forgives
-    
+
     #ifdef SYS_add_key
     seccomp_context.kill(SCMP_SYS(add_key)); // flawfinder: ignore
     #endif
@@ -838,10 +838,12 @@ void SeccompFilterContext::kill_system_service()
     seccomp_context.kill(SCMP_SYS(remap_file_pages)); // flawfinder: ignore
     #endif
     #ifdef SYS_sched_get_priority_max
-    seccomp_context.kill(SCMP_SYS(sched_get_priority_max)); // flawfinder: ignore
+    seccomp_context.kill(
+        SCMP_SYS(sched_get_priority_max)); // flawfinder: ignore
     #endif
     #ifdef SYS_sched_get_priority_min
-    seccomp_context.kill(SCMP_SYS(sched_get_priority_min)); // flawfinder: ignore
+    seccomp_context.kill(
+        SCMP_SYS(sched_get_priority_min)); // flawfinder: ignore
     #endif
     #ifdef SYS_sched_getaffinity
     seccomp_context.kill(SCMP_SYS(sched_getaffinity)); // flawfinder: ignore
