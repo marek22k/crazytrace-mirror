@@ -44,7 +44,7 @@ int main(int argc, char * argv[])
         seccomp_context.kill_memlock();
         seccomp_context.kill_module();
         seccomp_context.kill_obsolete();
-        seccomp_context.kill_mkill_privilegedount();
+        seccomp_context.kill_privileged();
         seccomp_context.kill_rawio();
         seccomp_context.kill_reboot();
         seccomp_context.kill_resources();
