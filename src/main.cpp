@@ -78,17 +78,19 @@ int main(int argc, char * argv[])
         CapabilityManagment::drop_all_capabilies();
 #endif
 
+        const Crazytrace ct(
+            io.get_executor(), ::dup(dev.native_handler()), nodecontainer);
+
 #ifdef HAVE_SECCOMP
         SeccompFilterContext seccomp_context(SCMP_ACT_KILL);
-        seccomp_context.allow(SCMP_SYS(dup));
 
+        // see also
+        // https://lists.boost.org/archives/list/boost-users@lists.boost.org/thread/YJ5RTK25HLPFEZ3XVBBFQDJOSPIIOBNA/
+        // and https://sourceforge.net/p/asio/mailman/message/59260797/
     #if defined(BOOST_ASIO_HAS_IO_URING_AS_DEFAULT)
-        BOOST_LOG_TRIVIAL(debug) << "boost uses io uring backend";
-        seccomp_context.allow(SCMP_SYS(io_uring_setup));
-        seccomp_context.allow(SCMP_SYS(io_uring_enter));
-        seccomp_context.allow(SCMP_SYS(io_uring_register));
+        BOOST_LOG_TRIVIAL(debug) << "Boost.Asio uses io uring backend";
     #elif defined(BOOST_ASIO_HAS_EPOLL)
-        BOOST_LOG_TRIVIAL(debug) << "boost uses epoll backend";
+        BOOST_LOG_TRIVIAL(debug) << "Boost.Asio uses epoll backend";
         seccomp_context.allow(SCMP_SYS(epoll_create));
         seccomp_context.allow(SCMP_SYS(epoll_create1));
         seccomp_context.allow(SCMP_SYS(epoll_ctl));
@@ -100,7 +102,7 @@ int main(int argc, char * argv[])
     #endif
 
     #ifdef BOOST_ASIO_HAS_EVENTFD
-        BOOST_LOG_TRIVIAL(debug) << "boost uses eventfd backend";
+        BOOST_LOG_TRIVIAL(debug) << "Boost.Asio uses eventfd backend";
         seccomp_context.allow(SCMP_SYS(eventfd));
         seccomp_context.allow(SCMP_SYS(eventfd2));
     #else
@@ -109,7 +111,7 @@ int main(int argc, char * argv[])
     #endif
 
     #ifdef BOOST_ASIO_HAS_TIMERFD
-        BOOST_LOG_TRIVIAL(debug) << "boost uses timerfd backend";
+        BOOST_LOG_TRIVIAL(debug) << "Boost.Asio uses timerfd backend";
         seccomp_context.allow(SCMP_SYS(timerfd_create));
         seccomp_context.allow(SCMP_SYS(timerfd_settime));
         seccomp_context.allow(SCMP_SYS(timerfd_gettime));
@@ -119,10 +121,9 @@ int main(int argc, char * argv[])
         seccomp_context.allow(SCMP_SYS(write));
 
         seccomp_context.load();
-#endif
 
-        const Crazytrace ct(
-            io.get_executor(), ::dup(dev.native_handler()), nodecontainer);
+        BOOST_LOG_TRIVIAL(debug) << "Entered into secure state.";
+#endif
 
         io.run();
     }
