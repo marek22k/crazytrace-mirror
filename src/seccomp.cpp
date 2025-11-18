@@ -475,6 +475,8 @@ void SeccompFilterContext::kill_privileged()
 {
     // #lizard forgives
 
+    // without capset
+
     #ifdef SYS__sysctl
     seccomp_context.kill(SCMP_SYS(_sysctl)); // flawfinder: ignore
     #endif
@@ -483,9 +485,6 @@ void SeccompFilterContext::kill_privileged()
     #endif
     #ifdef SYS_bpf
     seccomp_context.kill(SCMP_SYS(bpf)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_capset
-    seccomp_context.kill(SCMP_SYS(capset)); // flawfinder: ignore
     #endif
     #ifdef SYS_chroot
     seccomp_context.kill(SCMP_SYS(chroot)); // flawfinder: ignore
