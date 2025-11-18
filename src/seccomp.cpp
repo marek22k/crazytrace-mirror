@@ -33,6 +33,8 @@ void SeccompFilterContext::kill(int syscall)
 
 void SeccompFilterContext::kill_chown()
 {
+    // #lizard forgives
+
     #ifdef SYS_chown
     seccomp_context.kill(SCMP_SYS(chown)); // flawfinder: ignore
     #endif
@@ -58,6 +60,8 @@ void SeccompFilterContext::kill_chown()
 
 void SeccompFilterContext::kill_clock()
 {
+    // #lizard forgives
+
     #ifdef SYS_adjtimex
     seccomp_context.kill(SCMP_SYS(adjtimex)); // flawfinder: ignore
     #endif
@@ -77,6 +81,8 @@ void SeccompFilterContext::kill_clock()
 
 void SeccompFilterContext::kill_cpu_emulation()
 {
+    // #lizard forgives
+
     #ifdef SYS_modify_ldt
     seccomp_context.kill(SCMP_SYS(modify_ldt)); // flawfinder: ignore
     #endif
@@ -96,6 +102,8 @@ void SeccompFilterContext::kill_cpu_emulation()
 
 void SeccompFilterContext::kill_debug()
 {
+    // #lizard forgives
+
     #ifdef SYS_lookup_dcookie
     seccomp_context.kill(SCMP_SYS(lookup_dcookie)); // flawfinder: ignore
     #endif
@@ -121,6 +129,8 @@ void SeccompFilterContext::kill_debug()
 
 void SeccompFilterContext::kill_others()
 {
+    // #lizard forgives
+    
     #ifdef SYS_open_by_handle_at
     seccomp_context.kill(SCMP_SYS(open_by_handle_at)); // flawfinder: ignore
     #endif
@@ -212,7 +222,10 @@ void SeccompFilterContext::kill_others()
 
 void SeccompFilterContext::kill_ipc()
 {
-    /* without pipe, pipe2 */
+    // #lizard forgives
+
+    // without pipe, pipe2
+
     #ifdef SYS_ipc
     seccomp_context.kill(SCMP_SYS(ipc)); // flawfinder: ignore
     #endif
@@ -286,6 +299,8 @@ void SeccompFilterContext::kill_ipc()
 
 void SeccompFilterContext::kill_keyring()
 {
+    // #lizard forgives
+    
     #ifdef SYS_add_key
     seccomp_context.kill(SCMP_SYS(add_key)); // flawfinder: ignore
     #endif
@@ -299,6 +314,8 @@ void SeccompFilterContext::kill_keyring()
 
 void SeccompFilterContext::kill_memlock()
 {
+    // #lizard forgives
+
     #ifdef SYS_mlock
     seccomp_context.kill(SCMP_SYS(mlock)); // flawfinder: ignore
     #endif
@@ -318,6 +335,8 @@ void SeccompFilterContext::kill_memlock()
 
 void SeccompFilterContext::kill_module()
 {
+    // #lizard forgives
+
     #ifdef SYS_delete_module
     seccomp_context.kill(SCMP_SYS(delete_module)); // flawfinder: ignore
     #endif
@@ -331,6 +350,8 @@ void SeccompFilterContext::kill_module()
 
 void SeccompFilterContext::kill_mount()
 {
+    // #lizard forgives
+
     #ifdef SYS_chroot
     seccomp_context.kill(SCMP_SYS(chroot)); // flawfinder: ignore
     #endif
@@ -368,6 +389,8 @@ void SeccompFilterContext::kill_mount()
 
 void SeccompFilterContext::kill_obsolete()
 {
+    // #lizard forgives
+
     #ifdef SYS__sysctl
     seccomp_context.kill(SCMP_SYS(_sysctl)); // flawfinder: ignore
     #endif
@@ -450,6 +473,8 @@ void SeccompFilterContext::kill_obsolete()
 
 void SeccompFilterContext::kill_privileged()
 {
+    // #lizard forgives
+
     #ifdef SYS__sysctl
     seccomp_context.kill(SCMP_SYS(_sysctl)); // flawfinder: ignore
     #endif
@@ -529,6 +554,8 @@ void SeccompFilterContext::kill_privileged()
 
 void SeccompFilterContext::kill_rawio()
 {
+    // #lizard forgives
+
     #ifdef SYS_ioperm
     seccomp_context.kill(SCMP_SYS(ioperm)); // flawfinder: ignore
     #endif
@@ -554,6 +581,8 @@ void SeccompFilterContext::kill_rawio()
 
 void SeccompFilterContext::kill_reboot()
 {
+    // #lizard forgives
+
     #ifdef SYS_kexec_load
     seccomp_context.kill(SCMP_SYS(kexec_load)); // flawfinder: ignore
     #endif
@@ -567,6 +596,8 @@ void SeccompFilterContext::kill_reboot()
 
 void SeccompFilterContext::kill_resources()
 {
+    // #lizard forgives
+
     #ifdef SYS_ioprio_set
     seccomp_context.kill(SCMP_SYS(ioprio_set)); // flawfinder: ignore
     #endif
@@ -601,6 +632,8 @@ void SeccompFilterContext::kill_resources()
 
 void SeccompFilterContext::kill_setuid()
 {
+    // #lizard forgives
+
     #ifdef SYS_setgid
     seccomp_context.kill(SCMP_SYS(setgid)); // flawfinder: ignore
     #endif
@@ -647,6 +680,8 @@ void SeccompFilterContext::kill_setuid()
 
 void SeccompFilterContext::kill_signal()
 {
+    // #lizard forgives
+
     #ifdef SYS_rt_sigaction
     seccomp_context.kill(SCMP_SYS(rt_sigaction)); // flawfinder: ignore
     #endif
@@ -690,6 +725,8 @@ void SeccompFilterContext::kill_signal()
 
 void SeccompFilterContext::kill_swap()
 {
+    // #lizard forgives
+
     #ifdef SYS_swapon
     seccomp_context.kill(SCMP_SYS(swapon)); // flawfinder: ignore
     #endif
@@ -700,6 +737,8 @@ void SeccompFilterContext::kill_swap()
 
 void SeccompFilterContext::kill_sync()
 {
+    // #lizard forgives
+
     #ifdef SYS_fdatasync
     seccomp_context.kill(SCMP_SYS(fdatasync)); // flawfinder: ignore
     #endif
@@ -725,7 +764,10 @@ void SeccompFilterContext::kill_sync()
 
 void SeccompFilterContext::kill_system_service()
 {
-    /* without ioctl */
+    // #lizard forgives
+
+    // without ioctl
+
     #ifdef SYS_brk
     seccomp_context.kill(SCMP_SYS(brk)); // flawfinder: ignore
     #endif
