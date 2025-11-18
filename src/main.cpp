@@ -54,6 +54,8 @@ int main(int argc, char * argv[])
         seccomp_context.kill_sync();
         seccomp_context.kill_system_service();
         seccomp_context.load();
+
+        seccomp_context.release();
 #endif
 
         const auto args = std::span(argv, static_cast<std::size_t>(argc));
