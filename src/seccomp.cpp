@@ -893,7 +893,7 @@ void SeccompFilterContext::release()
     this->ctx = nullptr;
 }
 
-bool SeccompFilterContext::is_useable() const
+bool SeccompFilterContext::is_useable() const noexcept
 {
     return this->ctx != nullptr;
 }

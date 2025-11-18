@@ -13,7 +13,7 @@
 class SeccompFilterContext
 {
     public:
-        SeccompFilterContext(uint32_t def_action);
+        explicit SeccompFilterContext(uint32_t def_action);
         void rule_add(uint32_t action, int syscall);
         void allow(int syscall);
         void kill(int syscall);
@@ -40,7 +40,7 @@ class SeccompFilterContext
         void load();
         void reset(uint32_t def_action);
         void release();
-        [[nodiscard]] bool is_useable() const;
+        [[nodiscard]] bool is_useable() const noexcept;
 
     private:
         scmp_filter_ctx ctx;
