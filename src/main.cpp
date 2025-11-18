@@ -28,6 +28,33 @@ int main(int argc, char * argv[])
         CapabilityManagment::lock();
         CapabilityManagment::drop_capabilies();
 #endif
+#ifdef HAVE_SECCOMP
+        SeccompFilterContext seccomp_context(SCMP_ACT_ALLOW);
+        // see also
+        // https://lists.boost.org/archives/list/boost-users@lists.boost.org/thread/YJ5RTK25HLPFEZ3XVBBFQDJOSPIIOBNA/
+        // and https://sourceforge.net/p/asio/mailman/message/59260797/
+        // due to complexity use seccomp blacklist
+        seccomp_context.kill_chown();
+        seccomp_context.kill_clock();
+        seccomp_context.kill_cpu_emulation();
+        seccomp_context.kill_debug();
+        seccomp_context.kill_others();
+        seccomp_context.kill_ipc();
+        seccomp_context.kill_keyring();
+        seccomp_context.kill_memlock();
+        seccomp_context.kill_module();
+        seccomp_context.kill_obsolete();
+        seccomp_context.kill_mkill_privilegedount();
+        seccomp_context.kill_rawio();
+        seccomp_context.kill_reboot();
+        seccomp_context.kill_resources();
+        seccomp_context.kill_setuid();
+        seccomp_context.kill_signal();
+        seccomp_context.kill_swap();
+        seccomp_context.kill_sync();
+        seccomp_context.kill_system_service();
+        seccomp_context.load();
+#endif
 
         const auto args = std::span(argv, static_cast<std::size_t>(argc));
         if (args.size() != 2)
@@ -59,7 +86,6 @@ int main(int argc, char * argv[])
         nodecontainer->print(nodes_verbose);
         BOOST_LOG_TRIVIAL(info) << nodes_verbose.str();
 
-        boost::asio::io_context io;
         constexpr std::size_t mtu = 1500;
         BOOST_LOG_TRIVIAL(debug) << "Create TUN device.";
         tun_tap dev(config.get_device_name(), tun_tap_mode::tap);
@@ -68,6 +94,7 @@ int main(int argc, char * argv[])
         BOOST_LOG_TRIVIAL(debug) << "Set the TUN device up.";
         dev.up();
 
+        boost::asio::io_context io;
 #ifdef BOOST_PROCESS_V1
         config.get_postup_commands().execute_commands();
 #else
@@ -80,50 +107,6 @@ int main(int argc, char * argv[])
 
         const Crazytrace ct(
             io.get_executor(), ::dup(dev.native_handler()), nodecontainer);
-
-#ifdef HAVE_SECCOMP
-        SeccompFilterContext seccomp_context(SCMP_ACT_KILL);
-
-        // see also
-        // https://lists.boost.org/archives/list/boost-users@lists.boost.org/thread/YJ5RTK25HLPFEZ3XVBBFQDJOSPIIOBNA/
-        // and https://sourceforge.net/p/asio/mailman/message/59260797/
-    #if defined(BOOST_ASIO_HAS_IO_URING_AS_DEFAULT)
-        BOOST_LOG_TRIVIAL(debug) << "Boost.Asio uses io uring backend";
-    #elif defined(BOOST_ASIO_HAS_EPOLL)
-        BOOST_LOG_TRIVIAL(debug) << "Boost.Asio uses epoll backend";
-        seccomp_context.allow(SCMP_SYS(epoll_create));
-        seccomp_context.allow(SCMP_SYS(epoll_create1));
-        seccomp_context.allow(SCMP_SYS(epoll_ctl));
-        seccomp_context.allow(SCMP_SYS(epoll_wait));
-        seccomp_context.allow(SCMP_SYS(epoll_pwait));
-        seccomp_context.allow(SCMP_SYS(epoll_pwait2));
-    #else
-        seccomp_context.allow(SCMP_SYS(select));
-    #endif
-
-    #ifdef BOOST_ASIO_HAS_EVENTFD
-        BOOST_LOG_TRIVIAL(debug) << "Boost.Asio uses eventfd backend";
-        seccomp_context.allow(SCMP_SYS(eventfd));
-        seccomp_context.allow(SCMP_SYS(eventfd2));
-    #else
-        seccomp_context.allow(SCMP_SYS(pipe));
-        seccomp_context.allow(SCMP_SYS(pipe2));
-    #endif
-
-    #ifdef BOOST_ASIO_HAS_TIMERFD
-        BOOST_LOG_TRIVIAL(debug) << "Boost.Asio uses timerfd backend";
-        seccomp_context.allow(SCMP_SYS(timerfd_create));
-        seccomp_context.allow(SCMP_SYS(timerfd_settime));
-        seccomp_context.allow(SCMP_SYS(timerfd_gettime));
-    #endif
-        seccomp_context.allow(SCMP_SYS(fcntl));
-        seccomp_context.allow(SCMP_SYS(read));
-        seccomp_context.allow(SCMP_SYS(write));
-
-        seccomp_context.load();
-
-        BOOST_LOG_TRIVIAL(debug) << "Entered into secure state.";
-#endif
 
         io.run();
     }
