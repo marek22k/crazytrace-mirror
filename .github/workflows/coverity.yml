@@ -22,8 +22,8 @@ jobs:
         cmake --build build
         sudo cmake --install build --prefix /usr
     - name: Configure project
-      run:
-        - make setup
+      run: |
+        make setup
     - uses: vapier/coverity-scan-action@v1
       with:
         project: 'crazytrace'
