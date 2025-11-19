@@ -11,7 +11,7 @@ override_dh_auto_clean:
 	test -d build && make clean || true
 
 override_dh_auto_configure:
-	meson setup --prefix=/usr -Dinstall_systemd_unit=true . build
+	meson setup --prefix=/usr -Dinstall_systemd_unit=true -Dinstall_apparmor_profile=true . build
 
 override_dh_auto_test:
 	make test

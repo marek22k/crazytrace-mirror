@@ -221,6 +221,13 @@ if get_option('install_systemd_unit')
     )
 endif
 
+if get_option('install_apparmor_profile')
+    install_data(
+        'apparmor/crazytrace',
+        install_dir: 'etc/apparmor.d'
+    )
+endif
+
 deps = [libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep, seccomp_dep]
 
 if gtest_dep.found()
