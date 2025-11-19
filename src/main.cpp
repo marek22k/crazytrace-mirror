@@ -30,7 +30,7 @@ int main(int argc, char * argv[])
         CapabilityManagment::drop_capabilies();
 #endif
 #ifdef HAVE_LANDLOCK
-        LandlockRuleset landlock_ruleset_init(
+        const LandlockRuleset landlock_ruleset_init(
             LANDLOCK_ACCESS_FS_READ_DIR | LANDLOCK_ACCESS_FS_REMOVE_DIR |
                 LANDLOCK_ACCESS_FS_REMOVE_FILE | LANDLOCK_ACCESS_FS_MAKE_CHAR |
                 LANDLOCK_ACCESS_FS_MAKE_DIR | LANDLOCK_ACCESS_FS_MAKE_REG |
@@ -137,7 +137,7 @@ int main(int argc, char * argv[])
         CapabilityManagment::drop_all_capabilies();
 #endif
 #ifdef HAVE_LANDLOCK
-        LandlockRuleset landlock_ruleset_loop(
+        const LandlockRuleset landlock_ruleset_loop(
             LANDLOCK_ACCESS_FS_EXECUTE | LANDLOCK_ACCESS_FS_WRITE_FILE |
                 LANDLOCK_ACCESS_FS_READ_FILE | LANDLOCK_ACCESS_FS_TRUNCATE |
                 LANDLOCK_ACCESS_FS_READ_DIR | LANDLOCK_ACCESS_FS_REMOVE_DIR |
@@ -148,10 +148,10 @@ int main(int argc, char * argv[])
                 LANDLOCK_ACCESS_FS_REFER | LANDLOCK_ACCESS_FS_IOCTL_DEV,
             LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP,
             LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET | LANDLOCK_SCOPE_SIGNAL);
-        landlock_ruleset_loop.add_path_beneath_rule(LANDLOCK_ACCESS_FS_WRITE_FILE |
-                                                  LANDLOCK_ACCESS_FS_READ_FILE |
-                                                  LANDLOCK_ACCESS_FS_IOCTL_DEV,
-                                              dev.native_handler());
+        landlock_ruleset_loop.add_path_beneath_rule(
+            LANDLOCK_ACCESS_FS_WRITE_FILE | LANDLOCK_ACCESS_FS_READ_FILE |
+                LANDLOCK_ACCESS_FS_IOCTL_DEV,
+            dev.native_handler());
         landlock_ruleset_loop.restrict_self();
 #endif
 #ifdef HAVE_SECCOMP
