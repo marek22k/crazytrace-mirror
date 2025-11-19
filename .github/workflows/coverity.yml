@@ -26,3 +26,9 @@ jobs:
         project: 'crazytrace'
         email: ${{ secrets.COVERITY_SCAN_EMAIL }}
         token: ${{ secrets.COVERITY_SCAN_TOKEN }}
+    - uses: actions/upload-artifact@v4
+      with:
+        path: cov-int.tgz
+        retention-days: 3
+        compression-level: 0
+        overwrite: true
