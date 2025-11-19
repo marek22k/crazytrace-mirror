@@ -42,7 +42,7 @@ $ sudo apt-get --yes install build-essential git cmake
 
 After that, libtuntap can be built like a normal cmake project:
 ```
-$ git clone https://github.com/LaKabane/libtuntap.git
+$ git clone --depth 1 https://github.com/LaKabane/libtuntap.git
 $ cmake -DCMAKE_BUILD_TYPE=Release -B build_libtuntap -S libtuntap
 $ cmake --build build_libtuntap
 $ cmake --install build_libtuntap --prefix /usr
