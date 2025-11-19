@@ -18,7 +18,7 @@ project(
         'b_ndebug=if-release',
         'b_pie=true'
     ],
-    meson_version: '>=1.5.0'
+    meson_version: '>=1.3.2'
 )
 
 cpp_compiler = meson.get_compiler('cpp')
@@ -118,19 +118,6 @@ if cpp_compiler.has_header('linux/landlock.h')
             add_project_arguments('-D' + macro, language: 'cpp')
         endif
     endforeach
-
-    cpp_compiler.compiles(
-        '''
-            #include <linux/landlock.h>
-            struct landlock_ruleset_attr attr = {
-                .handled_access_fs = 0,
-                .handled_access_net = 0,
-                .scoped = 0
-            };
-        ''',
-        name: 'Landlock supports scoped access control',
-        required: true
-    )
 endif
 
 libtins_dep = dependency('libtins', include_type: 'system')
