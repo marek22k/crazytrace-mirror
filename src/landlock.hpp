@@ -19,7 +19,7 @@ inline int landlock_create_ruleset(const struct landlock_ruleset_attr * attr,
                                    size_t size,
                                    uint32_t flags)
 {
-    return syscall(SYS_landlock_create_ruleset, attr, size, flags);
+    return static_cast<int>(syscall(SYS_landlock_create_ruleset, attr, size, flags));
 }
 
     #endif
@@ -33,8 +33,8 @@ inline int landlock_add_rule(int ruleset_fd,
                              const void * rule_attr,
                              uint32_t flags)
 {
-    return syscall(
-        SYS_landlock_add_rule, ruleset_fd, rule_type, rule_attr, flags);
+    return static_cast<int>(syscall(
+        SYS_landlock_add_rule, ruleset_fd, rule_type, rule_attr, flags));
 }
 
     #endif
@@ -45,7 +45,7 @@ inline int landlock_add_rule(int ruleset_fd,
 
 inline int landlock_restrict_self(int ruleset_fd, uint32_t flags)
 {
-    return syscall(SYS_landlock_restrict_self, ruleset_fd, flags);
+    return static_cast<int>(syscall(SYS_landlock_restrict_self, ruleset_fd, flags));
 }
 
     #endif
