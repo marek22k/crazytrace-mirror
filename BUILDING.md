@@ -15,6 +15,11 @@ The libraries used are listed in the README. To install them on Debian, the foll
 $ sudo apt-get --yes install build-essential git meson ninja-build libboost1.88-all-dev libyaml-cpp-dev libtins-dev
 ```
 
+The following packages are required for the additional security features of crazytrace:
+```
+$ sudo apt-get --yes install libseccomp-dev libcap-ng-dev
+```
+
 The following packages are required to analyze, lint and format the code:
 ```
 $ sudo apt-get --yes install clang-tidy clang-format cppcheck flawfinder
