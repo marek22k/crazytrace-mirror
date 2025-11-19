@@ -11,23 +11,23 @@
     #include <cstdint>
     #include <linux/landlock.h>
 
-    #ifdef NO_LANDLOCK_CREATE_RULESET
+    #if defined(NO_LANDLOCK_CREATE_RULESET) || \
+        defined(NO_LANDLOCK_ADD_RULE) || defined(NO_LANDLOCK_RESTRICT_SELF)
+
         #include <unistd.h>
         #include <sys/syscall.h>
 
+        #ifdef NO_LANDLOCK_CREATE_RULESET
 inline int landlock_create_ruleset(const struct landlock_ruleset_attr * attr,
                                    size_t size,
                                    uint32_t flags)
 {
-    return static_cast<int>(syscall(SYS_landlock_create_ruleset, attr, size, flags));
+    return static_cast<int>(
+        syscall(SYS_landlock_create_ruleset, attr, size, flags));
 }
+        #endif
 
-    #endif
-
-    #ifdef NO_LANDLOCK_ADD_RULE
-        #include <unistd.h>
-        #include <sys/syscall.h>
-
+        #ifdef NO_LANDLOCK_ADD_RULE
 inline int landlock_add_rule(int ruleset_fd,
                              enum landlock_rule_type rule_type,
                              const void * rule_attr,
@@ -36,17 +36,15 @@ inline int landlock_add_rule(int ruleset_fd,
     return static_cast<int>(syscall(
         SYS_landlock_add_rule, ruleset_fd, rule_type, rule_attr, flags));
 }
+        #endif
 
-    #endif
-
-    #ifdef NO_LANDLOCK_RESTRICT_SELF
-        #include <unistd.h>
-        #include <sys/syscall.h>
-
+        #ifdef NO_LANDLOCK_RESTRICT_SELF
 inline int landlock_restrict_self(int ruleset_fd, uint32_t flags)
 {
-    return static_cast<int>(syscall(SYS_landlock_restrict_self, ruleset_fd, flags));
+    return static_cast<int>(
+        syscall(SYS_landlock_restrict_self, ruleset_fd, flags));
 }
+        #endif
 
     #endif
 

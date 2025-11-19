@@ -5,7 +5,7 @@
 project(
     'crazytrace',
     'cpp',
-    version: '1.0.3',
+    version: '1.0.5',
     license: ['GPL-3.0-or-later'],
     default_options: [
         'buildtype=release',
@@ -17,7 +17,8 @@ project(
         'b_lto=true',
         'b_ndebug=if-release',
         'b_pie=true'
-    ]
+    ],
+    meson_version: '>=1.5.0'
 )
 
 cpp_compiler = meson.get_compiler('cpp')
@@ -100,24 +101,36 @@ endif
 
 if cpp_compiler.has_header('linux/landlock.h')
     add_project_arguments('-DHAVE_LANDLOCK', language: 'cpp')
-    if not cpp_compiler.has_function('landlock_create_ruleset', prefix: '#include <linux/landlock.h>')
-        if not cpp_compiler.has_header('sys/syscall.h')
-            error('No landlock_create_ruleset function, need sys/syscall.h header.')
+
+    landlock_functions = [
+        'landlock_create_ruleset',
+        'landlock_add_rule',
+        'landlock_restrict_self',
+    ]
+
+    foreach function : landlock_functions
+        if not cpp_compiler.has_function(function, prefix: '#include <linux/landlock.h>')
+            if not cpp_compiler.has_header('sys/syscall.h')
+                error('Missing function ' + function + ' and no sys/syscall.h available.')
+            endif
+
+            macro = 'NO_' + function.to_upper()
+            add_project_arguments('-D' + macro, language: 'cpp')
         endif
-        add_project_arguments('-DNO_LANDLOCK_CREATE_RULESET', language: 'cpp')
-    endif
-    if not cpp_compiler.has_function('landlock_add_rule', prefix: '#include <linux/landlock.h>')
-        if not cpp_compiler.has_header('sys/syscall.h')
-            error('No landlock_add_rule function, need sys/syscall.h header.')
-        endif
-        add_project_arguments('-DNO_LANDLOCK_ADD_RULE', language: 'cpp')
-    endif
-    if not cpp_compiler.has_function('landlock_restrict_self', prefix: '#include <linux/landlock.h>')
-        if not cpp_compiler.has_header('sys/syscall.h')
-            error('No landlock_restrict_self function, need sys/syscall.h header.')
-        endif
-        add_project_arguments('-DNO_LANDLOCK_RESTRICT_SELF', language: 'cpp')
-    endif
+    endforeach
+
+    cpp_compiler.compiles(
+        '''
+            #include <linux/landlock.h>
+            struct landlock_ruleset_attr attr = {
+                .handled_access_fs = 0,
+                .handled_access_net = 0,
+                .scoped = 0
+            };
+        ''',
+        name: 'Landlock supports scoped access control',
+        required: true
+    )
 endif
 
 libtins_dep = dependency('libtins', include_type: 'system')
