@@ -9,13 +9,11 @@
     #include <linux/landlock.h>
 
 LandlockRuleset::LandlockRuleset(uint64_t handled_access_fr,
-                                 uint64_t handled_access_net,
-                                 uint64_t scoped)
+                                 uint64_t handled_access_net)
 {
     const struct landlock_ruleset_attr attr = {
         .handled_access_fs = handled_access_fr,
-        .handled_access_net = handled_access_net,
-        .scoped = scoped};
+        .handled_access_net = handled_access_net};
     this->ruleset = landlock_create_ruleset(&attr, sizeof(attr), 0);
     if (this->ruleset == -1)
         throw std::runtime_error("Failed to create landlock ruleset.");

@@ -54,8 +54,7 @@ class LandlockRuleset
 {
     public:
         explicit LandlockRuleset(uint64_t handled_access_fr,
-                                 uint64_t handled_access_net,
-                                 uint64_t scoped);
+                                 uint64_t handled_access_net);
         void add_path_beneath_rule(uint64_t allowed_access,
                                    int32_t parent_fd) const;
         void restrict_self() const;
