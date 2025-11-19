@@ -106,9 +106,11 @@ int main(int argc, char * argv[])
 #endif
 
 #ifdef HAVE_LANDLOCK
-        BOOST_LOG_TRIVIAL(info) << "landlock: true";
+        BOOST_LOG_TRIVIAL(info) << "Landlock: true";
+        BOOST_LOG_TRIVIAL(debug)
+            << "Landlock ABI version: " << LandlockRuleset::abi_version();
 #else
-        BOOST_LOG_TRIVIAL(info) << "landlock: false";
+        BOOST_LOG_TRIVIAL(info) << "Landlock: false";
 #endif
 
         const std::shared_ptr<NodeContainer> nodecontainer =

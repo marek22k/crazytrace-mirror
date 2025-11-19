@@ -60,6 +60,8 @@ class LandlockRuleset
                                    int32_t parent_fd) const;
         void restrict_self() const;
 
+        [[nodiscard]] static int abi_version() noexcept;
+
     private:
         int ruleset;
 };
