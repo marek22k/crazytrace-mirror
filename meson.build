@@ -224,7 +224,7 @@ endif
 if get_option('install_apparmor_profile')
     install_data(
         'apparmor/usr.bin.crazytrace',
-        install_dir: 'etc/apparmor.d'
+        install_dir: '/etc/apparmor.d'
     )
 endif
 
