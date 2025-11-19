@@ -27,6 +27,7 @@ sources = files(
     'src/capability_managment.cpp',
     'src/configuration.cpp',
     'src/crazytrace.cpp',
+    'src/landlock.cpp',
     'src/loglevel.cpp',
     'src/postup_commands.cpp',
     'src/nodecontainer.cpp',
@@ -42,6 +43,7 @@ headers = files(
     'src/configuration.hpp',
     'src/crazytrace.hpp',
     'src/deviceclient.hpp',
+    'src/landlock.hpp',
     'src/loglevel.hpp',
     'src/postup_commands.hpp',
     'src/nodecontainer.hpp',
@@ -94,6 +96,28 @@ endif
 seccomp_dep = dependency('libseccomp', required: false)
 if seccomp_dep.found() and cpp_compiler.has_header('sys/syscall.h')
     add_project_arguments('-DHAVE_SECCOMP', language: 'cpp')
+endif
+
+if cpp_compiler.has_header('linux/landlock.h')
+    add_project_arguments('-DHAVE_LANDLOCK', language: 'cpp')
+    if not cpp_compiler.has_function('landlock_create_ruleset', prefix: '#include <linux/landlock.h>')
+        if not cpp_compiler.has_header('sys/syscall.h')
+            error('No landlock_create_ruleset function, need sys/syscall.h header.')
+        endif
+        add_project_arguments('-DNO_LANDLOCK_CREATE_RULESET', language: 'cpp')
+    endif
+    if not cpp_compiler.has_function('landlock_add_rule', prefix: '#include <linux/landlock.h>')
+        if not cpp_compiler.has_header('sys/syscall.h')
+            error('No landlock_add_rule function, need sys/syscall.h header.')
+        endif
+        add_project_arguments('-DNO_LANDLOCK_ADD_RULE', language: 'cpp')
+    endif
+    if not cpp_compiler.has_function('landlock_restrict_self', prefix: '#include <linux/landlock.h>')
+        if not cpp_compiler.has_header('sys/syscall.h')
+            error('No landlock_restrict_self function, need sys/syscall.h header.')
+        endif
+        add_project_arguments('-DNO_LANDLOCK_RESTRICT_SELF', language: 'cpp')
+    endif
 endif
 
 libtins_dep = dependency('libtins', include_type: 'system')

@@ -1,0 +1,29 @@
+// SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#include "landlock.hpp"
+
+#ifdef HAVE_LANDLOCK
+
+    #include <linux/landlock.h>
+
+LandlockRuleset::LandlockRuleset(uint64_t handled_access_fr,
+                                 uint64_t handled_access_net,
+                                 uint64_t scoped)
+{
+    const struct landlock_ruleset_attr attr = {
+        .handled_access_fs = handled_access_fr,
+        .handled_access_net = handled_access_net,
+        .scoped = scoped};
+    this->ruleset = landlock_create_ruleset(&attr, sizeof(attr), 0);
+    if (this->ruleset == -1)
+        throw std::runtime_error("Failed to create landlock ruleset.");
+}
+
+void LandlockRuleset::restrict_self()
+{
+    landlock_restrict_self(this->ruleset, 0);
+}
+
+#endif

@@ -15,6 +15,7 @@
 #include "capability_managment.hpp"
 #include "configuration.hpp"
 #include "crazytrace.hpp"
+#include "landlock.hpp"
 #include "nodecontainer.hpp"
 #include "seccomp.hpp"
 #include "tun_tap.hpp"
@@ -27,6 +28,18 @@ int main(int argc, char * argv[])
         CapabilityManagment::check_for_capabilites();
         CapabilityManagment::lock();
         CapabilityManagment::drop_capabilies();
+#endif
+#ifdef HAVE_LANDLOCK
+        LandlockRuleset llruleset(
+            LANDLOCK_ACCESS_FS_READ_DIR | LANDLOCK_ACCESS_FS_REMOVE_DIR |
+                LANDLOCK_ACCESS_FS_REMOVE_FILE | LANDLOCK_ACCESS_FS_MAKE_DIR |
+                LANDLOCK_ACCESS_FS_MAKE_REG | LANDLOCK_ACCESS_FS_MAKE_SOCK |
+                LANDLOCK_ACCESS_FS_MAKE_FIFO | LANDLOCK_ACCESS_FS_MAKE_BLOCK |
+                LANDLOCK_ACCESS_FS_MAKE_SYM | LANDLOCK_ACCESS_FS_REFER,
+            LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP,
+            LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET);
+        llruleset.restrict_self();
+        BOOST_LOG_TRIVIAL(debug) << "activate landlock";
 #endif
 #ifdef HAVE_SECCOMP
         SeccompFilterContext seccomp_context(SCMP_ACT_ALLOW);
@@ -49,7 +62,6 @@ int main(int argc, char * argv[])
         seccomp_context.kill_reboot();
         seccomp_context.kill_resources();
         seccomp_context.kill_setuid();
-        seccomp_context.kill_signal();
         seccomp_context.kill_swap();
         seccomp_context.kill_sync();
         seccomp_context.kill_system_service();
@@ -66,19 +78,38 @@ int main(int argc, char * argv[])
         const Configuration config(filename);
         config.get_log_level().apply();
 
-        BOOST_LOG_TRIVIAL(info) << "libtuntap version: " << TUNTAP_VERSION_MAJOR
-                                << "." << TUNTAP_VERSION_MINOR;
+        BOOST_LOG_TRIVIAL(info)
+            << "libtuntap version (compile time): " << TUNTAP_VERSION_MAJOR
+            << "." << TUNTAP_VERSION_MINOR;
         const int version = ::tuntap_version();
         const int major = (version >> 8) & 0xFF;
         const int minor = version & 0xFF;
         BOOST_LOG_TRIVIAL(info)
-            << "libtuntap version: " << major << "." << minor;
+            << "libtuntap version (runtime): " << major << "." << minor;
 
 #if defined(TINS_VERSION_MAJOR) && defined(TINS_VERSION_MINOR) && \
     defined(TINS_VERSION_PATCH)
         BOOST_LOG_TRIVIAL(info)
             << "libtins version: " << TINS_VERSION_MAJOR << "."
             << TINS_VERSION_MINOR << "." << TINS_VERSION_PATCH;
+#endif
+
+#ifdef HAVE_LIBCAPNG
+        BOOST_LOG_TRIVIAL(info) << "libcapng: true";
+#else
+        BOOST_LOG_TRIVIAL(info) << "libcapng: false";
+#endif
+
+#ifdef HAVE_SECCOMP
+        BOOST_LOG_TRIVIAL(info) << "seccomp: true";
+#else
+        BOOST_LOG_TRIVIAL(info) << "seccomp: false";
+#endif
+
+#ifdef HAVE_LANDLOCK
+        BOOST_LOG_TRIVIAL(info) << "landlock: true";
+#else
+        BOOST_LOG_TRIVIAL(info) << "landlock: false";
 #endif
 
         const std::shared_ptr<NodeContainer> nodecontainer =

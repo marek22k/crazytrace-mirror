@@ -35,7 +35,6 @@ class SeccompFilterContext
         void kill_reboot();
         void kill_resources();
         void kill_setuid();
-        void kill_signal();
         void kill_swap();
         void kill_sync();
         void kill_system_service();

@@ -677,51 +677,6 @@ void SeccompFilterContext::kill_setuid()
     #endif
 }
 
-void SeccompFilterContext::kill_signal()
-{
-    // #lizard forgives
-
-    #ifdef SYS_rt_sigaction
-    this->kill(SCMP_SYS(rt_sigaction)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_rt_sigpending
-    this->kill(SCMP_SYS(rt_sigpending)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_rt_sigprocmask
-    this->kill(SCMP_SYS(rt_sigprocmask)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_rt_sigsuspend
-    this->kill(SCMP_SYS(rt_sigsuspend)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_rt_sigtimedwait
-    this->kill(SCMP_SYS(rt_sigtimedwait)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_sigaction
-    this->kill(SCMP_SYS(sigaction)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_sigaltstack
-    this->kill(SCMP_SYS(sigaltstack)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_signal
-    this->kill(SCMP_SYS(signal)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_signalfd
-    this->kill(SCMP_SYS(signalfd)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_signalfd4
-    this->kill(SCMP_SYS(signalfd4)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_sigpending
-    this->kill(SCMP_SYS(sigpending)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_sigprocmask
-    this->kill(SCMP_SYS(sigprocmask)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_sigsuspend
-    this->kill(SCMP_SYS(sigsuspend)); // flawfinder: ignore
-    #endif
-}
-
 void SeccompFilterContext::kill_swap()
 {
     // #lizard forgives
@@ -765,17 +720,8 @@ void SeccompFilterContext::kill_system_service()
 {
     // #lizard forgives
 
-    // without ioctl
+    // without ioctl, capget, capset, getrandom, mprotect, brk
 
-    #ifdef SYS_brk
-    this->kill(SCMP_SYS(brk)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_capget
-    this->kill(SCMP_SYS(capget)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_capset
-    this->kill(SCMP_SYS(capset)); // flawfinder: ignore
-    #endif
     #ifdef SYS_copy_file_range
     this->kill(SCMP_SYS(copy_file_range)); // flawfinder: ignore
     #endif
@@ -797,9 +743,6 @@ void SeccompFilterContext::kill_system_service()
     #ifdef SYS_getpriority
     this->kill(SCMP_SYS(getpriority)); // flawfinder: ignore
     #endif
-    #ifdef SYS_getrandom
-    this->kill(SCMP_SYS(getrandom)); // flawfinder: ignore
-    #endif
     #ifdef SYS_ioprio_get
     this->kill(SCMP_SYS(ioprio_get)); // flawfinder: ignore
     #endif
@@ -808,9 +751,6 @@ void SeccompFilterContext::kill_system_service()
     #endif
     #ifdef SYS_madvise
     this->kill(SCMP_SYS(madvise)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_mprotect
-    this->kill(SCMP_SYS(mprotect)); // flawfinder: ignore
     #endif
     #ifdef SYS_mremap
     this->kill(SCMP_SYS(mremap)); // flawfinder: ignore
