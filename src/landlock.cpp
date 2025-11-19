@@ -12,6 +12,10 @@ LandlockRuleset::LandlockRuleset(uint64_t handled_access_fr,
                                  uint64_t handled_access_net,
                                  uint64_t scoped)
 {
+    if (landlock_create_ruleset(nullptr, 0, LANDLOCK_CREATE_RULESET_VERSION) <
+        6)
+        throw std::runtime_error("Landlock is too old.");
+
     const struct landlock_ruleset_attr attr = {
         .handled_access_fs = handled_access_fr,
         .handled_access_net = handled_access_net,
