@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+# SPDX-FileCopyrightText: Copyright (C) 2024-2025 Marek Küthe <m.k@mk16.de>
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -196,7 +196,7 @@ if reuse.found()
         'annotate',
         '--copyright', 'Marek Küthe <m.k@mk16.de>',
         '--license', 'GPL-3.0-or-later',
-        '--year', '2024',
+        '--year', '2025',
         '--copyright-prefix', 'spdx-string-c',
         '--merge-copyrights',
         '--recursive',
