@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+// SPDX-FileCopyrightText: Copyright (C) 2024-2025 Marek Küthe <m.k@mk16.de>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -158,6 +158,8 @@ int main(int argc, char * argv[])
                 LANDLOCK_ACCESS_FS_MAKE_BLOCK | LANDLOCK_ACCESS_FS_MAKE_SYM |
                 LANDLOCK_ACCESS_FS_REFER,
             LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP);
+        // see also
+        // https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
         landlock_ruleset_loop.add_path_beneath_rule(
             LANDLOCK_ACCESS_FS_WRITE_FILE | LANDLOCK_ACCESS_FS_READ_FILE,
             dev.native_handler());

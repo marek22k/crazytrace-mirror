@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: Copyright (C) 2024 Marek Küthe <m.k@mk16.de>
+SPDX-FileCopyrightText: Copyright (C) 2024-2025 Marek Küthe <m.k@mk16.de>
 
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
@@ -13,6 +13,11 @@ crazytrace uses meson as a build system. However, there is also a Makefile that 
 The libraries used are listed in the README. To install them on Debian, the following command can be used:
 ```
 $ sudo apt-get --yes install build-essential git meson ninja-build libboost1.88-all-dev libyaml-cpp-dev libtins-dev
+```
+
+The following packages are required for the additional security features of crazytrace:
+```
+$ sudo apt-get --yes install libseccomp-dev libcap-ng-dev
 ```
 
 The following packages are required to analyze, lint and format the code:
@@ -37,7 +42,7 @@ $ sudo apt-get --yes install build-essential git cmake
 
 After that, libtuntap can be built like a normal cmake project:
 ```
-$ git clone https://github.com/LaKabane/libtuntap.git
+$ git clone --depth 1 https://github.com/LaKabane/libtuntap.git
 $ cmake -DCMAKE_BUILD_TYPE=Release -B build_libtuntap -S libtuntap
 $ cmake --build build_libtuntap
 $ cmake --install build_libtuntap --prefix /usr
