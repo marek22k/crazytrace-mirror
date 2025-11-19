@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <boost/asio.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/version.hpp>
 #include <unistd.h>
 #include "capability_managment.hpp"
 #include "configuration.hpp"
@@ -116,6 +117,11 @@ int main(int argc, char * argv[])
 #else
         BOOST_LOG_TRIVIAL(info) << "Landlock: false";
 #endif
+
+        BOOST_LOG_TRIVIAL(info)
+            << "Boost version (compile time): " << (BOOST_VERSION / 100'000)
+            << "." << (BOOST_VERSION / 100 % 1000) << "."
+            << (BOOST_VERSION % 100);
 
         const std::shared_ptr<NodeContainer> nodecontainer =
             config.get_node_container();
