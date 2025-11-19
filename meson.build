@@ -92,7 +92,7 @@ if libcapng_dep.found()
 endif
 
 seccomp_dep = dependency('libseccomp', required: false)
-if seccomp_dep.found()
+if seccomp_dep.found() and cpp_compiler.has_header('sys/syscall.h')
     add_project_arguments('-DHAVE_SECCOMP', language: 'cpp')
 endif
 

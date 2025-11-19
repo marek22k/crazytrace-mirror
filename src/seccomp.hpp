@@ -8,6 +8,7 @@
 #ifdef HAVE_SECCOMP
 
     #include <stdexcept>
+    #include <sys/syscall.h>
     #include <seccomp.h>
 
 class SeccompFilterContext
