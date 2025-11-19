@@ -119,6 +119,7 @@ if cpp_compiler.has_header('linux/landlock.h')
         endif
     endforeach
 
+    # see also https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
     cpp_compiler.compiles(
         '''
             #include <linux/landlock.h>
