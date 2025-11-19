@@ -30,17 +30,18 @@ int main(int argc, char * argv[])
         CapabilityManagment::drop_capabilies();
 #endif
 #ifdef HAVE_LANDLOCK
-        LandlockRuleset llruleset(
+        LandlockRuleset ll_init_ruleset(
             LANDLOCK_ACCESS_FS_READ_DIR | LANDLOCK_ACCESS_FS_REMOVE_DIR |
-                LANDLOCK_ACCESS_FS_REMOVE_FILE | LANDLOCK_ACCESS_FS_MAKE_DIR |
-                LANDLOCK_ACCESS_FS_MAKE_REG | LANDLOCK_ACCESS_FS_MAKE_SOCK |
-                LANDLOCK_ACCESS_FS_MAKE_FIFO | LANDLOCK_ACCESS_FS_MAKE_BLOCK |
-                LANDLOCK_ACCESS_FS_MAKE_SYM | LANDLOCK_ACCESS_FS_REFER,
+                LANDLOCK_ACCESS_FS_REMOVE_FILE | LANDLOCK_ACCESS_FS_MAKE_CHAR |
+                LANDLOCK_ACCESS_FS_MAKE_DIR | LANDLOCK_ACCESS_FS_MAKE_REG |
+                LANDLOCK_ACCESS_FS_MAKE_SOCK | LANDLOCK_ACCESS_FS_MAKE_FIFO |
+                LANDLOCK_ACCESS_FS_MAKE_BLOCK | LANDLOCK_ACCESS_FS_MAKE_SYM |
+                LANDLOCK_ACCESS_FS_REFER,
             LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP,
             LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET);
-        llruleset.restrict_self();
-        BOOST_LOG_TRIVIAL(debug) << "activate landlock";
+        ll_init_ruleset.restrict_self();
 #endif
+
 #ifdef HAVE_SECCOMP
         SeccompFilterContext seccomp_context(SCMP_ACT_ALLOW);
         // see also
@@ -66,8 +67,6 @@ int main(int argc, char * argv[])
         seccomp_context.kill_sync();
         seccomp_context.kill_system_service();
         seccomp_context.load();
-
-        seccomp_context.release();
 #endif
 
         const auto args = std::span(argv, static_cast<std::size_t>(argc));
@@ -136,6 +135,29 @@ int main(int argc, char * argv[])
 
 #ifdef HAVE_LIBCAPNG
         CapabilityManagment::drop_all_capabilies();
+#endif
+#ifdef HAVE_LANDLOCK
+        LandlockRuleset ll_loop_ruleset(
+            LANDLOCK_ACCESS_FS_EXECUTE | LANDLOCK_ACCESS_FS_WRITE_FILE |
+                LANDLOCK_ACCESS_FS_READ_FILE | LANDLOCK_ACCESS_FS_TRUNCATE |
+                LANDLOCK_ACCESS_FS_READ_DIR | LANDLOCK_ACCESS_FS_REMOVE_DIR |
+                LANDLOCK_ACCESS_FS_REMOVE_FILE | LANDLOCK_ACCESS_FS_MAKE_CHAR |
+                LANDLOCK_ACCESS_FS_MAKE_DIR | LANDLOCK_ACCESS_FS_MAKE_REG |
+                LANDLOCK_ACCESS_FS_MAKE_SOCK | LANDLOCK_ACCESS_FS_MAKE_FIFO |
+                LANDLOCK_ACCESS_FS_MAKE_BLOCK | LANDLOCK_ACCESS_FS_MAKE_SYM |
+                LANDLOCK_ACCESS_FS_REFER | LANDLOCK_ACCESS_FS_IOCTL_DEV,
+            LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP,
+            LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET | LANDLOCK_SCOPE_SIGNAL);
+        ll_loop_ruleset.add_path_beneath_rule(LANDLOCK_ACCESS_FS_WRITE_FILE |
+                                                  LANDLOCK_ACCESS_FS_READ_FILE |
+                                                  LANDLOCK_ACCESS_FS_IOCTL_DEV,
+                                              dev.native_handler());
+        ll_loop_ruleset.restrict_self();
+#endif
+#ifdef HAVE_SECCOMP
+        seccomp_context.kill_signal();
+        seccomp_context.load();
+        seccomp_context.release();
 #endif
 
         const Crazytrace ct(

@@ -677,6 +677,51 @@ void SeccompFilterContext::kill_setuid()
     #endif
 }
 
+void SeccompFilterContext::kill_signal()
+{
+    // #lizard forgives
+
+    #ifdef SYS_rt_sigaction
+    this->kill(SCMP_SYS(rt_sigaction)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_rt_sigpending
+    this->kill(SCMP_SYS(rt_sigpending)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_rt_sigprocmask
+    this->kill(SCMP_SYS(rt_sigprocmask)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_rt_sigsuspend
+    this->kill(SCMP_SYS(rt_sigsuspend)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_rt_sigtimedwait
+    this->kill(SCMP_SYS(rt_sigtimedwait)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_sigaction
+    this->kill(SCMP_SYS(sigaction)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_sigaltstack
+    this->kill(SCMP_SYS(sigaltstack)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_signal
+    this->kill(SCMP_SYS(signal)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_signalfd
+    this->kill(SCMP_SYS(signalfd)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_signalfd4
+    this->kill(SCMP_SYS(signalfd4)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_sigpending
+    this->kill(SCMP_SYS(sigpending)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_sigprocmask
+    this->kill(SCMP_SYS(sigprocmask)); // flawfinder: ignore
+    #endif
+    #ifdef SYS_sigsuspend
+    this->kill(SCMP_SYS(sigsuspend)); // flawfinder: ignore
+    #endif
+}
+
 void SeccompFilterContext::kill_swap()
 {
     // #lizard forgives

@@ -56,7 +56,7 @@ class LandlockRuleset
         explicit LandlockRuleset(uint64_t handled_access_fr,
                                  uint64_t handled_access_net,
                                  uint64_t scoped);
-        void rule_add(uint32_t action, int syscall);
+        void add_path_beneath_rule(uint64_t allowed_access, int32_t parent_fd);
         void restrict_self();
 
     private:
