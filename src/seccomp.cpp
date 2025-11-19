@@ -13,7 +13,7 @@ SeccompFilterContext::SeccompFilterContext(uint32_t def_action) :
         throw std::runtime_error("Failed to initialize seccomp.");
 }
 
-void SeccompFilterContext::rule_add(uint32_t action, int syscall)
+void SeccompFilterContext::rule_add(uint32_t action, int syscall) const
 {
     if (!this->is_useable())
         throw std::runtime_error("seccomp filter context not useable.");
@@ -21,17 +21,17 @@ void SeccompFilterContext::rule_add(uint32_t action, int syscall)
     seccomp_rule_add(this->ctx, action, syscall, 0);
 }
 
-void SeccompFilterContext::allow(int syscall)
+void SeccompFilterContext::allow(int syscall) const
 {
     this->rule_add(SCMP_ACT_ALLOW, syscall);
 }
 
-void SeccompFilterContext::kill(int syscall)
+void SeccompFilterContext::kill(int syscall) const
 {
     this->rule_add(SCMP_ACT_KILL, syscall);
 }
 
-void SeccompFilterContext::kill_chown()
+void SeccompFilterContext::kill_chown() const
 {
     // #lizard forgives
 
@@ -58,7 +58,7 @@ void SeccompFilterContext::kill_chown()
     #endif
 }
 
-void SeccompFilterContext::kill_clock()
+void SeccompFilterContext::kill_clock() const
 {
     // #lizard forgives
 
@@ -79,7 +79,7 @@ void SeccompFilterContext::kill_clock()
     #endif
 }
 
-void SeccompFilterContext::kill_cpu_emulation()
+void SeccompFilterContext::kill_cpu_emulation() const
 {
     // #lizard forgives
 
@@ -100,7 +100,7 @@ void SeccompFilterContext::kill_cpu_emulation()
     #endif
 }
 
-void SeccompFilterContext::kill_debug()
+void SeccompFilterContext::kill_debug() const
 {
     // #lizard forgives
 
@@ -127,7 +127,7 @@ void SeccompFilterContext::kill_debug()
     #endif
 }
 
-void SeccompFilterContext::kill_others()
+void SeccompFilterContext::kill_others() const
 {
     // #lizard forgives
 
@@ -220,7 +220,7 @@ void SeccompFilterContext::kill_others()
     #endif
 }
 
-void SeccompFilterContext::kill_ipc()
+void SeccompFilterContext::kill_ipc() const
 {
     // #lizard forgives
 
@@ -297,7 +297,7 @@ void SeccompFilterContext::kill_ipc()
     #endif
 }
 
-void SeccompFilterContext::kill_keyring()
+void SeccompFilterContext::kill_keyring() const
 {
     // #lizard forgives
 
@@ -312,7 +312,7 @@ void SeccompFilterContext::kill_keyring()
     #endif
 }
 
-void SeccompFilterContext::kill_memlock()
+void SeccompFilterContext::kill_memlock() const
 {
     // #lizard forgives
 
@@ -333,7 +333,7 @@ void SeccompFilterContext::kill_memlock()
     #endif
 }
 
-void SeccompFilterContext::kill_module()
+void SeccompFilterContext::kill_module() const
 {
     // #lizard forgives
 
@@ -348,7 +348,7 @@ void SeccompFilterContext::kill_module()
     #endif
 }
 
-void SeccompFilterContext::kill_mount()
+void SeccompFilterContext::kill_mount() const
 {
     // #lizard forgives
 
@@ -387,7 +387,7 @@ void SeccompFilterContext::kill_mount()
     #endif
 }
 
-void SeccompFilterContext::kill_obsolete()
+void SeccompFilterContext::kill_obsolete() const
 {
     // #lizard forgives
 
@@ -471,7 +471,7 @@ void SeccompFilterContext::kill_obsolete()
     #endif
 }
 
-void SeccompFilterContext::kill_privileged()
+void SeccompFilterContext::kill_privileged() const
 {
     // #lizard forgives
 
@@ -551,7 +551,7 @@ void SeccompFilterContext::kill_privileged()
     #endif
 }
 
-void SeccompFilterContext::kill_rawio()
+void SeccompFilterContext::kill_rawio() const
 {
     // #lizard forgives
 
@@ -578,7 +578,7 @@ void SeccompFilterContext::kill_rawio()
     #endif
 }
 
-void SeccompFilterContext::kill_reboot()
+void SeccompFilterContext::kill_reboot() const
 {
     // #lizard forgives
 
@@ -593,7 +593,7 @@ void SeccompFilterContext::kill_reboot()
     #endif
 }
 
-void SeccompFilterContext::kill_resources()
+void SeccompFilterContext::kill_resources() const
 {
     // #lizard forgives
 
@@ -629,7 +629,7 @@ void SeccompFilterContext::kill_resources()
     #endif
 }
 
-void SeccompFilterContext::kill_setuid()
+void SeccompFilterContext::kill_setuid() const
 {
     // #lizard forgives
 
@@ -677,7 +677,7 @@ void SeccompFilterContext::kill_setuid()
     #endif
 }
 
-void SeccompFilterContext::kill_signal()
+void SeccompFilterContext::kill_signal() const
 {
     // #lizard forgives
 
@@ -722,7 +722,7 @@ void SeccompFilterContext::kill_signal()
     #endif
 }
 
-void SeccompFilterContext::kill_swap()
+void SeccompFilterContext::kill_swap() const
 {
     // #lizard forgives
 
@@ -734,7 +734,7 @@ void SeccompFilterContext::kill_swap()
     #endif
 }
 
-void SeccompFilterContext::kill_sync()
+void SeccompFilterContext::kill_sync() const
 {
     // #lizard forgives
 
@@ -761,7 +761,7 @@ void SeccompFilterContext::kill_sync()
     #endif
 }
 
-void SeccompFilterContext::kill_system_service()
+void SeccompFilterContext::kill_system_service() const
 {
     // #lizard forgives
 
@@ -892,7 +892,7 @@ void SeccompFilterContext::kill_system_service()
     #endif
 }
 
-void SeccompFilterContext::load()
+void SeccompFilterContext::load() const
 {
     if (!this->is_useable())
         throw std::runtime_error("seccomp filter context not useable.");
@@ -901,7 +901,7 @@ void SeccompFilterContext::load()
         throw std::runtime_error("Failed to load seccomp filter.");
 }
 
-void SeccompFilterContext::reset(uint32_t def_action)
+void SeccompFilterContext::reset(uint32_t def_action) const
 {
     if (!this->is_useable())
         throw std::runtime_error("seccomp filter context not useable.");

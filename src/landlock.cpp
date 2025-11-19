@@ -22,18 +22,18 @@ LandlockRuleset::LandlockRuleset(uint64_t handled_access_fr,
 }
 
 void LandlockRuleset::add_path_beneath_rule(uint64_t allowed_access,
-                                            int32_t parent_fd)
+                                            int32_t parent_fd) const
 {
     const struct landlock_path_beneath_attr attr = {
         .allowed_access = allowed_access, .parent_fd = parent_fd};
     if (landlock_add_rule(this->ruleset,
                           LANDLOCK_RULE_PATH_BENEATH,
-                          reinterpret_cast<const void *>(&attr),
+                          static_cast<const void *>(&attr),
                           0) != 0)
         throw std::runtime_error("Failed to add rule.");
 }
 
-void LandlockRuleset::restrict_self()
+void LandlockRuleset::restrict_self() const
 {
     if (landlock_restrict_self(this->ruleset, 0) != 0)
         throw std::runtime_error("Failed to restrict self via landlock.");
