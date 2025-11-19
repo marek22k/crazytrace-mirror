@@ -107,7 +107,7 @@ int main(int argc, char * argv[])
 
 #ifdef HAVE_SECCOMP
         BOOST_LOG_TRIVIAL(info) << "seccomp: true";
-        auto seccomp_ver = seccomp_version();
+        auto * seccomp_ver = seccomp_version();
         BOOST_LOG_TRIVIAL(info)
             << "seccomp version (runtime): " << seccomp_ver->major << "."
             << seccomp_ver->minor << "." << seccomp_ver->micro;
