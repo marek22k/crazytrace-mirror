@@ -11,6 +11,9 @@
 LandlockRuleset::LandlockRuleset(uint64_t handled_access_fr,
                                  uint64_t handled_access_net)
 {
+    if (LandlockRuleset::abi_version() < 6)
+        throw std::runtime_error("Landlock is too old.");
+
     const struct landlock_ruleset_attr attr = {
         .handled_access_fs = handled_access_fr,
         .handled_access_net = handled_access_net};
@@ -35,6 +38,11 @@ void LandlockRuleset::restrict_self() const
 {
     if (landlock_restrict_self(this->ruleset, 0) != 0)
         throw std::runtime_error("Failed to restrict self via landlock.");
+}
+
+[[nodiscard]] int LandlockRuleset::abi_version() noexcept
+{
+    return landlock_create_ruleset(nullptr, 0, LANDLOCK_CREATE_RULESET_VERSION);
 }
 
 #endif
