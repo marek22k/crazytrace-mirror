@@ -14,6 +14,6 @@ steps:
     pull: true
     commands:
       - apt-get update
-      - apt-get --yes install build-essential meson ninja-build libboost1.88-all-dev libyaml-cpp-dev libtins-dev libseccomp-dev libcap-ng-dev clang-tidy clang-format cppcheck flawfinder debhelper debhelper-compat config-package-dev
+      - apt-get --yes install build-essential meson ninja-build libboost1.88-all-dev libyaml-cpp-dev libtins-dev libseccomp-dev libcap-ng-dev clang-tidy cppcheck flawfinder debhelper debhelper-compat config-package-dev
       - export PATH="$HOME/.local/bin:$PATH"
       - make debian
