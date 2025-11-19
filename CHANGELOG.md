@@ -10,6 +10,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 - Adding capability management on Linux for improved security
 - Add a seccomp filter to prevent unwanted syscalls
+- Add landlock to restrict access rights
 
 ## Release 1.0.4
 

@@ -91,17 +91,21 @@ IncludeCategories:
     Priority:        61
   - Regex:           '^<yaml-cpp/.*>'
     Priority:        62
-  - Regex:           '^<cap-ng.h>'
+  - Regex:           '^<cap-ng\.h>'
     Priority:        66
-  - Regex:           '^<unistd.h>'
+  - Regex:           '^<seccomp\.h>'
+    Priority:        66
+  - Regex:           '^<unistd\.h>'
     Priority:        67
-  - Regex:           '^<seccomp.h>'
-    Priority:        70
+  - Regex:           '^<linux/.*>'
+    Priority:        69
+  - Regex:           '^<sys/.*>'
+    Priority:        69
   - Regex:           '^<io.h>'
     Priority:        71
-  - Regex:           '"[^"]+\\.hpp"'
+  - Regex:           '"[^"]+\.hpp"'
     Priority:        80
-  - Regex:           '"[^"]+\\.h"'
+  - Regex:           '"[^"]+\.h"'
     Priority:        81
   - Regex:           '.*'
     Priority:        90
