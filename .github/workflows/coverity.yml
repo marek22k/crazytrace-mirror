@@ -21,6 +21,9 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=Release -B build -S "libtuntap"
         cmake --build build
         sudo cmake --install build --prefix /usr
+    - name: Configure project
+      with:
+        - make setup
     - uses: vapier/coverity-scan-action@v1
       with:
         project: 'crazytrace'
