@@ -89,7 +89,7 @@ int main(int argc, char * argv[])
 #if defined(TINS_VERSION_MAJOR) && defined(TINS_VERSION_MINOR) && \
     defined(TINS_VERSION_PATCH)
         BOOST_LOG_TRIVIAL(info)
-            << "libtins version: " << TINS_VERSION_MAJOR << "."
+            << "libtins version (compile time): " << TINS_VERSION_MAJOR << "."
             << TINS_VERSION_MINOR << "." << TINS_VERSION_PATCH;
 #endif
 
@@ -101,13 +101,17 @@ int main(int argc, char * argv[])
 
 #ifdef HAVE_SECCOMP
         BOOST_LOG_TRIVIAL(info) << "seccomp: true";
+        auto seccomp_ver = seccomp_version();
+        BOOST_LOG_TRIVIAL(info)
+            << "seccomp version (runtime): " << seccomp_ver->major << "."
+            << seccomp_ver->minor << "." << seccomp_ver->micro;
 #else
         BOOST_LOG_TRIVIAL(info) << "seccomp: false";
 #endif
 
 #ifdef HAVE_LANDLOCK
         BOOST_LOG_TRIVIAL(info) << "Landlock: true";
-        BOOST_LOG_TRIVIAL(debug)
+        BOOST_LOG_TRIVIAL(info)
             << "Landlock ABI version: " << LandlockRuleset::abi_version();
 #else
         BOOST_LOG_TRIVIAL(info) << "Landlock: false";
