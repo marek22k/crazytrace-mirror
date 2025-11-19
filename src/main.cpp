@@ -93,6 +93,11 @@ int main(int argc, char * argv[])
             << TINS_VERSION_MINOR << "." << TINS_VERSION_PATCH;
 #endif
 
+        BOOST_LOG_TRIVIAL(info)
+            << "Boost version (compile time): " << (BOOST_VERSION / 100'000)
+            << "." << (BOOST_VERSION / 100 % 1000) << "."
+            << (BOOST_VERSION % 100);
+
 #ifdef HAVE_LIBCAPNG
         BOOST_LOG_TRIVIAL(info) << "libcapng: true";
 #else
@@ -101,7 +106,7 @@ int main(int argc, char * argv[])
 
 #ifdef HAVE_SECCOMP
         BOOST_LOG_TRIVIAL(info) << "seccomp: true";
-        auto seccomp_ver = seccomp_version();
+        const auto * seccomp_ver = seccomp_version();
         BOOST_LOG_TRIVIAL(info)
             << "seccomp version (runtime): " << seccomp_ver->major << "."
             << seccomp_ver->minor << "." << seccomp_ver->micro;
@@ -116,11 +121,6 @@ int main(int argc, char * argv[])
 #else
         BOOST_LOG_TRIVIAL(info) << "Landlock: false";
 #endif
-
-        BOOST_LOG_TRIVIAL(info)
-            << "Boost version (compile time): " << (BOOST_VERSION / 100'000)
-            << "." << (BOOST_VERSION / 100 % 1000) << "."
-            << (BOOST_VERSION % 100);
 
         const std::shared_ptr<NodeContainer> nodecontainer =
             config.get_node_container();
