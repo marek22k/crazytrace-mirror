@@ -837,12 +837,10 @@ void SeccompFilterContext::kill_system_service()
     this->kill(SCMP_SYS(remap_file_pages)); // flawfinder: ignore
     #endif
     #ifdef SYS_sched_get_priority_max
-    this->kill(
-        SCMP_SYS(sched_get_priority_max)); // flawfinder: ignore
+    this->kill(SCMP_SYS(sched_get_priority_max)); // flawfinder: ignore
     #endif
     #ifdef SYS_sched_get_priority_min
-    this->kill(
-        SCMP_SYS(sched_get_priority_min)); // flawfinder: ignore
+    this->kill(SCMP_SYS(sched_get_priority_min)); // flawfinder: ignore
     #endif
     #ifdef SYS_sched_getaffinity
     this->kill(SCMP_SYS(sched_getaffinity)); // flawfinder: ignore
