@@ -6,6 +6,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## Release 1.0.6
+
+- Improvement of landlock sandboxing
+- Validation of the return value of the POSIX dup function
+
 ## Release 1.0.5
 
 - Adding capability management on Linux for improved security
