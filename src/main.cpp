@@ -138,6 +138,10 @@ int main(int argc, char * argv[])
         BOOST_LOG_TRIVIAL(debug) << "Set the TUN device up.";
         dev.up();
 
+        int tap_dev_fd = ::dup(dev.native_handler());
+        if (tap_dev_fd < 0)
+            throw std::runtime_error("Failed to duplicate file descriptor.");
+
         boost::asio::io_context io;
 #ifdef BOOST_PROCESS_V1
         config.get_postup_commands().execute_commands();
@@ -160,12 +164,7 @@ int main(int argc, char * argv[])
                 LANDLOCK_ACCESS_FS_REFER | LANDLOCK_ACCESS_FS_IOCTL_DEV,
             LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP,
             LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET | LANDLOCK_SCOPE_SIGNAL);
-        // see also
-        // https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
-        landlock_ruleset_loop.add_path_beneath_rule(
-            LANDLOCK_ACCESS_FS_WRITE_FILE | LANDLOCK_ACCESS_FS_READ_FILE |
-                LANDLOCK_ACCESS_FS_IOCTL_DEV,
-            dev.native_handler());
+        // see also https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
         landlock_ruleset_loop.restrict_self();
 #endif
 #ifdef HAVE_SECCOMP
@@ -175,7 +174,7 @@ int main(int argc, char * argv[])
 #endif
 
         const Crazytrace ct(
-            io.get_executor(), ::dup(dev.native_handler()), nodecontainer);
+            io.get_executor(), tap_dev_fd, nodecontainer);
 
         io.run();
     }
