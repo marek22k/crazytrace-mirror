@@ -132,6 +132,64 @@ if cpp_compiler.has_header('linux/landlock.h')
         name: 'Landlock supports scoped access control',
         required: true
     )
+
+    cpp_compiler.compiles(
+        '''
+            #include <linux/landlock.h>
+            struct landlock_path_beneath_attr attr = {
+                .allowed_access = 0,
+                .parent_fd = 0
+            };
+        ''',
+        name: 'Landlock has landlock_path_beneath_attr',
+        required: true
+    )
+
+    cpp_compiler.compiles(
+        '''
+            #include <linux/landlock.h>
+            struct landlock_net_port_attr attr = {
+                .allowed_access = 0,
+                .port = 0
+            };
+        ''',
+        name: 'Landlock has landlock_net_port_attr',
+        required: true
+    )
+
+    landlock_macros = [
+        'LANDLOCK_RULE_PATH_BENEATH',
+        'LANDLOCK_RULE_NET_PORT',
+
+        'LANDLOCK_CREATE_RULESET_VERSION',
+
+        'LANDLOCK_ACCESS_FS_EXECUTE',
+        'LANDLOCK_ACCESS_FS_WRITE_FILE',
+        'LANDLOCK_ACCESS_FS_READ_FILE',
+        'LANDLOCK_ACCESS_FS_TRUNCATE',
+        'LANDLOCK_ACCESS_FS_READ_DIR',
+        'LANDLOCK_ACCESS_FS_REMOVE_DIR',
+        'LANDLOCK_ACCESS_FS_REMOVE_FILE',
+        'LANDLOCK_ACCESS_FS_MAKE_CHAR',
+        'LANDLOCK_ACCESS_FS_MAKE_DIR',
+        'LANDLOCK_ACCESS_FS_MAKE_REG',
+        'LANDLOCK_ACCESS_FS_MAKE_SOCK',
+        'LANDLOCK_ACCESS_FS_MAKE_FIFO',
+        'LANDLOCK_ACCESS_FS_MAKE_BLOCK',
+        'LANDLOCK_ACCESS_FS_MAKE_SYM',
+        'LANDLOCK_ACCESS_FS_REFER',
+        'LANDLOCK_ACCESS_FS_IOCTL_DEV',
+
+        'LANDLOCK_ACCESS_NET_BIND_TCP',
+        'LANDLOCK_ACCESS_NET_CONNECT_TCP',
+
+        'LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET',
+        'LANDLOCK_SCOPE_SIGNAL'
+    ]
+
+    foreach macro : landlock_macros
+        cpp_compiler.compiles('#include <linux/landlock.h>\nint number = ' + macro + ';', name: macro + ' number is available', required: true)
+    endforeach
 endif
 
 libtins_dep = dependency('libtins', include_type: 'system')
