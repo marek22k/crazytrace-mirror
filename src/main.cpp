@@ -138,7 +138,7 @@ int main(int argc, char * argv[])
         BOOST_LOG_TRIVIAL(debug) << "Set the TUN device up.";
         dev.up();
 
-        int tap_dev_fd = ::dup(dev.native_handler());
+        const int tap_dev_fd = ::dup(dev.native_handler());
         if (tap_dev_fd < 0)
             throw std::runtime_error("Failed to duplicate file descriptor.");
 
