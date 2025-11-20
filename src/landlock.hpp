@@ -23,7 +23,7 @@ inline int landlock_create_ruleset(const struct landlock_ruleset_attr * attr,
                                    uint32_t flags)
 {
     return static_cast<int>(
-        syscall(SYS_landlock_create_ruleset, attr, size, flags));
+        ::syscall(SYS_landlock_create_ruleset, attr, size, flags));
 }
         #endif
 
@@ -33,7 +33,7 @@ inline int landlock_add_rule(int ruleset_fd,
                              const void * rule_attr,
                              uint32_t flags)
 {
-    return static_cast<int>(syscall(
+    return static_cast<int>(::syscall(
         SYS_landlock_add_rule, ruleset_fd, rule_type, rule_attr, flags));
 }
         #endif
@@ -42,7 +42,7 @@ inline int landlock_add_rule(int ruleset_fd,
 inline int landlock_restrict_self(int ruleset_fd, uint32_t flags)
 {
     return static_cast<int>(
-        syscall(SYS_landlock_restrict_self, ruleset_fd, flags));
+        ::syscall(SYS_landlock_restrict_self, ruleset_fd, flags));
 }
         #endif
 
