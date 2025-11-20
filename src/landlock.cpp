@@ -33,7 +33,19 @@ void LandlockRuleset::add_path_beneath_rule(uint64_t allowed_access,
                             LANDLOCK_RULE_PATH_BENEATH,
                             static_cast<const void *>(&attr),
                             0) != 0)
-        throw std::runtime_error("Failed to add rule.");
+        throw std::runtime_error("Failed to add path beneath rule.");
+}
+
+void LocklandRuleset::add_net_port_rule(uint64_t allowed_access,
+                                        uint64_t port) const
+{
+    const struct landlock_net_port_attr attr = {
+        .allowed_access = allowed_access, .port = port};
+    if (::landlock_add_rule(this->ruleset,
+                            LANDLOCK_RULE_NET_PORT,
+                            static_cast<const void *>(&attr),
+                            0) != 0)
+        throw std::runtime_error("Failed to add net port rule.");
 }
 
 void LandlockRuleset::restrict_self() const
