@@ -30,9 +30,9 @@ void LandlockRuleset::add_path_beneath_rule(uint64_t allowed_access,
     const struct landlock_path_beneath_attr attr = {
         .allowed_access = allowed_access, .parent_fd = parent_fd};
     if (::landlock_add_rule(this->ruleset,
-                          LANDLOCK_RULE_PATH_BENEATH,
-                          static_cast<const void *>(&attr),
-                          0) != 0)
+                            LANDLOCK_RULE_PATH_BENEATH,
+                            static_cast<const void *>(&attr),
+                            0) != 0)
         throw std::runtime_error("Failed to add rule.");
 }
 
@@ -44,7 +44,8 @@ void LandlockRuleset::restrict_self() const
 
 [[nodiscard]] int LandlockRuleset::abi_version() noexcept
 {
-    return ::landlock_create_ruleset(nullptr, 0, LANDLOCK_CREATE_RULESET_VERSION);
+    return ::landlock_create_ruleset(
+        nullptr, 0, LANDLOCK_CREATE_RULESET_VERSION);
 }
 
 #endif

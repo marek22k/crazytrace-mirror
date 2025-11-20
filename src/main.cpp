@@ -164,7 +164,8 @@ int main(int argc, char * argv[])
                 LANDLOCK_ACCESS_FS_REFER | LANDLOCK_ACCESS_FS_IOCTL_DEV,
             LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP,
             LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET | LANDLOCK_SCOPE_SIGNAL);
-        // see also https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
+        // see also
+        // https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
         landlock_ruleset_loop.restrict_self();
 #endif
 #ifdef HAVE_SECCOMP
@@ -173,8 +174,7 @@ int main(int argc, char * argv[])
         seccomp_context.release();
 #endif
 
-        const Crazytrace ct(
-            io.get_executor(), tap_dev_fd, nodecontainer);
+        const Crazytrace ct(io.get_executor(), tap_dev_fd, nodecontainer);
 
         io.run();
     }
