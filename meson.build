@@ -72,10 +72,8 @@ if get_option('native')
     add_project_arguments(cpp_compiler.get_supported_arguments(native_flags), language: 'cpp')
 endif
 
-if not cpp_compiler.has_header('unistd.h') or \
-   not cpp_compiler.has_function('dup', prefix: '#include <unistd.h>')
-    error('crazytrace requires unistd.h and the dup function')
-endif
+cpp_compiler.has_header('unistd.h', required: true)
+cpp_compiler.has_function('dup', prefix: '#include <unistd.h>', required: true)
 
 libtuntap_dep = dependency('libtuntap', required: false, include_type: 'system')
 if not libtuntap_dep.found()
@@ -110,9 +108,11 @@ if cpp_compiler.has_header('linux/landlock.h')
 
     foreach function : landlock_functions
         if not cpp_compiler.has_function(function, prefix: '#include <linux/landlock.h>')
-            if not cpp_compiler.has_header('sys/syscall.h')
-                error('Missing function ' + function + ' and no sys/syscall.h available.')
-            endif
+            cpp_compiler.has_header('unistd.h', required: true)
+            cpp_compiler.has_function('syscall', prefix: '#include <unistd.h>', required: true)
+            cpp_compiler.has_header('sys/syscall.h', required: true)
+            syscall_number_macro = 'SYS_' + function
+            cpp_compiler.compiles('#include <sys/syscall.h>\nint number = ' + syscall_number_macro + ';', name: syscall_number_macro + ' number is available', required: true)
 
             macro = 'NO_' + function.to_upper()
             add_project_arguments('-D' + macro, language: 'cpp')
