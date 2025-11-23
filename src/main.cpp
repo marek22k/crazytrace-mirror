@@ -37,7 +37,6 @@ int main(int argc, char * argv[])
     #else
         constexpr uint32_t lockland_restrict_self_flags = 0;
     #endif
-        BOOST_LOG_TRIVIAL(info) << "landlock flags: " << LANDLOCK_FLAGS;
         const LandlockRuleset landlock_ruleset_init(
             LANDLOCK_ACCESS_FS_READ_DIR | LANDLOCK_ACCESS_FS_REMOVE_DIR |
                 LANDLOCK_ACCESS_FS_REMOVE_FILE | LANDLOCK_ACCESS_FS_MAKE_CHAR |
