@@ -53,6 +53,8 @@ For this reason, seccomp is used to blacklist syscalls that crazytrace does not 
 Landlock can restrict what a program can access. In phase 1, crazytrace is restricted by landlock so that it never blocks necessary accesses.
 In phase 2, all accesses are blocked. This is possible because crazytrace has been fully initialized in phase 1 and landlock only restricts new accesses. Therefore: The TAP device can be opened in phase 1 and continue to be used in phase 2.
 
+Landlock offers backward compatibility with older kernels through a dynamic ABI query. However, to reduce maintenance effort, a certain Landlock version is required. This should be based on Debian.
+
 ### AppArmor
 
 AppArmor restricts crazytrace by determining what crazytrace is allowed to do. Unnecessary operations are therefore blocked by AppArmor.

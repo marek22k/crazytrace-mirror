@@ -190,6 +190,10 @@ if cpp_compiler.has_header('linux/landlock.h')
     foreach macro : landlock_macros
         cpp_compiler.compiles('#include <linux/landlock.h>\nint number = ' + macro + ';', name: macro + ' number is available', required: true)
     endforeach
+
+    if cpp_compiler.compiles('#include <linux/landlock.h>\nint number = LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON;', name: 'LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON number is available')
+        add_project_arguments('-DHAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON', language: 'cpp')
+    endif
 endif
 
 libtins_dep = dependency('libtins', include_type: 'system')

@@ -21,6 +21,14 @@
 #include "seccomp.hpp"
 #include "tun_tap.hpp"
 
+#ifdef HAVE_LANDLOCK
+    #ifdef HAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
+        #define LANDLOCK_FLAGS LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
+    #else
+        #define LANDLOCK_FLAGS 0
+    #endif
+#endif
+
 int main(int argc, char * argv[])
 {
     try
@@ -31,6 +39,7 @@ int main(int argc, char * argv[])
         CapabilityManagment::drop_capabilies();
 #endif
 #ifdef HAVE_LANDLOCK
+        BOOST_LOG_TRIVIAL(info) << "landlock flags: " << LANDLOCK_FLAGS;
         const LandlockRuleset landlock_ruleset_init(
             LANDLOCK_ACCESS_FS_READ_DIR | LANDLOCK_ACCESS_FS_REMOVE_DIR |
                 LANDLOCK_ACCESS_FS_REMOVE_FILE | LANDLOCK_ACCESS_FS_MAKE_CHAR |
@@ -40,7 +49,7 @@ int main(int argc, char * argv[])
                 LANDLOCK_ACCESS_FS_REFER,
             LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP,
             LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET);
-        landlock_ruleset_init.restrict_self();
+        landlock_ruleset_init.restrict_self(LANDLOCK_FLAGS);
 #endif
 
 #ifdef HAVE_SECCOMP
@@ -118,7 +127,7 @@ int main(int argc, char * argv[])
 #ifdef HAVE_LANDLOCK
         BOOST_LOG_TRIVIAL(info) << "Landlock: true";
         BOOST_LOG_TRIVIAL(info)
-            << "Landlock ABI version: " << LandlockRuleset::abi_version();
+            << "Landlock ABI version: " << LandlockRuleset::get_abi_version();
 #else
         BOOST_LOG_TRIVIAL(info) << "Landlock: false";
 #endif
@@ -166,7 +175,7 @@ int main(int argc, char * argv[])
             LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET | LANDLOCK_SCOPE_SIGNAL);
         // see also
         // https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
-        landlock_ruleset_loop.restrict_self();
+        landlock_ruleset_loop.restrict_self(LANDLOCK_FLAGS);
 #endif
 #ifdef HAVE_SECCOMP
         seccomp_context.kill_signal();

@@ -10,15 +10,17 @@
 
 LandlockRuleset::LandlockRuleset(uint64_t handled_access_fr,
                                  uint64_t handled_access_net,
-                                 uint64_t scoped)
+                                 uint64_t scoped) :
+    abi_version(LandlockRuleset::get_abi_version())
 {
-    if (LandlockRuleset::abi_version() < 6)
+    if (this->abi_version < 6)
         throw std::runtime_error("Landlock is too old.");
 
     const struct landlock_ruleset_attr attr = {
         .handled_access_fs = handled_access_fr,
         .handled_access_net = handled_access_net,
         .scoped = scoped};
+
     this->ruleset = ::landlock_create_ruleset(&attr, sizeof(attr), 0);
     if (this->ruleset == -1)
         throw std::runtime_error("Failed to create landlock ruleset.");
@@ -48,13 +50,18 @@ void LandlockRuleset::add_net_port_rule(uint64_t allowed_access,
         throw std::runtime_error("Failed to add net port rule.");
 }
 
-void LandlockRuleset::restrict_self() const
+void LandlockRuleset::restrict_self(uint32_t flags) const
 {
-    if (::landlock_restrict_self(this->ruleset, 0) != 0)
+    uint32_t compatility_flags = flags;
+    #ifdef HAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
+    if (abi_version < 7)
+        compatility_flags &= ~LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON;
+    #endif
+    if (::landlock_restrict_self(this->ruleset, compatility_flags) != 0)
         throw std::runtime_error("Failed to restrict self via landlock.");
 }
 
-[[nodiscard]] int LandlockRuleset::abi_version() noexcept
+[[nodiscard]] int LandlockRuleset::get_abi_version() noexcept
 {
     return ::landlock_create_ruleset(
         nullptr, 0, LANDLOCK_CREATE_RULESET_VERSION);

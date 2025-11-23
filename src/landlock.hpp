@@ -57,11 +57,12 @@ class LandlockRuleset
         void add_path_beneath_rule(uint64_t allowed_access,
                                    int32_t parent_fd) const;
         void add_net_port_rule(uint64_t allowed_access, uint64_t port) const;
-        void restrict_self() const;
+        void restrict_self(uint32_t flags) const;
 
-        [[nodiscard]] static int abi_version() noexcept;
+        [[nodiscard]] static int get_abi_version() noexcept;
 
     private:
+        int abi_version;
         int ruleset;
 };
 
