@@ -27,6 +27,40 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Security
 
+On Linux, crazytrace uses three sandboxing technologies or restriction technologies: Capabilities, seccomp and landlock, systemd, and AppArmor.
+These serve to limit the extent of compromise if crazytrace is compromised by an attack.
+
+libcap-ng, seccomp, and landlock are used in two phases in crazytrace:
+1. In the first phase, which lasts only a few milliseconds, crazytrace is initialized: The configuration file is read, the TAP device is created, and the post-up commands are started.
+2. In the second phase, an IO loop is entered. In this loop, crazytrace only reads from the TAP device and responds.
+
+### Capabilities
+
+In Linux, capabilities are used to restrict what a program is allowed to do, especially when interacting with the system. crazytrace requires two capabilities: `CAP_NET_ADMIN` and `CAP_SETPCAP`.
+`CAP_NET_ADMIN` is required to create the TAP device and, if necessary, for the post-up commands.
+`CAP_SETPCAP` is required to restrict its own capabilities.
+systemd and AppArmor ensure on Linux that crazytrace does not receive any other capabilities.
+crazytrace uses libcap-ng to drop all unnecessarily granted capabilities in phase 1. Once dropped, these cannot be re-granted. The post-up commands only receive the `CAP_NET_ADMIN` capability, but not the `CAP_SETPCAP` capability. In phase 2, all capabilities are dropped.
+Furthermore, libcap-ng performs a "lock": If supported, NoNewPriv and securebits are set.
+
+### Seccomp
+
+crazytrace uses various libraries. These libraries use syscalls. However, it is not documented which ones they use. Creating a whitelist - especially one that is distribution-independent - has therefore proven difficult.
+For this reason, seccomp is used to blacklist syscalls that crazytrace does not need.
+
+### Landlock
+
+Landlock can restrict what a program can access. In phase 1, crazytrace is restricted by landlock so that it never blocks necessary accesses.
+In phase 2, all accesses are blocked. This is possible because crazytrace has been fully initialized in phase 1 and landlock only restricts new accesses. Therefore: The TAP device can be opened in phase 1 and continue to be used in phase 2.
+
+### AppArmor
+
+AppArmor restricts crazytrace by determining what crazytrace is allowed to do. Unnecessary operations are therefore blocked by AppArmor.
+
+### systemd
+
+crazytrace comes with a hardened systemd unit that restricts many accesses not used by crazytrace.
+
 See [SECURITY.md](SECURITY.md).
 
 ## How it works?
@@ -44,6 +78,7 @@ Libraries used:
 Optional libraries:
 - [libcap-ng](https://people.redhat.com/sgrubb/libcap-ng/): Used to discard unnecessary capabilities and restrict the program.
 - [libseccomp](https://github.com/seccomp/libseccomp): Used to block potentially dangerous system calls.
+- [landlock](https://landlock.io/): Used to restrict access.
 
 Here is how the program works:
 1. reading the configuration file
