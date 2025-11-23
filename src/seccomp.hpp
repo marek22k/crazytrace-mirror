@@ -7,7 +7,8 @@
 
 #ifdef HAVE_SECCOMP
 
-    #include <stdexcept>
+    #include <system_error>
+    #include <cerrno>
     #include <cstdint>
     #include <seccomp.h>
     #include <sys/syscall.h>

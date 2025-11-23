@@ -10,7 +10,8 @@ SeccompFilterContext::SeccompFilterContext(uint32_t def_action) :
     ctx(seccomp_init(def_action))
 {
     if (this->ctx == nullptr)
-        throw std::runtime_error("Failed to initialize seccomp.");
+        throw std::system_error(
+            errno, std::generic_category(), "Failed to initialize seccomp.");
 }
 
 void SeccompFilterContext::rule_add(uint32_t action, int syscall) const
@@ -898,7 +899,8 @@ void SeccompFilterContext::load() const
         throw std::runtime_error("seccomp filter context not useable.");
 
     if (seccomp_load(this->ctx) != 0)
-        throw std::runtime_error("Failed to load seccomp filter.");
+        throw std::system_error(
+            errno, std::generic_category(), "Failed to load seccomp filter.");
 }
 
 void SeccompFilterContext::reset(uint32_t def_action) const
@@ -907,7 +909,8 @@ void SeccompFilterContext::reset(uint32_t def_action) const
         throw std::runtime_error("seccomp filter context not useable.");
 
     if (seccomp_reset(this->ctx, def_action) != 0)
-        throw std::runtime_error("Failed to reset seccomp filter.");
+        throw std::system_error(
+            errno, std::generic_category(), "Failed to reset seccomp filter.");
 }
 
 void SeccompFilterContext::release()

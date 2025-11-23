@@ -23,7 +23,9 @@ LandlockRuleset::LandlockRuleset(uint64_t handled_access_fr,
 
     this->ruleset = ::landlock_create_ruleset(&attr, sizeof(attr), 0);
     if (this->ruleset == -1)
-        throw std::runtime_error("Failed to create landlock ruleset.");
+        throw std::system_error(errno,
+                                std::generic_category(),
+                                "Failed to create landlock ruleset");
 }
 
 void LandlockRuleset::add_path_beneath_rule(uint64_t allowed_access,
@@ -35,7 +37,8 @@ void LandlockRuleset::add_path_beneath_rule(uint64_t allowed_access,
                             LANDLOCK_RULE_PATH_BENEATH,
                             static_cast<const void *>(&attr),
                             0) != 0)
-        throw std::runtime_error("Failed to add path beneath rule.");
+        throw std::system_error(
+            errno, std::generic_category(), "Failed to add path beneath rule");
 }
 
 void LandlockRuleset::add_net_port_rule(uint64_t allowed_access,
@@ -47,7 +50,8 @@ void LandlockRuleset::add_net_port_rule(uint64_t allowed_access,
                             LANDLOCK_RULE_NET_PORT,
                             static_cast<const void *>(&attr),
                             0) != 0)
-        throw std::runtime_error("Failed to add net port rule.");
+        throw std::system_error(
+            errno, std::generic_category(), "Failed to add net port rule");
 }
 
 void LandlockRuleset::restrict_self(uint32_t flags) const
@@ -58,7 +62,9 @@ void LandlockRuleset::restrict_self(uint32_t flags) const
         compatility_flags &= ~LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON;
     #endif
     if (::landlock_restrict_self(this->ruleset, compatility_flags) != 0)
-        throw std::runtime_error("Failed to restrict self via landlock.");
+        throw std::system_error(errno,
+                                std::generic_category(),
+                                "Failed to restrict self via landlock");
 }
 
 [[nodiscard]] int LandlockRuleset::get_abi_version() noexcept

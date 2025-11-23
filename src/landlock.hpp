@@ -7,7 +7,8 @@
 
 #ifdef HAVE_LANDLOCK
 
-    #include <stdexcept>
+    #include <system_error>
+    #include <cerrno>
     #include <cstdint>
     #include <linux/landlock.h>
 
