@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## Release 1.0.7
+
+- Improvement of error messages
+
 ## Release 1.0.6
 
 - Improvement of landlock sandboxing

@@ -5,7 +5,7 @@
 project(
     'crazytrace',
     'cpp',
-    version: '1.0.6',
+    version: '1.0.7',
     license: ['GPL-3.0-or-later'],
     default_options: [
         'buildtype=release',
