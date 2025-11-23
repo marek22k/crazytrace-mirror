@@ -31,12 +31,6 @@ int main(int argc, char * argv[])
         CapabilityManagment::drop_capabilies();
 #endif
 #ifdef HAVE_LANDLOCK
-    #ifdef HAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
-        constexpr uint32_t lockland_restrict_self_flags =
-            LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON;
-    #else
-        constexpr uint32_t lockland_restrict_self_flags = 0;
-    #endif
         const LandlockRuleset landlock_ruleset_init(
             LANDLOCK_ACCESS_FS_READ_DIR | LANDLOCK_ACCESS_FS_REMOVE_DIR |
                 LANDLOCK_ACCESS_FS_REMOVE_FILE | LANDLOCK_ACCESS_FS_MAKE_CHAR |
@@ -46,7 +40,12 @@ int main(int argc, char * argv[])
                 LANDLOCK_ACCESS_FS_REFER,
             LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP,
             LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET);
-        landlock_ruleset_init.restrict_self(lockland_restrict_self_flags);
+    #ifdef HAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
+        landlock_ruleset_init.restrict_self(
+            LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON);
+    #else
+        landlock_ruleset_init.restrict_self();
+    #endif
 #endif
 
 #ifdef HAVE_SECCOMP
@@ -172,7 +171,12 @@ int main(int argc, char * argv[])
             LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET | LANDLOCK_SCOPE_SIGNAL);
         // see also
         // https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
-        landlock_ruleset_loop.restrict_self(lockland_restrict_self_flags);
+    #ifdef HAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
+        landlock_ruleset_init.restrict_self(
+            LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON);
+    #else
+        landlock_ruleset_init.restrict_self();
+    #endif
 #endif
 #ifdef HAVE_SECCOMP
         seccomp_context.kill_signal();

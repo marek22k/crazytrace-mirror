@@ -54,21 +54,27 @@ void LandlockRuleset::add_net_port_rule(uint64_t allowed_access,
             errno, std::generic_category(), "Failed to add net port rule");
 }
 
+    #ifdef HAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
 void LandlockRuleset::restrict_self(uint32_t flags) const
 {
-    #ifdef HAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
     uint32_t compatility_flags = flags;
     if (abi_version < 7)
         compatility_flags &= ~LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON;
-    #else
-    constexpr uint32_t compatility_flags = 0;
-    #endif
 
     if (::landlock_restrict_self(this->ruleset, compatility_flags) != 0)
         throw std::system_error(errno,
                                 std::generic_category(),
                                 "Failed to restrict self via landlock");
 }
+    #else
+void LandlockRuleset::restrict_self() const
+{
+    if (::landlock_restrict_self(this->ruleset, 0) != 0)
+        throw std::system_error(errno,
+                                std::generic_category(),
+                                "Failed to restrict self via landlock");
+}
+    #endif
 
 [[nodiscard]] int LandlockRuleset::get_abi_version() noexcept
 {
