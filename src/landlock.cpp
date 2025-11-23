@@ -56,7 +56,7 @@ void LandlockRuleset::add_net_port_rule(uint64_t allowed_access,
 
 void LandlockRuleset::restrict_self(uint32_t flags) const
 {
-    const uint32_t compatility_flags = flags;
+    uint32_t compatility_flags = flags;
 
     #ifdef HAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
     if (abi_version < 7)
