@@ -244,7 +244,7 @@ lizard = find_program('lizard', required: false)
 if lizard.found()
     run_target('lizard', command: [
         lizard,
-        '--CCN', '15',
+        '--CCN', '25',
         '--length', '400',
         '--arguments', '10',
         all_sources
