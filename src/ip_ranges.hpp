@@ -7,8 +7,7 @@
 
 #include <tins/tins.h>
 
-const Tins::AddressRange<Tins::IPv6Address>
-    linklocal_range("fe80::",
-                    "febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff"); // fe80::/10
+const Tins::AddressRange<Tins::IPv6Address> linklocal_range =
+    Tins::IPv6Address("fe80::") / 10;
 
 #endif
