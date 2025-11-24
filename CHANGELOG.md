@@ -9,6 +9,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ## Release 1.0.7
 
 - Improvement of error messages
+- Prevent routing of IPv6 link-local addresses
 
 ## Release 1.0.6
 
