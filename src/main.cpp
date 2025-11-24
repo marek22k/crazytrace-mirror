@@ -137,7 +137,8 @@ int main(int argc, char * argv[])
 
         constexpr std::size_t mtu = 1500;
         BOOST_LOG_TRIVIAL(debug) << "Create TUN device.";
-        tun_tap dev(config.get_device_name(), tun_tap_mode::tap);
+        tun_tap_device::tun_tap dev(config.get_device_name(),
+                                    tun_tap_device::tun_tap_mode::tap);
         BOOST_LOG_TRIVIAL(debug) << "Set MTU to " << mtu << ".";
         dev.set_mtu(mtu);
         BOOST_LOG_TRIVIAL(debug) << "Set the TUN device up.";

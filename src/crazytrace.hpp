@@ -32,7 +32,7 @@ namespace crazytrace
                                 const std::string_view packet_data) noexcept;
 
             std::shared_ptr<crazytrace::NodeContainer> _nodecontainer;
-            DeviceClient<1520> _client;
+            tun_tap_device::DeviceClient<1520> _client;
     };
 } // namespace crazytrace
 
