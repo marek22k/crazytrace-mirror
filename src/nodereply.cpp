@@ -4,7 +4,9 @@
 
 #include "nodereply.hpp"
 
-NodeReply::NodeReply(NodeReplyType type) :
+using namespace crazytrace;
+
+crazytrace::NodeReply::NodeReply(NodeReplyType type) :
     _type(type),
     _hoplimit(0),
     _icmp_identifier(0),
@@ -14,11 +16,11 @@ NodeReply::NodeReply(NodeReplyType type) :
 {
 }
 
-NodeReply::NodeReply(NodeReplyType type,
-                     Tins::HWAddress<6> destination_mac,
-                     Tins::IPv6Address destination_address,
-                     Tins::HWAddress<6> source_mac,
-                     Tins::IPv6Address source_address) :
+crazytrace::NodeReply::NodeReply(NodeReplyType type,
+                                 Tins::HWAddress<6> destination_mac,
+                                 Tins::IPv6Address destination_address,
+                                 Tins::HWAddress<6> source_mac,
+                                 Tins::IPv6Address source_address) :
     _type(type),
     _destination_mac(destination_mac),
     _destination_address(destination_address),
@@ -32,7 +34,7 @@ NodeReply::NodeReply(NodeReplyType type,
 {
 }
 
-void NodeReply::set_hoplimit(int hoplimit)
+void crazytrace::NodeReply::set_hoplimit(int hoplimit)
 {
     if (this->_type == NodeReplyType::ICMP_NDP)
         throw std::runtime_error(
@@ -41,9 +43,10 @@ void NodeReply::set_hoplimit(int hoplimit)
     this->_hoplimit = hoplimit;
 }
 
-void NodeReply::icmp_echo_reply(int icmp_identifier,
-                                int icmp_sequence,
-                                const Tins::RawPDU::payload_type& payload)
+void crazytrace::NodeReply::icmp_echo_reply(
+    int icmp_identifier,
+    int icmp_sequence,
+    const Tins::RawPDU::payload_type& payload)
 {
     if (this->_type != NodeReplyType::ICMP_ECHO_REPLY &&
         this->_type != NodeReplyType::ICMP_TIME_EXCEEDED_ICMP_ECHO_REQUEST)
@@ -55,9 +58,8 @@ void NodeReply::icmp_echo_reply(int icmp_identifier,
     this->_payload = payload;
 }
 
-void NodeReply::udp_response(const Tins::RawPDU::payload_type& payload,
-                             int udp_dport,
-                             int udp_sport)
+void crazytrace::NodeReply::udp_response(
+    const Tins::RawPDU::payload_type& payload, int udp_dport, int udp_sport)
 {
     if (this->_type != NodeReplyType::ICMP_PORT_UNREACHABLE &&
         this->_type != NodeReplyType::ICMP_TIME_EXCEEDED_UDP)
@@ -68,7 +70,7 @@ void NodeReply::udp_response(const Tins::RawPDU::payload_type& payload,
     this->_udp_sport = udp_sport;
 }
 
-void NodeReply::packet_reassembly(
+void crazytrace::NodeReply::packet_reassembly(
     Tins::IPv6Address original_destination_address)
 {
     if (this->_type != NodeReplyType::ICMP_PORT_UNREACHABLE &&
@@ -79,7 +81,7 @@ void NodeReply::packet_reassembly(
     this->_original_destination_address = original_destination_address;
 }
 
-std::string NodeReply::to_packet() const
+std::string crazytrace::NodeReply::to_packet() const
 {
     switch (this->_type)
     {
@@ -223,12 +225,12 @@ std::string NodeReply::to_packet() const
     }
 }
 
-NodeReplyType NodeReply::get_type() const noexcept
+NodeReplyType crazytrace::NodeReply::get_type() const noexcept
 {
     return this->_type;
 }
 
-bool NodeReply::operator==(const NodeReply& other) const
+bool crazytrace::NodeReply::operator==(const NodeReply& other) const
 {
     return this->_type == other._type &&
            this->_destination_mac == other._destination_mac &&
@@ -245,7 +247,8 @@ bool NodeReply::operator==(const NodeReply& other) const
                other._original_destination_address;
 }
 
-std::ostream& operator<<(std::ostream& os, NodeReply const & nodereply)
+std::ostream& crazytrace::operator<<(std::ostream& os,
+                                     NodeReply const & nodereply)
 {
     if (nodereply._type == NodeReplyType::NOREPLY)
     {

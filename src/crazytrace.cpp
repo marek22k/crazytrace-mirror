@@ -4,6 +4,8 @@
 
 #include "crazytrace.hpp"
 
+using namespace crazytrace;
+
 Crazytrace::Crazytrace(boost::asio::any_io_executor ex,
                        int native_handler,
                        std::shared_ptr<NodeContainer> nodecontainer) :

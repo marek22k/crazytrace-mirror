@@ -9,6 +9,8 @@
 #include "nodecontainer.hpp"
 #include "nodeinfo.hpp"
 
+using namespace crazytrace;
+
 class NodeContainerTest : public testing::Test
 {
     protected:

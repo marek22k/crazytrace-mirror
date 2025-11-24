@@ -6,6 +6,8 @@
 #include <tins/tins.h>
 #include "noderequest.hpp"
 
+using namespace crazytrace;
+
 TEST(NodeRequestTest, EchoRequest)
 {
     const Tins::HWAddress<6> source_mac("52:54:00:b2:fa:7f");

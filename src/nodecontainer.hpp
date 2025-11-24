@@ -16,22 +16,31 @@
 #include "nodereply.hpp"
 #include "noderequest.hpp"
 
-class NodeContainer
+namespace crazytrace
 {
-    public:
-        [[nodiscard]] NodeReply get_reply(const NodeRequest& request);
-        void add_node(std::shared_ptr<NodeInfo> node) noexcept;
-        [[nodiscard]] std::size_t max_depth() const;
+    class NodeContainer
+    {
+        public:
+            [[nodiscard]] NodeReply
+                get_reply(const crazytrace::NodeRequest& request);
+            void add_node(std::shared_ptr<NodeInfo> node) noexcept;
+            [[nodiscard]] std::size_t max_depth() const;
 
-        void print(std::ostream& os) const;
-        bool operator==(const NodeContainer& other) const;
-        friend std::ostream& operator<<(std::ostream& os,
-                                        const NodeContainer& nodecontainer);
+            void print(std::ostream& os) const;
+            bool operator==(const crazytrace::NodeContainer& other) const;
+            friend std::ostream&
+                operator<<(std::ostream& os,
+                           const crazytrace::NodeContainer& nodecontainer);
 
-    private:
-        [[nodiscard]] std::vector<std::shared_ptr<NodeInfo>>
-            get_route_to(const Tins::IPv6Address& destination_address) const;
-        std::vector<std::shared_ptr<NodeInfo>> _nodes;
-};
+        private:
+            [[nodiscard]] std::vector<std::shared_ptr<crazytrace::NodeInfo>>
+                get_route_to(
+                    const Tins::IPv6Address& destination_address) const;
+            std::vector<std::shared_ptr<crazytrace::NodeInfo>> _nodes;
+    };
+
+    std::ostream& operator<<(std::ostream& os,
+                             const crazytrace::NodeContainer& nodecontainer);
+} // namespace crazytrace
 
 #endif

@@ -15,21 +15,25 @@
 #include "nodecontainer.hpp"
 #include "noderequest.hpp"
 
-class Crazytrace
+namespace crazytrace
 {
-    public:
-        explicit Crazytrace(boost::asio::any_io_executor ex,
-                            int native_handler,
-                            std::shared_ptr<NodeContainer> nodecontainer);
+    class Crazytrace
+    {
+        public:
+            explicit Crazytrace(
+                boost::asio::any_io_executor ex,
+                int native_handler,
+                std::shared_ptr<crazytrace::NodeContainer> nodecontainer);
 
-    private:
-        void _handle_error(
-            const boost::system::error_code& error) const noexcept;
-        void _handle_packet(const boost::system::error_code error,
-                            const std::string_view packet_data) noexcept;
+        private:
+            void _handle_error(
+                const boost::system::error_code& error) const noexcept;
+            void _handle_packet(const boost::system::error_code error,
+                                const std::string_view packet_data) noexcept;
 
-        std::shared_ptr<NodeContainer> _nodecontainer;
-        DeviceClient<1520> _client;
-};
+            std::shared_ptr<crazytrace::NodeContainer> _nodecontainer;
+            DeviceClient<1520> _client;
+    };
+} // namespace crazytrace
 
 #endif

@@ -4,10 +4,12 @@
 
 #include "configuration.hpp"
 
+using namespace crazytrace;
+
 // NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 // _log_level is initialized in a function that is called directly from the
 // constructor. If _log_level cannot be initialized, an error is thrown.
-Configuration::Configuration(const std::string& filename) :
+crazytrace::Configuration::Configuration(const std::string& filename) :
     _node_container(std::make_shared<NodeContainer>()),
     _log_level(boost::log::trivial::info)
 {
@@ -16,7 +18,7 @@ Configuration::Configuration(const std::string& filename) :
     this->validate_node_depth();
 }
 
-void Configuration::load(const std::string& filename)
+void crazytrace::Configuration::load(const std::string& filename)
 {
     try
     {
@@ -44,7 +46,7 @@ void Configuration::load(const std::string& filename)
     }
 }
 
-void Configuration::validate_node_depth() const
+void crazytrace::Configuration::validate_node_depth() const
 {
     const std::size_t max_depth = this->_node_container->max_depth();
     if (max_depth > 255)
@@ -53,7 +55,7 @@ void Configuration::validate_node_depth() const
     }
 }
 
-void Configuration::load_log_level(const YAML::Node& node)
+void crazytrace::Configuration::load_log_level(const YAML::Node& node)
 {
     if (!node.IsDefined())
         return;
@@ -62,7 +64,7 @@ void Configuration::load_log_level(const YAML::Node& node)
     this->_log_level = LogLevel(log_level_string);
 }
 
-void Configuration::load_postup_commands(const YAML::Node& node)
+void crazytrace::Configuration::load_postup_commands(const YAML::Node& node)
 {
     if (node.IsDefined())
     {
@@ -79,9 +81,9 @@ void Configuration::load_postup_commands(const YAML::Node& node)
 
 template<typename T>
     requires(std::same_as<T, NodeInfo> || std::same_as<T, NodeContainer>)
-void Configuration::load_nodes(const YAML::Node& nodes_config,
-                               std::shared_ptr<T> nodes,
-                               bool mac)
+void crazytrace::Configuration::load_nodes(const YAML::Node& nodes_config,
+                                           std::shared_ptr<T> nodes,
+                                           bool mac)
 {
     if (nodes_config.IsDefined() && !nodes_config.IsNull())
     {
@@ -125,7 +127,7 @@ void Configuration::load_nodes(const YAML::Node& nodes_config,
             {
                 const Tins::IPv6Address ipv6_address =
                     Tins::IPv6Address(address_config.as<std::string>());
-                if (!mac && linklocal_range.contains(ipv6_address))
+                if (!mac && ip_ranges::linklocal_range.contains(ipv6_address))
                     throw std::runtime_error(
                         "Failed to load configuration file: Link-local address "
                         "for non-MAC node defined.");
@@ -144,22 +146,23 @@ void Configuration::load_nodes(const YAML::Node& nodes_config,
 }
 
 std::shared_ptr<NodeContainer>
-    Configuration::get_node_container() const noexcept
+    crazytrace::Configuration::get_node_container() const noexcept
 {
     return this->_node_container;
 }
 
-LogLevel Configuration::get_log_level() const noexcept
+LogLevel crazytrace::Configuration::get_log_level() const noexcept
 {
     return this->_log_level;
 }
 
-const std::string& Configuration::get_device_name() const noexcept
+const std::string& crazytrace::Configuration::get_device_name() const noexcept
 {
     return this->_device_name;
 }
 
-const PostupCommands& Configuration::get_postup_commands() const noexcept
+const PostupCommands&
+    crazytrace::Configuration::get_postup_commands() const noexcept
 {
     return this->_postup_commands;
 }

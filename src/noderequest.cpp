@@ -5,7 +5,9 @@
 #include "noderequest.hpp"
 #include <iostream>
 
-NodeRequest::NodeRequest(const Tins::EthernetII& packet) :
+using namespace crazytrace;
+
+crazytrace::NodeRequest::NodeRequest(const Tins::EthernetII& packet) :
     _type(NodeRequestType::UNKNOWN),
     _hoplimit(0),
     _udp_dport(0),
@@ -75,62 +77,68 @@ NodeRequest::NodeRequest(const Tins::EthernetII& packet) :
     }
 }
 
-NodeRequestType NodeRequest::get_type() const noexcept
+NodeRequestType crazytrace::NodeRequest::get_type() const noexcept
 {
     return this->_type;
 }
 
-const Tins::HWAddress<6>& NodeRequest::get_source_mac() const noexcept
+const Tins::HWAddress<6>&
+    crazytrace::NodeRequest::get_source_mac() const noexcept
 {
     return this->_source_mac;
 }
 
-const Tins::HWAddress<6>& NodeRequest::get_destination_mac() const noexcept
+const Tins::HWAddress<6>&
+    crazytrace::NodeRequest::get_destination_mac() const noexcept
 {
     return this->_destination_mac;
 }
 
-const Tins::IPv6Address& NodeRequest::get_source_address() const noexcept
+const Tins::IPv6Address&
+    crazytrace::NodeRequest::get_source_address() const noexcept
 {
     return this->_source_address;
 }
 
-const Tins::IPv6Address& NodeRequest::get_destination_address() const noexcept
+const Tins::IPv6Address&
+    crazytrace::NodeRequest::get_destination_address() const noexcept
 {
     return this->_destination_address;
 }
 
-int NodeRequest::get_hoplimit() const noexcept
+int crazytrace::NodeRequest::get_hoplimit() const noexcept
 {
     return this->_hoplimit;
 }
 
-int NodeRequest::get_udp_sport() const noexcept
+int crazytrace::NodeRequest::get_udp_sport() const noexcept
 {
     return this->_udp_sport;
 }
 
-int NodeRequest::get_udp_dport() const noexcept
+int crazytrace::NodeRequest::get_udp_dport() const noexcept
 {
     return this->_udp_dport;
 }
 
-int NodeRequest::get_icmp_identifier() const noexcept
+int crazytrace::NodeRequest::get_icmp_identifier() const noexcept
 {
     return this->_icmp_identifier;
 }
 
-int NodeRequest::get_icmp_sequence() const noexcept
+int crazytrace::NodeRequest::get_icmp_sequence() const noexcept
 {
     return this->_icmp_sequence;
 }
 
-const Tins::RawPDU::payload_type& NodeRequest::get_payload() const noexcept
+const Tins::RawPDU::payload_type&
+    crazytrace::NodeRequest::get_payload() const noexcept
 {
     return this->_payload;
 }
 
-std::ostream& operator<<(std::ostream& os, NodeRequest const & noderequest)
+std::ostream& crazytrace::operator<<(std::ostream& os,
+                                     NodeRequest const & noderequest)
 {
     std::string type_string;
     switch (noderequest._type)

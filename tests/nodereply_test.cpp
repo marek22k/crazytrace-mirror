@@ -7,6 +7,8 @@
 #include <tins/tins.h>
 #include "nodereply.hpp"
 
+using namespace crazytrace;
+
 TEST(NodeReplyTest, SimpleInit)
 {
     const NodeReply reply(NodeReplyType::ICMP_TIME_EXCEEDED_ICMP_ECHO_REQUEST);

@@ -9,6 +9,8 @@
 #include <tins/tins.h>
 #include "nodeinfo.hpp"
 
+using namespace crazytrace;
+
 TEST(NodeInfoTest, MacAddress)
 {
     const Tins::HWAddress<6> mac_address(std::string("52:54:00:b2:fa:7f"));

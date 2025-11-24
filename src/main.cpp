@@ -80,7 +80,7 @@ int main(int argc, char * argv[])
             throw std::runtime_error("A configuration file must be specified.");
 
         const std::string filename(args.at(1));
-        const Configuration config(filename);
+        const crazytrace::Configuration config(filename);
         config.get_log_level().apply();
 
         BOOST_LOG_TRIVIAL(info)
@@ -128,7 +128,7 @@ int main(int argc, char * argv[])
         BOOST_LOG_TRIVIAL(info) << "Landlock: false";
 #endif
 
-        const std::shared_ptr<NodeContainer> nodecontainer =
+        const std::shared_ptr<crazytrace::NodeContainer> nodecontainer =
             config.get_node_container();
 
         std::ostringstream nodes_verbose;
@@ -184,7 +184,8 @@ int main(int argc, char * argv[])
         seccomp_context.release();
 #endif
 
-        const Crazytrace ct(io.get_executor(), tap_dev_fd, nodecontainer);
+        const crazytrace::Crazytrace ct(
+            io.get_executor(), tap_dev_fd, nodecontainer);
 
         io.run();
     }
