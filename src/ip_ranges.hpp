@@ -9,7 +9,9 @@
 
 namespace ip_ranges
 {
-    const Tins::AddressRange<Tins::IPv6Address> linklocal_range = // NOLINT(bugprone-throwing-static-initialization, cert-err58-cpp)
+    const Tins::AddressRange<Tins::IPv6Address>
+        linklocal_range = // NOLINT(bugprone-throwing-static-initialization,
+                          // cert-err58-cpp)
         Tins::IPv6Address("fe80::") / 10;
 }
 
