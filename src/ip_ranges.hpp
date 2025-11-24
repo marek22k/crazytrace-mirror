@@ -10,7 +10,7 @@
 namespace ip_ranges
 {
     const Tins::AddressRange<Tins::IPv6Address> linklocal_range =
-        Tins::IPv6Address("fe80::") / 10;
+        Tins::IPv6Address("fe80::") / 10; // NOLINT(bugprone-throwing-static-initialization)
 }
 
 #endif
