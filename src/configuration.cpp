@@ -131,7 +131,7 @@ void crazytrace::Configuration::load_nodes(const YAML::Node& nodes_config,
                     throw std::runtime_error(
                         "Failed to load configuration file: Link-local address "
                         "for non-MAC node defined.");
-                node->add_address(std::move(ipv6_address));
+                node->add_address(ipv6_address);
             }
 
             if (const YAML::Node hoplimit_config = node_config["hoplimit"];
