@@ -146,7 +146,9 @@ int main(int argc, char * argv[])
 
         const int tap_dev_fd = ::dup(dev.native_handler());
         if (tap_dev_fd < 0)
-            throw std::runtime_error("Failed to duplicate file descriptor.");
+            throw std::system_error(errno,
+                                    std::generic_category(),
+                                    "Failed to duplicate file descriptor.");
 
         boost::asio::io_context io;
 #ifdef BOOST_PROCESS_V1
