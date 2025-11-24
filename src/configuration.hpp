@@ -13,6 +13,7 @@
 #include <boost/log/trivial.hpp>
 #include <tins/tins.h>
 #include <yaml-cpp/yaml.h>
+#include "ip_ranges.hpp"
 #include "loglevel.hpp"
 #include "nodecontainer.hpp"
 #include "postup_commands.hpp"
