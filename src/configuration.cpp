@@ -110,9 +110,9 @@ void Configuration::load_nodes(const YAML::Node& nodes_config,
                                          "file: Missing mac attribute.");
             if (!mac && node_config["mac"].IsDefined())
                 throw std::runtime_error("Failed to load configuration file: "
-                                         "MAC for non-MAC node is defined.")
+                                         "MAC for non-MAC node is defined.");
 
-                    const auto node = std::make_shared<NodeInfo>();
+            const auto node = std::make_shared<NodeInfo>();
 
             if (mac)
             {
@@ -123,7 +123,7 @@ void Configuration::load_nodes(const YAML::Node& nodes_config,
             for (const YAML::Node addresses_config = node_config["addresses"];
                  const auto& address_config : addresses_config)
             {
-                const ipv6_address =
+                const Tins::IPv6Address ipv6_address =
                     Tins::IPv6Address(address_config.as<std::string>());
                 if (!mac && linklocal_range.contains(ipv6_address))
                     throw std::runtime_error(

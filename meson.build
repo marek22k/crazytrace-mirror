@@ -44,6 +44,7 @@ headers = files(
     'src/configuration.hpp',
     'src/crazytrace.hpp',
     'src/deviceclient.hpp',
+    'src/ip_ranges.hpp',
     'src/landlock.hpp',
     'src/loglevel.hpp',
     'src/postup_commands.hpp',
