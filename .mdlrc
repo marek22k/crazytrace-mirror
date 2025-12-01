@@ -1,3 +1,4 @@
 show_kramdown_warnings true
+style File.join(File.dirname(__FILE__), '.mdl.style')
 all
-rules "~MD013", "~MD014", "~MD024", "~MD026"
+rules '~MD013', '~MD014', '~MD026'

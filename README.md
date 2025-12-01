@@ -100,9 +100,9 @@ The following is how the network simulator works when a packet is received:
 2. reading the packet into a NodeRequest
 3. generate a NodeReply using the configuration
 4. check whether a reply should be sent
-  1. If no, abort
-  2. if yes, create a NodeReply packet using libtins
-6. write the packet to the socket of the TAP device
+    1. If no, abort
+    2. if yes, create a NodeReply packet using libtins
+5. write the packet to the socket of the TAP device
 
 ## Configuration file
 
