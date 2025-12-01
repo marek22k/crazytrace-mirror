@@ -10,5 +10,5 @@ HeaderFileExtensions:
 ImplementationFileExtensions:
   - cpp
 SystemHeaders: false
-ExcludeHeaderFilterRegex: '(boost/|tins/|yaml-cpp/|cap-ng|seccomp|unistd|linux/|sys/).*\.h(pp)?$'
+ExcludeHeaderFilterRegex: '.*(boost/|tins/|yaml-cpp/|cap-ng|seccomp|unistd|linux/|sys/).*\.h(pp)?$'
 ...
