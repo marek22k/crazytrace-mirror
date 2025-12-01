@@ -25,7 +25,7 @@ $ sudo apt-get --yes install libseccomp-dev libcap-ng-dev
 The following packages are required to analyze, lint and format the code:
 
 ```
-$ sudo apt-get --yes install clang-tidy clang-format cppcheck flawfinder
+$ sudo apt-get --yes install clang-tidy clang-format cppcheck flawfinder ruby-mdl
 ```
 
 To get the latest release of LLVM or Clang, llvm has its [own Debian repostitory](https://apt.llvm.org/).
