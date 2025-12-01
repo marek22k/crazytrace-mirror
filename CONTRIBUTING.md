@@ -13,6 +13,7 @@ I am happy to receive any form of friendly feedback. You can use the issue track
 ## Report bugs
 
 Unfortunately, it can always happen that a program does not behave as desired. In such cases I am happy to receive bug reports via the issue tracker. If you create a bug report please state the following:
+
 - Version used
 - Configuration file
 - Environment (e.g. operating system)
@@ -29,6 +30,7 @@ You miss a functionality of crazytrace? Feel free to express your wishes via the
 Have you found a place in the code that you would like to improve? Or you want to implement your wish yourself? No problem, just submit a pull request.
 
 The following would be nice:
+
 - Add a test for the new code
 - No new errors or warnings from compiler or linter
 - Formatted code

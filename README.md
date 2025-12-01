@@ -31,6 +31,7 @@ On Linux, crazytrace uses three sandboxing technologies or restriction technolog
 These serve to limit the extent of compromise if crazytrace is compromised by an attack.
 
 libcap-ng, seccomp, and landlock are used in two phases in crazytrace:
+
 1. In the first phase, which lasts only a few milliseconds, crazytrace is initialized: The configuration file is read, the TAP device is created, and the post-up commands are started.
 2. In the second phase, an IO loop is entered. In this loop, crazytrace only reads from the TAP device and responds.
 
@@ -78,11 +79,13 @@ Libraries used:
 - [Boost.Asio](https://www.boost.org/): This library is used to communicate with the socket of the TAP device and to receive and send several packets asynchronously.
 
 Optional libraries:
+
 - [libcap-ng](https://people.redhat.com/sgrubb/libcap-ng/): Used to discard unnecessary capabilities and restrict the program.
 - [libseccomp](https://github.com/seccomp/libseccomp): Used to block potentially dangerous system calls.
 - [landlock](https://landlock.io/): Used to restrict access.
 
 Here is how the program works:
+
 1. reading the configuration file
 2. setting the log level
 3. output of the libtuntap version
@@ -92,17 +95,19 @@ Here is how the program works:
 7. starting the network simulator
 
 The following is how the network simulator works when a packet is received:
+
 1. reading the packet with tins
 2. reading the packet into a NodeRequest
 3. generate a NodeReply using the configuration
 4. check whether a reply should be sent
-4a. If no, abort
-5. if yes, create a NodeReply packet using libtins
+  1. If no, abort
+  2. if yes, create a NodeReply packet using libtins
 6. write the packet to the socket of the TAP device
 
 ## Configuration file
 
 The following is a example configuration file:
+
 ```yaml
 ---
 log_level: info
@@ -127,6 +132,7 @@ This would generate the following topology:
 ![Topology](topology.png)
 
 The log level can have one of the following values:
+
 - `trace`
 - `debug`
 - `info`
@@ -141,6 +147,7 @@ The device name is the name of the TAP interface that crazytrace creates.
 The post-up commands are a series of commands that are executed by the command processor of the operating system after the TAP interface has been created. These commands are executed with the same rights as crazytrace. They receive no input. Their output is ignored. crazytrace aborts if one of the commands has not been successfully completed.
 
 A list of nodes then appears in the configuration file. These can have the following attributes:
+
 - `mac`: The nodes in the first level must have a MAC address. crazytrace acts as if these nodes were directly on the TAP interface. All child nodes of these are behind them, so that no MAC address is required for communication.
 - `addresses`: A list of IP addresses that the node should have. It responds to all of them and replies with a random one.
 - `hoplimit`: Hop limit with which the response is to be sent. ICMP NDP packets are always sent with a hop limit of 255. If no hop limit is specified, a hop limit of 64 is used.
@@ -151,6 +158,7 @@ The configuration is written in YAML.
 ### Which MAC addresses can I use without any problems?
 
 The following belong to the locally administered range and can be used without any problems:
+
 ```
 x2-xx-xx-xx-xx-xx
 x6-xx-xx-xx-xx-xx
@@ -171,6 +179,7 @@ crazytrace is configured via a configuration file. The path to this file is give
 ### Create a new release
 
 To create a new release the following is necessary:
+
 - Create a changelog entry
 - Create a changelog entry for the Debian package
 - Update the SECURITY.md
