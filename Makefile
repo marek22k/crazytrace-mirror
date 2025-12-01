@@ -33,7 +33,7 @@ install: setup compile
 debian:
 	dpkg-buildpackage -b
 
-check: flawfinder cppcheck scanbuild clangtidy lizard reuse
+check: flawfinder cppcheck scanbuild clangtidy lizard reuse mdl
 
 cppcheck: setup
 	meson compile -C build cppcheck
