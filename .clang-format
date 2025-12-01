@@ -101,8 +101,6 @@ IncludeCategories:
     Priority:        69
   - Regex:           '^<sys/.*>'
     Priority:        69
-  - Regex:           '^<io.h>'
-    Priority:        71
   - Regex:           '"[^"]+\.hpp"'
     Priority:        80
   - Regex:           '"[^"]+\.h"'
