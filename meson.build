@@ -65,6 +65,13 @@ tests_sources = files(
     'tests/noderequest_test.cpp',
     'tests/randomgenerator_test.cpp'
 )
+markdown_files = files(
+    'BUILDING.md',
+    'CHANGELOG.md',
+    'CONTRIBUTING.md',
+    'README.md',
+    'SECURITY.md'
+)
 all_sources = main_file + sources + headers + tests_sources
 
 if get_option('native')
@@ -249,6 +256,14 @@ if lizard.found()
         '--length', '400',
         '--arguments', '10',
         all_sources
+    ])
+endif
+
+mdl = find_program('mdl', required: false)
+if mdl.found()
+    run_target('mdl', command: [
+        mdl,
+        markdown_files
     ])
 endif
 
