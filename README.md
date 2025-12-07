@@ -75,7 +75,7 @@ Libraries used:
 - [libtuntap](https://github.com/LaKabane/libtuntap/): This library is used to create and close the TAP device.
 - [libtins](https://libtins.github.io/): This library is used for packet parsing and crafting.
 - [yaml-cpp](https://github.com/jbeder/yaml-cpp/): This library is used to read the configuration file in YAML format.
-- [Boost.log](https://www.boost.org/): This library is used as a logger. Various log levels can be set in the configuration file.
+- [Boost.Log](https://www.boost.org/): This library is used as a logger. Various log levels can be set in the configuration file.
 - [Boost.Asio](https://www.boost.org/): This library is used to communicate with the socket of the TAP device and to receive and send several packets asynchronously.
 
 Optional libraries:
