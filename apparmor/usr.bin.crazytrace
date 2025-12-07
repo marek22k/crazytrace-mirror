@@ -14,7 +14,7 @@ include <tunables/global>
   # used by libtuntap for IPv6 test
   network (create) inet dgram,
   network (create) inet6 dgram,
-  
+
   # used by libtuntap to manage the TAP device
   network (create) netlink raw,
   network (bind) netlink raw,
