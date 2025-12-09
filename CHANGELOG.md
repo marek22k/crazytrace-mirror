@@ -10,6 +10,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 - Fix path to license file
 - Correction of the copyright date
+- Improve performance
 
 ## Release 1.0.7
 
