@@ -16,4 +16,9 @@ steps:
       - apt-get update
       - apt-get --yes install build-essential meson ninja-build libboost1.88-all-dev libyaml-cpp-dev libtins-dev libseccomp-dev libcap-ng-dev clang-tidy cppcheck flawfinder debhelper debhelper-compat config-package-dev ruby-mdl
       - export PATH="$HOME/.local/bin:$PATH"
+      - export CC=clang CXX=clang++
+      - make check
+      - make debian
+      - rm --recursive --force build
+      - export CC=gcc CXX=g++
       - make debian

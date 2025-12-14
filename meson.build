@@ -80,6 +80,34 @@ if get_option('native')
     add_project_arguments(cpp_compiler.get_supported_arguments(native_flags), language: 'cpp')
 endif
 
+# see https://best.openssf.org/Compiler-Hardening-Guides/Compiler-Options-Hardening-Guide-for-C-and-C++.html
+hardening_compiler_flags = [
+    '-Wformat=2', # Strict printf/scanf format checks
+    '-Wconversion', # Warnings for potentially lossy implicit conversions
+    '-Wsign-conversion',
+    '-Wtrampolines', # Warn about stack trampolines (conflicts with non‑executable stack)
+    '-Wbidi-chars=any', # Enable warnings for possibly misleading Unicode bidirectional control characters
+    '-fstrict-flex-arrays=3', # Flexible arrays can only be declared with [].
+    '-fcf-protection=full', # Prevent certain attacks by enabling additional protection against unexpected control flow jumps. Minimal performance loss, as often implemented on the hardware side.
+    '-mbranch-protection=standard',
+    '-fno-delete-null-pointer-checks', # Prevent optimizations assuming null dereference is impossible
+    '-fno-strict-aliasing' # Disable strict aliasing optimizations
+]
+add_project_arguments(cpp_compiler.get_supported_arguments(hardening_compiler_flags), language: 'cpp')
+
+hardening_linker_flags = [
+    '-Wl,-z,noexecstack', # Mark the stack in memory as non-executable
+    '-Wl,-z,nodlopen', # Prevent loading this code via dlopen()
+    '-Wl,-z,relro', # Make relocation data read‑only after startup
+    '-Wl,-z,now' # Force the resolution of symbols from dynamic libraries at program startup
+]
+add_project_link_arguments(cpp_compiler.get_supported_link_arguments(hardening_linker_flags), language: 'cpp')
+
+if get_option('debug')
+    # see https://sourceware.org/bugzilla/show_bug.cgi?id=27375
+    add_project_arguments(cpp_compiler.get_supported_arguments(['-gdwarf-4']), language: 'cpp')
+endif
+
 cpp_compiler.has_header('unistd.h', required: true)
 cpp_compiler.has_function('dup', prefix: '#include <unistd.h>', required: true)
 
