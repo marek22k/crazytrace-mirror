@@ -31,10 +31,8 @@ NodeReply crazytrace::NodeContainer::get_reply(const NodeRequest& request)
 
                 // Both variables undergo a value check during initialization so
                 // that neither is greater than 255. It is therefore safe to
-                // convert them into an uint8_t.
-                const uint8_t reply_hoplimit = static_cast<uint8_t>(
-                    reached_node->get_hoplimit() -
-                    static_cast<uint8_t>(route.size()) + 1);
+                // convert them into an int.
+                const int reply_hoplimit = reached_node->get_hoplimit() - static_cast<int>(route.size()) + 1;
                 if (reply_hoplimit <= 0)
                     return NodeReply(NodeReplyType::NOREPLY);
 
@@ -50,7 +48,7 @@ NodeReply crazytrace::NodeContainer::get_reply(const NodeRequest& request)
                         reply.icmp_echo_reply(request.get_icmp_identifier(),
                                               request.get_icmp_sequence(),
                                               request.get_payload());
-                        reply.set_hoplimit(reply_hoplimit);
+                        reply.set_hoplimit(static_cast<uint8_t>(reply_hoplimit));
                         return reply;
                     }
                     case NodeRequestType::UDP:
@@ -65,7 +63,7 @@ NodeReply crazytrace::NodeContainer::get_reply(const NodeRequest& request)
                                            request.get_udp_sport());
                         reply.packet_reassembly(
                             request.get_destination_address());
-                        reply.set_hoplimit(reply_hoplimit);
+                        reply.set_hoplimit(static_cast<uint8_t>(reply_hoplimit));
                         return reply;
                     }
                     default:
@@ -85,8 +83,7 @@ NodeReply crazytrace::NodeContainer::get_reply(const NodeRequest& request)
                 const std::shared_ptr<NodeInfo>& reached_node =
                     route.at(reached_node_number);
 
-                const uint8_t reply_hoplimit = static_cast<uint8_t>(
-                    reached_node->get_hoplimit() - hoplimit + 1);
+                const int reply_hoplimit = reached_node->get_hoplimit() - hoplimit + 1;
                 if (reply_hoplimit <= 0)
                     return NodeReply(NodeReplyType::NOREPLY);
 
@@ -105,7 +102,7 @@ NodeReply crazytrace::NodeContainer::get_reply(const NodeRequest& request)
                                               request.get_payload());
                         reply.packet_reassembly(
                             request.get_destination_address());
-                        reply.set_hoplimit(reply_hoplimit);
+                        reply.set_hoplimit(static_cast<uint8_t>(reply_hoplimit));
                         return reply;
                     }
                     case NodeRequestType::UDP:
@@ -120,7 +117,7 @@ NodeReply crazytrace::NodeContainer::get_reply(const NodeRequest& request)
                                            request.get_udp_sport());
                         reply.packet_reassembly(
                             request.get_destination_address());
-                        reply.set_hoplimit(reply_hoplimit);
+                        reply.set_hoplimit(static_cast<uint8_t>(reply_hoplimit));
                         return reply;
                     }
                     default:
