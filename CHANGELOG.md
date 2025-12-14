@@ -6,22 +6,16 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
-## Release 1.0.8
-
-- Fix path to license file
-- Correction of the copyright date
-- Improve performance
-- Improve security
-
-## Release 1.0.7
-
-- Improvement of error messages
-- Prevent routing of IPv6 link-local addresses
-
 ## Release 1.0.6
 
 - Improvement of landlock sandboxing
 - Validation of the return value of the POSIX dup function
+- Improvement of error messages
+- Prevent routing of IPv6 link-local addresses
+- Fix path to license file
+- Correction of the copyright date
+- Improve performance
+- Improve security
 
 ## Release 1.0.5
 

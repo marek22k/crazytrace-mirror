@@ -19,6 +19,6 @@ steps:
       - export CC=clang CXX=clang++
       - make check
       - make debian
-      - rm --recursive --force build
+      - git clean -d --force
       - export CC=gcc CXX=g++
       - make debian
