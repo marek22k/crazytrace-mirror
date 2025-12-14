@@ -95,9 +95,8 @@ class NodeContainerTest : public testing::Test
 
             const Tins::PDU::serialization_type serialized_packet =
                 packet.serialize();
-            if (serialized_packet.size() >
-                std::numeric_limits<uint32_t>::max())
-                throw new std::invalid_argument(
+            if (serialized_packet.size() > std::numeric_limits<uint32_t>::max())
+                throw std::invalid_argument(
                     "serialized_packet.size() > "
                     "std::numeric_limits<uint32_t>::max()");
             const Tins::EthernetII final_packet(
@@ -128,9 +127,8 @@ class NodeContainerTest : public testing::Test
 
             const Tins::PDU::serialization_type serialized_packet =
                 packet.serialize();
-            if (serialized_packet.size() >
-                std::numeric_limits<uint32_t>::max())
-                throw new std::invalid_argument(
+            if (serialized_packet.size() > std::numeric_limits<uint32_t>::max())
+                throw std::invalid_argument(
                     "serialized_packet.size() > "
                     "std::numeric_limits<uint32_t>::max()");
             const Tins::EthernetII final_packet(
@@ -159,9 +157,8 @@ class NodeContainerTest : public testing::Test
 
             const Tins::PDU::serialization_type serialized_packet =
                 packet.serialize();
-            if (serialized_packet.size() >
-                std::numeric_limits<uint32_t>::max())
-                throw new std::invalid_argument(
+            if (serialized_packet.size() > std::numeric_limits<uint32_t>::max())
+                throw std::invalid_argument(
                     "serialized_packet.size() > "
                     "std::numeric_limits<uint32_t>::max()");
             const Tins::EthernetII final_packet(

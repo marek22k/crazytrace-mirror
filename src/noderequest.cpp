@@ -24,7 +24,7 @@ crazytrace::NodeRequest::NodeRequest(const Tins::EthernetII& packet) :
 
         this->_source_address = ipv6.src_addr();
         this->_destination_address = ipv6.dst_addr();
-        this->_hoplimit = static_cast<int>(ipv6.hop_limit());
+        this->_hoplimit = ipv6.hop_limit();
 
         switch (ipv6.next_header())
         {
@@ -45,10 +45,8 @@ crazytrace::NodeRequest::NodeRequest(const Tins::EthernetII& packet) :
                     case Tins::ICMPv6::Types::ECHO_REQUEST:
                     {
                         this->_type = NodeRequestType::ICMP_ECHO_REQUEST;
-                        this->_icmp_identifier =
-                            static_cast<int>(icmpv6.identifier());
-                        this->_icmp_sequence =
-                            static_cast<int>(icmpv6.sequence());
+                        this->_icmp_identifier = icmpv6.identifier();
+                        this->_icmp_sequence = icmpv6.sequence();
                         const Tins::RawPDU& raw_icmpv6 =
                             icmpv6.rfind_pdu<Tins::RawPDU>();
                         this->_payload = raw_icmpv6.payload();
