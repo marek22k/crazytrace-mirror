@@ -34,7 +34,7 @@ crazytrace::NodeReply::NodeReply(NodeReplyType type,
 {
 }
 
-void crazytrace::NodeReply::set_hoplimit(int hoplimit)
+void crazytrace::NodeReply::set_hoplimit(uint8_t hoplimit)
 {
     if (this->_type == NodeReplyType::ICMP_NDP)
         throw std::runtime_error(
@@ -44,8 +44,8 @@ void crazytrace::NodeReply::set_hoplimit(int hoplimit)
 }
 
 void crazytrace::NodeReply::icmp_echo_reply(
-    int icmp_identifier,
-    int icmp_sequence,
+    uint16_t icmp_identifier,
+    uint16_t icmp_sequence,
     const Tins::RawPDU::payload_type& payload)
 {
     if (this->_type != NodeReplyType::ICMP_ECHO_REPLY &&
@@ -59,7 +59,9 @@ void crazytrace::NodeReply::icmp_echo_reply(
 }
 
 void crazytrace::NodeReply::udp_response(
-    const Tins::RawPDU::payload_type& payload, int udp_dport, int udp_sport)
+    const Tins::RawPDU::payload_type& payload,
+    uint16_t udp_dport,
+    uint16_t udp_sport)
 {
     if (this->_type != NodeReplyType::ICMP_PORT_UNREACHABLE &&
         this->_type != NodeReplyType::ICMP_TIME_EXCEEDED_UDP)
@@ -286,7 +288,7 @@ std::ostream& crazytrace::operator<<(std::ostream& os,
     {
         case NodeReplyType::ICMP_ECHO_REPLY:
         {
-            os << " Hoplimit=" << nodereply._hoplimit
+            os << " Hoplimit=" << static_cast<unsigned>(nodereply._hoplimit)
                << ": ID=" << nodereply._icmp_identifier
                << " SEQ=" << nodereply._icmp_sequence << " Payload:";
             for (const auto& byte : nodereply._payload)
@@ -296,7 +298,7 @@ std::ostream& crazytrace::operator<<(std::ostream& os,
             break;
         }
         case NodeReplyType::ICMP_PORT_UNREACHABLE:
-            os << " Hoplimit=" << nodereply._hoplimit
+            os << " Hoplimit=" << static_cast<unsigned>(nodereply._hoplimit)
                << ": DPORT=" << nodereply._udp_dport
                << " SPORT=" << nodereply._udp_sport
                << " REQUEST_ADDRESS=" << nodereply._original_destination_address
@@ -304,7 +306,7 @@ std::ostream& crazytrace::operator<<(std::ostream& os,
             break;
         case NodeReplyType::ICMP_TIME_EXCEEDED_ICMP_ECHO_REQUEST:
         case NodeReplyType::ICMP_TIME_EXCEEDED_UDP:
-            os << " Hoplimit=" << nodereply._hoplimit
+            os << " Hoplimit=" << static_cast<unsigned>(nodereply._hoplimit)
                << " REQUEST_ADDRESS=" << nodereply._original_destination_address
                << " LENGTH=" << nodereply._payload.size();
             break;

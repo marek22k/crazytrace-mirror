@@ -12,7 +12,7 @@
 
 namespace tun_tap_device
 {
-    template<int BUFFER_SIZE> class DeviceClient
+    template<unsigned long BUFFER_SIZE> class DeviceClient
     {
         public:
             explicit DeviceClient(

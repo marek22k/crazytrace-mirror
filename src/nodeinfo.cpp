@@ -13,7 +13,7 @@ crazytrace::NodeInfo::NodeInfo() :
 {
 }
 
-int crazytrace::NodeInfo::get_hoplimit() const noexcept
+uint8_t crazytrace::NodeInfo::get_hoplimit() const noexcept
 {
     return this->_hoplimit;
 }
@@ -34,11 +34,10 @@ bool crazytrace::NodeInfo::has_address(const Tins::IPv6Address& address)
     return std::ranges::binary_search(this->_addresses, address);
 }
 
-void crazytrace::NodeInfo::set_hoplimit(int hoplimit)
+void crazytrace::NodeInfo::set_hoplimit(uint8_t hoplimit)
 {
-    if (hoplimit < 0 || hoplimit > 255)
-        throw std::invalid_argument(
-            "Hop limit outside the permitted value range");
+    static_assert(std::numeric_limits<decltype(this->_hoplimit)>::min() == 0);
+    static_assert(std::numeric_limits<decltype(this->_hoplimit)>::max() == 255);
     this->_hoplimit = hoplimit;
 }
 
@@ -109,7 +108,7 @@ std::vector<std::shared_ptr<NodeInfo>> crazytrace::NodeInfo::get_route_to(
     return {};
 }
 
-void crazytrace::NodeInfo::print(std::ostream& os, int layer) const
+void crazytrace::NodeInfo::print(std::ostream& os, unsigned int layer) const
 {
     const std::string tabs(layer, '\t');
 
@@ -140,7 +139,7 @@ bool crazytrace::NodeInfo::operator==(const NodeInfo& other) const
 std::ostream& crazytrace::operator<<(std::ostream& os,
                                      NodeInfo const & nodeinfo)
 {
-    os << "NodeInfo: hoplimit=" << nodeinfo._hoplimit;
+    os << "NodeInfo: hoplimit=" << static_cast<unsigned>(nodeinfo._hoplimit);
     for (const auto& address : nodeinfo._addresses)
     {
         os << " " << address;

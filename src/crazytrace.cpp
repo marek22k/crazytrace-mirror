@@ -42,7 +42,8 @@ void Crazytrace::_handle_packet(const boost::system::error_code,
     {
         const std::vector<uint8_t> raw_data(packet_data.begin(),
                                             packet_data.end());
-        const Tins::EthernetII packet(raw_data.data(), raw_data.size());
+        const Tins::EthernetII packet(raw_data.data(),
+                                      static_cast<uint32_t>(raw_data.size()));
 
         const NodeRequest request(packet);
         if (request.get_type() != NodeRequestType::UNKNOWN)

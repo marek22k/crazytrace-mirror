@@ -7,6 +7,7 @@
 
 #include <iomanip>
 #include <ostream>
+#include <cstdint>
 #include <tins/constants.h>
 #include <tins/tins.h>
 
@@ -33,13 +34,13 @@ namespace crazytrace
                 get_source_address() const noexcept;
             [[nodiscard]] const Tins::IPv6Address&
                 get_destination_address() const noexcept;
-            [[nodiscard]] int get_hoplimit() const noexcept;
+            [[nodiscard]] uint8_t get_hoplimit() const noexcept;
 
-            [[nodiscard]] int get_udp_sport() const noexcept;
-            [[nodiscard]] int get_udp_dport() const noexcept;
+            [[nodiscard]] uint16_t get_udp_sport() const noexcept;
+            [[nodiscard]] uint16_t get_udp_dport() const noexcept;
 
-            [[nodiscard]] int get_icmp_identifier() const noexcept;
-            [[nodiscard]] int get_icmp_sequence() const noexcept;
+            [[nodiscard]] uint16_t get_icmp_identifier() const noexcept;
+            [[nodiscard]] uint16_t get_icmp_sequence() const noexcept;
 
             [[nodiscard]] const Tins::RawPDU::payload_type&
                 get_payload() const noexcept;
@@ -53,13 +54,13 @@ namespace crazytrace
             Tins::HWAddress<6> _destination_mac;
             Tins::IPv6Address _source_address;
             Tins::IPv6Address _destination_address;
-            int _hoplimit;
+            uint8_t _hoplimit;
 
-            int _udp_dport;
-            int _udp_sport;
+            uint16_t _udp_dport;
+            uint16_t _udp_sport;
 
-            int _icmp_identifier;
-            int _icmp_sequence;
+            uint16_t _icmp_identifier;
+            uint16_t _icmp_sequence;
 
             /* Used for UDP and ICMP */
             Tins::RawPDU::payload_type /* aka std::vector<uint8_t> */ _payload;

@@ -106,27 +106,27 @@ const Tins::IPv6Address&
     return this->_destination_address;
 }
 
-int crazytrace::NodeRequest::get_hoplimit() const noexcept
+uint8_t crazytrace::NodeRequest::get_hoplimit() const noexcept
 {
     return this->_hoplimit;
 }
 
-int crazytrace::NodeRequest::get_udp_sport() const noexcept
+uint16_t crazytrace::NodeRequest::get_udp_sport() const noexcept
 {
     return this->_udp_sport;
 }
 
-int crazytrace::NodeRequest::get_udp_dport() const noexcept
+uint16_t crazytrace::NodeRequest::get_udp_dport() const noexcept
 {
     return this->_udp_dport;
 }
 
-int crazytrace::NodeRequest::get_icmp_identifier() const noexcept
+uint16_t crazytrace::NodeRequest::get_icmp_identifier() const noexcept
 {
     return this->_icmp_identifier;
 }
 
-int crazytrace::NodeRequest::get_icmp_sequence() const noexcept
+uint16_t crazytrace::NodeRequest::get_icmp_sequence() const noexcept
 {
     return this->_icmp_sequence;
 }
@@ -160,7 +160,7 @@ std::ostream& crazytrace::operator<<(std::ostream& os,
        << " (" << noderequest._source_mac << ") -> "
        << noderequest._destination_address << " ("
        << noderequest._destination_mac << ") "
-       << "Hoplimit=" << noderequest._hoplimit;
+       << "Hoplimit=" << static_cast<unsigned>(noderequest._hoplimit);
 
     switch (noderequest._type)
     {

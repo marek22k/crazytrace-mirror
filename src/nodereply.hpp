@@ -9,6 +9,7 @@
 #include <ostream>
 #include <string>
 #include <stdexcept>
+#include <cstdint>
 #include <tins/tins.h>
 
 namespace crazytrace
@@ -37,13 +38,13 @@ namespace crazytrace
                                Tins::HWAddress<6> source_mac,
                                Tins::IPv6Address source_address);
 
-            void set_hoplimit(int hoplimit);
-            void icmp_echo_reply(int icmp_identifier,
-                                 int icmp_sequence,
+            void set_hoplimit(uint8_t hoplimit);
+            void icmp_echo_reply(uint16_t icmp_identifier,
+                                 uint16_t icmp_sequence,
                                  const Tins::RawPDU::payload_type& payload);
             void udp_response(const Tins::RawPDU::payload_type& payload,
-                              int udp_dport,
-                              int udp_sport);
+                              uint16_t udp_dport,
+                              uint16_t udp_sport);
             void packet_reassembly(
                 Tins::IPv6Address original_destination_address);
 
@@ -61,16 +62,16 @@ namespace crazytrace
             Tins::HWAddress<6> _source_mac;
             Tins::IPv6Address _source_address; /* Also used for ICMP_NDP */
 
-            int _hoplimit;
+            uint8_t _hoplimit;
 
             /* ICMP ECHO REPLY */
-            int _icmp_identifier;
-            int _icmp_sequence;
+            uint16_t _icmp_identifier;
+            uint16_t _icmp_sequence;
 
             /* ICMP_PORT_UNREACHABLE */
             Tins::RawPDU::payload_type /* aka std::vector<uint8_t> */ _payload;
-            int _udp_dport;
-            int _udp_sport;
+            uint16_t _udp_dport;
+            uint16_t _udp_sport;
 
             /* ICMP TIME EXCEEDED */
             Tins::IPv6Address _original_destination_address;

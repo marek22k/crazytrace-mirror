@@ -10,6 +10,7 @@
 #include <type_traits>
 #include <vector>
 #include <stdexcept>
+#include <cstdint>
 #include <boost/log/trivial.hpp>
 #include <tins/tins.h>
 #include <yaml-cpp/yaml.h>

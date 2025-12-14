@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <gtest/gtest.h>
+#include <limits>
 #include <tins/tins.h>
 #include "noderequest.hpp"
 
@@ -32,8 +33,10 @@ TEST(NodeRequestTest, EchoRequest)
     /* Serializing the package is necessary to automatically calculate checksums
      * and other fields. */
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
-    const Tins::EthernetII final_packet(serialized_packet.data(),
-                                        serialized_packet.size());
+    ASSERT_LE(serialized_packet.size(), std::numeric_limits<uint32_t>::max());
+    const Tins::EthernetII final_packet(
+        serialized_packet.data(),
+        static_cast<uint32_t>(serialized_packet.size()));
 
     const NodeRequest request(final_packet);
 
@@ -78,8 +81,10 @@ TEST(NodeRequestTest, NdpRequest)
     /* Serializing the package is necessary to automatically calculate checksums
      * and other fields. */
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
-    const Tins::EthernetII final_packet(serialized_packet.data(),
-                                        serialized_packet.size());
+    ASSERT_LE(serialized_packet.size(), std::numeric_limits<uint32_t>::max());
+    const Tins::EthernetII final_packet(
+        serialized_packet.data(),
+        static_cast<uint32_t>(serialized_packet.size()));
 
     const NodeRequest request(final_packet);
 
@@ -124,8 +129,10 @@ TEST(NodeRequestTest, UdpRequest)
     /* Serializing the package is necessary to automatically calculate checksums
      * and other fields. */
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
-    const Tins::EthernetII final_packet(serialized_packet.data(),
-                                        serialized_packet.size());
+    ASSERT_LE(serialized_packet.size(), std::numeric_limits<uint32_t>::max());
+    const Tins::EthernetII final_packet(
+        serialized_packet.data(),
+        static_cast<uint32_t>(serialized_packet.size()));
 
     const NodeRequest request(final_packet);
 
@@ -167,8 +174,10 @@ TEST(NodeRequestTest, UnknownRequest)
     /* Serializing the package is necessary to automatically calculate checksums
      * and other fields. */
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
-    const Tins::EthernetII final_packet(serialized_packet.data(),
-                                        serialized_packet.size());
+    ASSERT_LE(serialized_packet.size(), std::numeric_limits<uint32_t>::max());
+    const Tins::EthernetII final_packet(
+        serialized_packet.data(),
+        static_cast<uint32_t>(serialized_packet.size()));
 
     const NodeRequest request(final_packet);
 

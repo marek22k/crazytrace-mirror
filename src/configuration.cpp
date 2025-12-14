@@ -136,7 +136,7 @@ void crazytrace::Configuration::load_nodes(const YAML::Node& nodes_config,
 
             if (const YAML::Node hoplimit_config = node_config["hoplimit"];
                 hoplimit_config.IsDefined())
-                node->set_hoplimit(hoplimit_config.as<int>());
+                node->set_hoplimit(hoplimit_config.as<uint8_t>());
 
             load_nodes(node_config["nodes"], node, false);
             nodes->add_node(node);
