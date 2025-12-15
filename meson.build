@@ -89,9 +89,7 @@ hardening_compiler_flags = [
     '-Wbidi-chars=any', # Enable warnings for possibly misleading Unicode bidirectional control characters
     '-fstrict-flex-arrays=3', # Flexible arrays can only be declared with [].
     '-fcf-protection=full', # Prevent certain attacks by enabling additional protection against unexpected control flow jumps. Minimal performance loss, as often implemented on the hardware side.
-    '-mbranch-protection=standard',
-    '-fno-delete-null-pointer-checks', # Prevent optimizations assuming null dereference is impossible
-    '-fno-strict-aliasing' # Disable strict aliasing optimizations
+    '-mbranch-protection=standard'
 ]
 add_project_arguments(cpp_compiler.get_supported_arguments(hardening_compiler_flags), language: 'cpp')
 
