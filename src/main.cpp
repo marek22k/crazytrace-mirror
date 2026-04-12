@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright (C) 2024-2025 Marek Küthe <m.k@mk16.de>
+// SPDX-FileCopyrightText: Copyright (C) 2024-2026 Marek Küthe <m.k@mk16.de>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -20,6 +20,7 @@
 #include "nodecontainer.hpp"
 #include "seccomp.hpp"
 #include "tun_tap.hpp"
+#include "capsicum.hpp"
 
 int main(int argc, char * argv[])
 {
@@ -128,6 +129,12 @@ int main(int argc, char * argv[])
         BOOST_LOG_TRIVIAL(info) << "Landlock: false";
 #endif
 
+#ifdef HAVE_CAPSICUM
+        BOOST_LOG_TRIVIAL(info) << "capsicum: true";
+#else
+        BOOST_LOG_TRIVIAL(info) << "capsicum: false";
+#endif
+
         const std::shared_ptr<crazytrace::NodeContainer> nodecontainer =
             config.get_node_container();
 
@@ -185,6 +192,20 @@ int main(int argc, char * argv[])
         seccomp_context.kill_signal();
         seccomp_context.load();
         seccomp_context.release();
+#endif
+#ifdef HAVE_CAPSICUM
+        Capsicum::enter();
+        Capsicum::limit_stdio();
+        Capsicum::limit_rights(dev.native_handler(), CAP_EVENT, CAP_FCNTL, CAP_IOCTL, CAP_READ, CAP_WRITE);
+        
+        if (Capsicum::in_capabiliy_mode())
+        {
+            BOOST_LOG_TRIVIAL(info) << "capsicum capabiliy mode: true";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "capsicum capabiliy mode: false";
+        }
 #endif
 
         const crazytrace::Crazytrace ct(

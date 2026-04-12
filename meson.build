@@ -41,6 +41,7 @@ sources = files(
 )
 headers = files(
     'src/capability_managment.hpp',
+    'src/capsicum.hpp',
     'src/configuration.hpp',
     'src/crazytrace.hpp',
     'src/deviceclient.hpp',
@@ -54,7 +55,7 @@ headers = files(
     'src/noderequest.hpp',
     'src/randomgenerator.hpp',
     'src/seccomp.hpp',
-    'src/tun_tap.hpp'
+    'src/tun_tap.hpp',´
 )
 tests_sources = files(
     'tests/loglevel_test.cpp',
@@ -228,6 +229,11 @@ if cpp_compiler.has_header('linux/landlock.h')
     if cpp_compiler.compiles('#include <linux/landlock.h>\nint number = LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON;', name: 'LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON number is available')
         add_project_arguments('-DHAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON', language: 'cpp')
     endif
+endif
+
+capsicum_dep = dependency('libcapsicum', required: false)
+if capsicum_dep.found() and cpp_compiler.has_header('capsicum_helpers.h') and cpp_compiler.has_header('sys/capsicum.h')
+    add_project_arguments('-DHAVE_CAPSICUM', language: 'cpp')
 endif
 
 libtins_dep = dependency('libtins', include_type: 'system')
