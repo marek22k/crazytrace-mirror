@@ -55,7 +55,7 @@ headers = files(
     'src/noderequest.hpp',
     'src/randomgenerator.hpp',
     'src/seccomp.hpp',
-    'src/tun_tap.hpp',´
+    'src/tun_tap.hpp',
 )
 tests_sources = files(
     'tests/loglevel_test.cpp',
@@ -252,6 +252,7 @@ if cppcheck.found()
         # Problems with detecting system libraries
         '--suppress=missingIncludeSystem',
         '--suppress=unmatchedSuppression',
+        '--suppress=functionStatic',
 
         '--enable=warning,style,information,missingInclude',
         '--error-exitcode=1',
