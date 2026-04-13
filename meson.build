@@ -107,12 +107,20 @@ if get_option('debug')
     add_project_arguments(cpp_compiler.get_supported_arguments(['-gdwarf-4']), language: 'cpp')
 endif
 
+if host_machine.system() == 'freebsd'
+    # see https://github.com/exult/exult/commit/202264bcf37d4edc8eafdaf53e1a910c8cf181a7
+    add_project_arguments('-isystem/usr/local/include', language: 'cpp')
+endif
+
 cpp_compiler.has_header('unistd.h', required: true)
 cpp_compiler.has_function('dup', prefix: '#include <unistd.h>', required: true)
 
 libtuntap_dep = dependency('libtuntap', required: false, include_type: 'system')
 if not libtuntap_dep.found()
-    libtuntap_dep = cpp_compiler.find_library('libtuntap', has_headers: ['tuntap.h'], required: true)
+    libtuntap_dep = cpp_compiler.find_library('libtuntap', has_headers: ['tuntap.h'], required: false)
+    if not libtuntap_dep.found()
+        libtuntap_dep = cpp_compiler.find_library('tuntap', has_headers: ['tuntap.h'], required: true)
+    endif
 endif
 
 # Workaround for https://github.com/boostorg/process/issues/494#issuecomment-3392312248
@@ -236,6 +244,13 @@ if capsicum_dep.found() and cpp_compiler.has_header('capsicum_helpers.h') and cp
     add_project_arguments('-DHAVE_CAPSICUM', language: 'cpp')
 endif
 
+threads_dep = declare_dependency()
+if host_machine.system() == 'freebsd'
+    # see https://github.com/exult/exult/issues/436
+    #     https://github.com/exult/exult/blob/38e8b8d140102ea9ec3632f618af7e73a43955df/configure.ac
+    threads_dep = dependency('threads')
+endif
+
 libtins_dep = dependency('libtins', include_type: 'system')
 yamlcpp_dep = dependency('yaml-cpp', include_type: 'system')
 gtest_dep = dependency('gtest', main: true, required: false, include_type: 'system')
@@ -339,7 +354,7 @@ if get_option('install_apparmor_profile')
     )
 endif
 
-deps = [libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep, seccomp_dep]
+deps = [libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep, seccomp_dep, threads_dep]
 
 if gtest_dep.found()
     gtest = executable('gtest', sources + tests_sources, dependencies: [gtest_dep] + deps, include_directories: ['src/'])
