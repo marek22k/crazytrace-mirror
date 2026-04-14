@@ -9,6 +9,7 @@
 
     #include <system_error>
     #include <cerrno>
+    #include <cstdint>
     #include <capsicum_helpers.h>
     #include <sys/capsicum.h>
 
@@ -31,6 +32,27 @@ namespace Capsicum
                 errno,
                 std::generic_category(),
                 "Failed to limit stdio");
+    }
+
+    inline void limit_fcntls(int fd, uint32_t fcntlrights)
+    {
+        if (::caph_fcntls_limit(fd, &fcntlrights) != 0)
+            throw std::system_error(
+                errno,
+                std::generic_category(),
+                "Failed to limit fcntls rights");
+    }
+
+    inline void limit_ioctls(int fd, const std::vector<unsigned long>& cmds)
+    {
+        if (cmds.empty())
+            throw std::out_of_range("cmds is empty");
+        
+        if (::caph_ioctls_limit(fd, cmds.data(), cmds.size()) != 0)
+            throw std::system_error(
+                errno,
+                std::generic_category(),
+                "Failed to limit ioctls rights");
     }
 
     inline bool in_capability_mode()
