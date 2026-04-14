@@ -35,14 +35,7 @@ namespace Capsicum
 
     inline bool in_capability_mode()
     {
-        unsigned int flag;
-        if (::cap_getmode(&flag) != 0)
-            throw std::system_error(
-                errno,
-                std::generic_category(),
-                "Failed to get capability mode");
-        
-        return flag != 0;
+       return ::cap_sandboxed();
     }
 
     template<typename... Rights>
