@@ -197,6 +197,8 @@ int main(int argc, char * argv[])
         Capsicum::enter();
         Capsicum::limit_stdio();
         Capsicum::limit_rights(dev.native_handler(), CAP_EVENT, CAP_FCNTL, CAP_IOCTL, CAP_READ, CAP_WRITE);
+        Capsicum::limit_fcntls(dev.native_handler(), CAP_FCNTL_GETFL | CAP_FCNTL_SETFL);
+        Capsicum::limit_ioctls(dev.native_handler(), {DP_POLL, FIONBIO, FIONREAD, SIOCATMARK});
         
         if (Capsicum::in_capabiliy_mode())
         {
