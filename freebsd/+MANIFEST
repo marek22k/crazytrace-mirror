@@ -5,6 +5,7 @@
 name = "crazytrace"
 version = "1.0.8"
 origin = "net/crazytrace"
+comment = "a network simulation program"
 desc = <<EOD
 Simple network simulator to test ping and traceroute implementations
 What happens if a traceroute with the same TTL/hop limit is received from two different source addresses? How will they react?
