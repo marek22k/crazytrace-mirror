@@ -17,7 +17,7 @@ steps:
     pull: true
     commands:
       - apt-get update
-      - apt-get --yes install build-essential meson ninja-build libboost1.88-all-dev libyaml-cpp-dev libtins-dev libseccomp-dev libcap-ng-dev clang-tidy cppcheck flawfinder debhelper debhelper-compat config-package-dev ruby-mdl
+      - apt-get --yes install build-essential meson ninja-build libboost1.88-all-dev libyaml-cpp-dev libtins-dev libseccomp-dev libcap-ng-dev clang-tidy cppcheck flawfinder debhelper debhelper-compat config-package-dev ruby-mdl googletest
       - export PATH="$HOME/.local/bin:$PATH"
       - export CC=clang CXX=clang++
       - make check
