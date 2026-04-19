@@ -1,0 +1,22 @@
+# SPDX-FileCopyrightText: Copyright (C) 2024-2025 Marek Küthe <m.k@mk16.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+labels:
+  platform: freebsd/amd64
+
+when:
+  - event: manual
+    branch: main
+  - event: push
+    branch: main
+
+steps:
+  - name: build
+    image: sh
+    commands:
+      - pkg install --yes pkgconf gmake meson ninja boost-all yaml-cpp llvm
+      - gmake scanbuild clangtidy
+      - git clean -d --force
+      - rm --force --recursive build
+      - gmake
