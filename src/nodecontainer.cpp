@@ -172,7 +172,7 @@ NodeReply crazytrace::NodeContainer::get_reply(const NodeRequest& request)
 }
 
 void crazytrace::NodeContainer::add_node(
-    std::shared_ptr<NodeInfo> node) noexcept
+    std::shared_ptr<NodeInfo> node)
 {
     this->_nodes.push_back(node);
 }

@@ -23,7 +23,7 @@ namespace crazytrace
         public:
             [[nodiscard]] NodeReply
                 get_reply(const crazytrace::NodeRequest& request);
-            void add_node(std::shared_ptr<NodeInfo> node) noexcept;
+            void add_node(std::shared_ptr<NodeInfo> node);
             [[nodiscard]] std::size_t max_depth() const;
 
             void print(std::ostream& os) const;
