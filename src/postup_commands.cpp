@@ -58,7 +58,7 @@ void PostupCommands::execute_commands(
                                      "there is no command to execute.");
         }
 
-        const std::string_view exe(postup_command_argsat.at(0));
+        const std::string_view exe(postup_command_args.at(0));
         const bool is_path_to_file = exe.contains('/');
 
         boost::process::process child(

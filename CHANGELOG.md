@@ -12,6 +12,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - Add Capsicum sandboxing support
 - Removal of an incorrect compiler warning
 - Catch all errors, even the highly unlikely ones.
+- Use functions with bounds checking
 
 ## Release 1.0.7
 
