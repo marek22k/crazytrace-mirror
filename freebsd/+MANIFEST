@@ -15,13 +15,11 @@ maintainer = "m.k@mk16.de"
 www = "https://codeberg.org/mark22k/crazytrace"
 prefix = "/usr/local"
 
-# Dependencies
 deps {
     yaml-cpp: {origin: "devel/yaml-cpp", version: "0.9.0"}
     boost-libs: {origin: "devel/boost-libs", version: "1.89.0_2"}
 }
 
-# Files
 files {
     /usr/local/bin/crazytrace = "0755";
 }
