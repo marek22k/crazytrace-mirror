@@ -22,7 +22,7 @@
 #include "seccomp.hpp"
 #include "tun_tap.hpp"
 
-int main(int argc, char * argv[])
+int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
 {
     try
     {
