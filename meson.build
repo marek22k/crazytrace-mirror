@@ -239,8 +239,7 @@ if cpp_compiler.has_header('linux/landlock.h')
     endif
 endif
 
-capsicum_dep = dependency('libcapsicum', required: false)
-if capsicum_dep.found() and cpp_compiler.has_header('capsicum_helpers.h') and cpp_compiler.has_header('sys/capsicum.h')
+if cpp_compiler.has_header('capsicum_helpers.h') and cpp_compiler.has_header('sys/capsicum.h')
     add_project_arguments('-DHAVE_CAPSICUM', language: 'cpp')
 endif
 

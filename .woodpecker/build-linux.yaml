@@ -2,6 +2,9 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+labels:
+  platform: linux/amd64
+
 when:
   - event: manual
     branch: main
