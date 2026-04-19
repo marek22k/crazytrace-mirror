@@ -2,6 +2,9 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+labels:
+  platform: linux/amd64
+
 when:
   - event: tag
 
@@ -27,5 +30,5 @@ steps:
       - make debian
       - |
         for FILE in ../crazytrace_*.deb; do
-          curl --user $CODEBERG_GIT_USERNAME:$CODEBERG_GIT_PASSWORD --upload-file $FILE https://codeberg.org/api/packages/mark22k/debian/pool/stable/main/upload
+          curl --user "$CODEBERG_GIT_USERNAME:$CODEBERG_GIT_PASSWORD" --upload-file "$FILE" "https://codeberg.org/api/packages/mark22k/debian/pool/stable/main/upload"
         done

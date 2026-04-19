@@ -33,6 +33,7 @@ install: setup compile
 freebsd: compile
 	meson install -C build --destdir freebsd-staging
 	pkg create --metadata freebsd --root-dir build/freebsd-staging --out-dir .
+	rm -rf build/freebsd-staging
 
 debian:
 	dpkg-buildpackage -b

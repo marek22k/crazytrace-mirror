@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: Copyright (C) 2024-2026 Marek Küthe <m.k@mk16.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+labels:
+  platform: freebsd/amd64
+
+when:
+  - event: tag
+
+steps:
+  - name: release
+    environment:
+      CODEBERG_GIT_USERNAME:
+        from_secret: codeberg_git_username
+      CODEBERG_GIT_PASSWORD:
+        from_secret: codeberg_git_password
+    image: codeberg.org/mark22k/ci:latest
+    pull: true
+    commands:
+      - pkg install --yes pkgconf gmake meson ninja boost-all yaml-cpp llvm googletest
+      - gmake scanbuild clangtidy
+      - git clean -d --force
+      - rm --force --recursive build
+      - gmake freebsd
+      - |
+        for FILE in ./crazytrace-*.pkg; do
+          curl --user "$CODEBERG_GIT_USERNAME:$CODEBERG_GIT_PASSWORD" --upload-file "$FILE" "https://codeberg.org/api/packages/mark22k/generic/crazytrace-freebsd/$(git describe --tags --abbrev=0)/$(basename "$FILE")"
+        done
