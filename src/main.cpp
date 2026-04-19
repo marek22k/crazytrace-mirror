@@ -228,5 +228,11 @@ int main(int argc, char * argv[])
                                  << "Exit program.";
         std::exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
     }
+    catch (...)
+    {
+        BOOST_LOG_TRIVIAL(fatal) << "Unknown error caught." << std::endl
+                                 << "Exit program.";
+        std::exit(EXIT_FAILURE);
+    }
     return EXIT_SUCCESS;
 }
