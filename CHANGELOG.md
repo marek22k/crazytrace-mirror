@@ -11,6 +11,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - Add FreeBSD support
 - Add Capsicum sandboxing support
 - Removal of an incorrect compiler warning
+- Catch all errors, even the highly unlikely ones.
 
 ## Release 1.0.7
 

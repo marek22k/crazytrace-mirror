@@ -30,6 +30,9 @@ coverage: setupcoverage test
 install: setup compile
 	meson install -C build
 
+freebsd: compile
+	pkg create --metadata -r /build/
+
 debian:
 	dpkg-buildpackage -b
 

@@ -182,5 +182,7 @@ To create a new release the following is necessary:
 
 - Create a changelog entry
 - Create a changelog entry for the Debian package
+- Bump the version in the Arch PKGBUILD
+- Bump the version in the FreeBSD +MANIFEST
 - Update the SECURITY.md
 - Create a new git tag

@@ -15,8 +15,8 @@ steps:
   - name: build
     image: sh
     commands:
-      - pkg install --yes pkgconf gmake meson ninja boost-all yaml-cpp llvm
+      - pkg install --yes pkgconf gmake meson ninja boost-all yaml-cpp llvm googletest
       - gmake scanbuild clangtidy
       - git clean -d --force
       - rm --force --recursive build
-      - gmake
+      - gmake freebsd
