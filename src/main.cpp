@@ -232,7 +232,7 @@ int main(int argc, char * argv[])
     {
         BOOST_LOG_TRIVIAL(fatal) << "Unknown error caught." << std::endl
                                  << "Exit program.";
-        std::exit(EXIT_FAILURE);
+        std::exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
     }
     return EXIT_SUCCESS;
 }
