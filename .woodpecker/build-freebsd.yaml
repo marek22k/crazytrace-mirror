@@ -16,9 +16,7 @@ steps:
     image: sh
     commands:
       - pkg install --yes pkgconf gmake meson ninja boost-all yaml-cpp llvm
-      # - make check
-      # - make debian
-      # - git clean -d --force
-      # - rm --force --recursive build
-      # - export CC=gcc CXX=g++
+      - gmake scanbuild clangtidy
+      - git clean -d --force
+      - rm --force --recursive build
       - gmake

@@ -36,7 +36,7 @@ namespace Capsicum
 
     inline void limit_fcntls(int fd, uint32_t fcntlrights)
     {
-        if (::caph_fcntls_limit(fd, &fcntlrights) != 0)
+        if (::caph_fcntls_limit(fd, fcntlrights) != 0)
             throw std::system_error(
                 errno,
                 std::generic_category(),
