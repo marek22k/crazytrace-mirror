@@ -39,7 +39,10 @@ void PosixWrapper::setgid(const gid_t uid)
 
 uid_t PosixWrapper::username_to_uid(const std::string& username)
 {
-    struct passwd * entry = ::getpwnam(username.c_str());
+    // This function is called in a single-threaded manner in crazytrace.
+    // Therefore, it may be thread-unsafe.
+    struct passwd * entry =
+        ::getpwnam(username.c_str()); // NOLINT(concurrency-mt-unsafe)
     if (entry == nullptr)
     {
         throw std::system_error(
@@ -50,6 +53,8 @@ uid_t PosixWrapper::username_to_uid(const std::string& username)
 
 gid_t PosixWrapper::groupname_to_gid(const std::string& groupname)
 {
+    // This function is called in a single-threaded manner in crazytrace.
+    // Therefore, it may be thread-unsafe.
     struct group * entry = ::getgrnam(groupname.c_str());
     if (entry == nullptr)
     {
