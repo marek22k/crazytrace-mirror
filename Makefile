@@ -30,7 +30,8 @@ coverage: setupcoverage test
 install: setup compile
 	meson install -C build
 
-freebsd: compile
+freebsd:
+	meson setup --prefix=/usr/local -Dinstall_documentation=true
 	meson install -C build --destdir freebsd-staging
 	pkg create --metadata freebsd --root-dir build/freebsd-staging --out-dir .
 	rm -fR build/freebsd-staging

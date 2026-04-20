@@ -4,4 +4,5 @@
 
 option('install_systemd_unit', type: 'boolean', description: 'Install systemd unit file (default: false)', value: false)
 option('install_apparmor_profile', type: 'boolean', description: 'Install apparmor profile (default: false)', value: false)
+option('install_documentation', type: 'boolean', description: 'Install documentation including license note and README (default: false)', value: false)
 option('native', type: 'boolean', description: 'Optimize build for local CPU architecture (default: false)', value: false)

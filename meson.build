@@ -353,6 +353,24 @@ if get_option('install_apparmor_profile')
     )
 endif
 
+if get_option('install_documentation')
+    documentation_files = [
+        'BUILDING.md',
+        'CHANGELOG.md',
+        'CONTRIBUTING.md',
+        'README.md',
+        'SECURITY.md',
+        'LICENSE.txt'
+    ]
+
+    foreach file : documentation_files
+        install_data(
+            file,
+            install_dir: 'share/doc/crazytrace/'
+        )
+    endforeach
+endif
+
 deps = [libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep, seccomp_dep, threads_dep]
 
 if gtest_dep.found()

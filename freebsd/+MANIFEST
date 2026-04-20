@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 name = "crazytrace"
-version = "1.0.8"
+version = "1.0.9"
 origin = "net/crazytrace"
 comment = "a network simulation program"
 desc = <<EOD
@@ -22,4 +22,10 @@ deps {
 
 files {
     /usr/local/bin/crazytrace = "0755";
+    /usr/local/share/doc/crazytrace/BUILDING.md = "0644";
+    /usr/local/share/doc/crazytrace/CHANGELOG.md = "0644";
+    /usr/local/share/doc/crazytrace/CONTRIBUTING.md = "0644";
+    /usr/local/share/doc/crazytrace/README.md = "0644";
+    /usr/local/share/doc/crazytrace/SECURITY.md = "0644";
+    /usr/local/share/doc/crazytrace/LICENSE.txt = "0644";
 }
