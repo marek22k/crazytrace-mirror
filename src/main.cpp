@@ -173,13 +173,13 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
         {
             const std::string& username = config.get_user();
             const auto uid = PosixWrapper::username_to_uid(username);
-            PosixWrapper::setuid(uid); // NOLINT(clang-analyzer-security.insecureAPI.UncheckedReturn)
+            PosixWrapper::setuid(uid); // NOLINT(security.insecureAPI.UncheckedReturn)
             BOOST_LOG_TRIVIAL(info)
                 << "setuid: " << username << " (" << uid << ")";
 
             const std::string& groupname = config.get_group();
             const auto gid = PosixWrapper::groupname_to_gid(groupname);
-            PosixWrapper::setgid(gid); // NOLINT(clang-analyzer-security.insecureAPI.UncheckedReturn)
+            PosixWrapper::setgid(gid); // NOLINT(security.insecureAPI.UncheckedReturn)
             BOOST_LOG_TRIVIAL(info)
                 << "setgid: " << groupname << " (" << gid << ")";
         }
