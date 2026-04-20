@@ -15,6 +15,9 @@ sanitizer:
 native:
 	meson setup --reconfigure -Dnative=true build
 
+setugid:
+	meson setup --reconfigure -Denable_setugid=true build
+
 setupcoverage:
 	meson setup --reconfigure -Db_coverage=true build
 

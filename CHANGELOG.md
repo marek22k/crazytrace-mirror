@@ -9,6 +9,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ## Release 1.0.9
 
 - Include the documentation with the installation
+- Allows one to set the UID and GID of the process
 
 ## Release 1.0.8
 

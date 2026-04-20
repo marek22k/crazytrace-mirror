@@ -19,6 +19,10 @@
 #include "nodecontainer.hpp"
 #include "postup_commands.hpp"
 
+#ifdef HAVE_SETUGID
+    #include <optional>
+#endif
+
 namespace crazytrace
 {
     class Configuration
@@ -31,6 +35,12 @@ namespace crazytrace
             [[nodiscard]] const std::string& get_device_name() const noexcept;
             [[nodiscard]] const PostupCommands&
                 get_postup_commands() const noexcept;
+
+            #ifdef HAVE_SETUGID
+                [[nodiscard]] bool has_setguid() const noexcept;
+                [[nodiscard]] const std::string& get_user() const noexcept;
+                [[nodiscard]] const std::string& get_group() const noexcept;
+            #endif
 
         private:
             void load(const std::string& filename);
@@ -46,6 +56,10 @@ namespace crazytrace
 
             std::string _device_name;
             std::shared_ptr<crazytrace::NodeContainer> _node_container;
+            #ifdef HAVE_SETUGID
+                std::optional<std::string> _user;
+                std::optional<std::string> _group;
+            #endif
             LogLevel _log_level;
             PostupCommands _postup_commands;
     };

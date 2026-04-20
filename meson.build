@@ -117,6 +117,14 @@ endif
 cpp_compiler.has_header('unistd.h', required: true)
 cpp_compiler.has_function('dup', prefix: '#include <unistd.h>', required: true)
 
+if get_option('enable_setugid')
+    cpp_compiler.has_function('setuid', prefix: '#include <unistd.h>', required: true)
+    cpp_compiler.has_function('setgid', prefix: '#include <unistd.h>', required: true)
+    cpp_compiler.has_type('struct passwd', prefix: '#include <pwd.h>', required: true)
+    cpp_compiler.has_type('struct group', prefix: '#include <grp.h>', required: true)
+    add_project_arguments('-DHAVE_SETUGID', language: 'cpp')
+endif
+
 libtuntap_dep = dependency('libtuntap', required: false, include_type: 'system')
 if not libtuntap_dep.found()
     libtuntap_dep = cpp_compiler.find_library('libtuntap', has_headers: ['tuntap.h'], required: false)

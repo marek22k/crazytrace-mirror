@@ -9,9 +9,21 @@
 #include <system_error>
 #include <unistd.h>
 
+#ifdef HAVE_SETUGID
+    #include <pwd.h>
+    #include <grp.h>
+#endif
+
 namespace PosixWrapper
 {
     [[nodiscard]] int dup(const int oldfd);
+
+    #ifdef HAVE_SETUGID
+    void setuid(const uid_t uid);
+    void setgid(const gid_t uid);
+    [[nodiscard]] uid_t username_to_uid(const std::string& username);
+    [[nodiscard]] gid_t groupname_to_gid(const std::string& groupname);
+    #endif
 }
 
 #endif
