@@ -20,7 +20,7 @@ steps:
       - pkg install --yes pkgconf gmake meson ninja boost-all yaml-cpp llvm googletest
       - gmake scanbuild clangtidy
       - git clean -d --force
-      - rm --force --recursive build
+      - rm -fR build
       - gmake freebsd
       - |
         for FILE in ./crazytrace-*.pkg; do
