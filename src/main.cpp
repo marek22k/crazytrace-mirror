@@ -12,7 +12,7 @@
 #include <boost/asio.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/version.hpp>
-#include <unistd.h>
+#include "posix_wrapper.hpp"
 #include "capability_managment.hpp"
 #include "capsicum.hpp"
 #include "configuration.hpp"
@@ -151,11 +151,7 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
         BOOST_LOG_TRIVIAL(debug) << "Set the TUN device up.";
         dev.up();
 
-        const int tap_dev_fd = ::dup(dev.native_handler());
-        if (tap_dev_fd < 0)
-            throw std::system_error(errno,
-                                    std::generic_category(),
-                                    "Failed to duplicate file descriptor.");
+        const int tap_dev_fd = PosixWrapper::dup(dev.native_handler());
 
         boost::asio::io_context io;
 #ifdef BOOST_PROCESS_V1
