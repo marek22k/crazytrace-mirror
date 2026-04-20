@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ -n "${PKG_ROOTDIR}" ] && [ "${PKG_ROOTDIR}" != "/" ]; then
+  PW="/usr/sbin/pw -R ${PKG_ROOTDIR}"
+else
+  PW=/usr/sbin/pw
+fi
+
+if ${PW} usershow crazytrace >/dev/null 2>&1; then
+  echo "==> You should manually remove the \"crazytrace\" user"
+fi
+if ${PW} groupshow crazytrace >/dev/null 2>&1; then
+  echo "==> You should manually remove the \"crazytrace\" group"
+fi

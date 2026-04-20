@@ -14,6 +14,10 @@ EOD
 maintainer = "m.k@mk16.de"
 www = "https://codeberg.org/mark22k/crazytrace"
 prefix = "/usr/local"
+licenselogic = "and";
+licenses = ["GPL-3.0-or-later", "ISC", "BSD-2-Clause"];
+users = ["crazytrace"]
+groups = ["crazytrace"]
 
 deps {
     yaml-cpp: {origin: "devel/yaml-cpp", version: "0.9.0"}
