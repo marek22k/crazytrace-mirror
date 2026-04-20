@@ -187,12 +187,12 @@ bool crazytrace::Configuration::has_setguid() const noexcept
     return this->_user.has_value() && this->_group.has_value();
 }
 
-const std::string& crazytrace::Configuration::get_user() const noexcept
+const std::string& crazytrace::Configuration::get_user() const
 {
     return this->_user.value();
 }
 
-const std::string& crazytrace::Configuration::get_group() const noexcept
+const std::string& crazytrace::Configuration::get_group() const
 {
     return this->_group.value();
 }
