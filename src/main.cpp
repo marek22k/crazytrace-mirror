@@ -69,9 +69,9 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
         seccomp_context.kill_rawio();
         seccomp_context.kill_reboot();
         seccomp_context.kill_resources();
-        #ifndef HAVE_SETUGID
-            seccomp_context.kill_setuid();
-        #endif
+    #ifndef HAVE_SETUGID
+        seccomp_context.kill_setuid();
+    #endif
         seccomp_context.kill_swap();
         seccomp_context.kill_sync();
         seccomp_context.kill_system_service();
@@ -174,12 +174,14 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
             const std::string& username = config.get_user();
             const auto uid = PosixWrapper::username_to_uid(username);
             PosixWrapper::setuid(uid);
-            BOOST_LOG_TRIVIAL(info) << "setuid: " << username << " (" << uid << ")";
+            BOOST_LOG_TRIVIAL(info)
+                << "setuid: " << username << " (" << uid << ")";
 
             const std::string& groupname = config.get_group();
             const auto gid = PosixWrapper::groupname_to_gid(groupname);
             PosixWrapper::setgid(gid);
-            BOOST_LOG_TRIVIAL(info) << "setgid: " << groupname << " (" << gid << ")";
+            BOOST_LOG_TRIVIAL(info)
+                << "setgid: " << groupname << " (" << gid << ")";
         }
 #endif
 #ifdef HAVE_LIBCAPNG

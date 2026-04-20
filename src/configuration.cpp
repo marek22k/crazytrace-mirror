@@ -31,19 +31,19 @@ void crazytrace::Configuration::load(const std::string& filename)
             throw std::runtime_error("device name is missing.");
         this->_device_name = device_name_node.as<std::string>();
 
-        #ifdef HAVE_SETUGID
+#ifdef HAVE_SETUGID
         const YAML::Node setugid_node = config["setugid"];
         if (setugid_node.IsDefined())
         {
             const YAML::Node user_node = setugid_node["user"];
             const YAML::Node group_node = setugid_node["group"];
-            if (! user_node.IsDefined() || ! group_node.IsDefined())
+            if (!user_node.IsDefined() || !group_node.IsDefined())
                 throw std::runtime_error("user or group is missing.");
 
             this->_user = user_node.as<std::string>();
             this->_group = group_node.as<std::string>();
         }
-        #endif
+#endif
 
         const YAML::Node post_up_command_node = config["post_up_commands"];
         this->load_postup_commands(post_up_command_node);
