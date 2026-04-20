@@ -16,6 +16,7 @@ steps:
     image: sh
     commands:
       - pkg install --yes pkgconf gmake meson ninja boost-all yaml-cpp llvm googletest
+      - gmake setugid
       - gmake scanbuild clangtidy
       - git clean -d --force
       - rm -fR build
