@@ -37,7 +37,7 @@ debian:
 	dpkg-buildpackage -b
 
 freebsd:
-	meson setup --prefix=/usr/local -Dinstall_documentation=true -Denable_setugid=true build
+	meson setup --prefix=/usr/local -Dinstall_documentation=true -Dinstall_rc_script=true -Denable_setugid=true build
 	meson install -C build --destdir freebsd-staging
 	cp --force --link freebsd/configuration.yaml build/freebsd-staging/usr/local/etc/crazytrace.yaml
 	pkg create --metadata freebsd/metadata --root-dir build/freebsd-staging --out-dir .

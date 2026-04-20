@@ -356,6 +356,13 @@ if get_option('install_systemd_unit')
     )
 endif
 
+if get_option('install_rc_script')
+    install_data(
+        'rc/crazytrace',
+        install_dir: 'etc/rc.d'
+    )
+endif
+
 if get_option('install_apparmor_profile')
     install_data(
         'apparmor/usr.bin.crazytrace',
@@ -376,7 +383,7 @@ if get_option('install_documentation')
     foreach file : documentation_files
         install_data(
             file,
-            install_dir: 'share/doc/crazytrace/'
+            install_dir: 'share/doc/crazytrace'
         )
     endforeach
 endif
