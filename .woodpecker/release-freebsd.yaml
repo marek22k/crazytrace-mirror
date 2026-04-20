@@ -15,8 +15,7 @@ steps:
         from_secret: codeberg_git_username
       CODEBERG_GIT_PASSWORD:
         from_secret: codeberg_git_password
-    image: codeberg.org/mark22k/ci:latest
-    pull: true
+    image: sh
     commands:
       - pkg install --yes pkgconf gmake meson ninja boost-all yaml-cpp llvm googletest
       - gmake scanbuild clangtidy
