@@ -16,18 +16,12 @@ load_rc_config $name
 
 pidfile=/var/run/crazytrace.pid
 command="/usr/sbin/daemon"
-procname="/usr/local/bin/crazytrace"
-command_args"
+command_args="
     --syslog \
     --syslog-facility daemon \
-    --syslog-tag "$name"
-command_args="-f -p ${pidfile} -T ${name} \
-    /usr/bin/env PATH=$PATH:/usr/local/bin ${procname} \
-    --server ${woodpeckeragent_server} \
-    --grpc-token ${woodpeckeragent_token} \
-    --grpc-secure true \
-    --backend-engine local \
-    --agent-config /usr/local/etc/woodpecker/agent.conf \
-    --log-level info"
+    --syslog-tag "$name" \
+    /usr/local/bin/crazytrace \
+    "$crazytrace_config"
+"
 
 run_rc_command "$1"

@@ -36,7 +36,8 @@ install: setup compile
 freebsd:
 	meson setup --prefix=/usr/local -Dinstall_documentation=true -Denable_setugid=true build
 	meson install -C build --destdir freebsd-staging
-	pkg create --metadata freebsd --root-dir build/freebsd-staging --out-dir .
+	cp --force --link freebsd/configuration.yaml build/freebsd-staging/usr/local/etc/crazytrace.yaml
+	pkg create --metadata freebsd/metadata --root-dir build/freebsd-staging --out-dir .
 	rm -fR build/freebsd-staging
 
 debian:

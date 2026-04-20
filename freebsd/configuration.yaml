@@ -1,0 +1,20 @@
+---
+log_level: info
+setugid:
+  user: crazytrace
+  group: crazytrace
+device_name: crazytrace
+post_up_commands:
+  - ip route add fd00::/64 dev crazytrace via fe80::b1:4fff:fe7e:9dc3
+nodes:
+  - mac: 02:B1:4F:7E:9D:C3
+    addresses: [fe80::b1:4fff:fe7e:9dc3]
+    hoplimit: 255
+    nodes:
+      - addresses: [fd00::1]
+        nodes:
+          - addresses: [fd00::21, fd00::22, fd00::23]
+            nodes:
+              - addresses: [fd00::3]
+  - mac: 02:B1:4F:7E:9D:C4
+    addresses: [fe80::b1:4fff:fe7e:9dc4]
