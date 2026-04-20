@@ -28,6 +28,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Security
 
 On Linux, crazytrace uses three sandboxing technologies or restriction technologies: Capabilities, seccomp and landlock, systemd, and AppArmor.
+On FreeBSD, crazytrace uses Capsicum, and if necessary, it can set its UID and GID in phase 2.
 These serve to limit the extent of compromise if crazytrace is compromised by an attack.
 
 libcap-ng, seccomp, and landlock are used in two phases in crazytrace:
@@ -65,6 +66,16 @@ AppArmor restricts crazytrace by determining what crazytrace is allowed to do. U
 crazytrace comes with a hardened systemd unit that restricts many accesses not used by crazytrace.
 
 See [SECURITY.md](SECURITY.md).
+
+### Capsicum
+
+crazytrace restricts its permissions using Capsicum. The default input and output are hardened, and only the necessary permissions are granted to the TAP device's file descriptor.
+After that, crazytrace switches to capability mode and does not request any new permissions.
+
+### setugid
+
+crazytrace must be run with permissions to manage the network configuration. To achieve this, crazytrace can, for example, be started as a privileged user. It is unsafe to run crazytrace as a privileged user for longer than necessary. Therefore, crazytrace can change the user and group using the setuid and setgid commands. This can be specified in the configuration file.
+If crazytrace is started via systemd, this is not necessary, as systemd creates a dynamic (temporary) user for crazytrace that has only the necessary permissions.
 
 ## How it works?
 
@@ -152,6 +163,14 @@ A list of nodes then appears in the configuration file. These can have the follo
 - `addresses`: A list of IP addresses that the node should have. It responds to all of them and replies with a random one.
 - `hoplimit`: Hop limit with which the response is to be sent. ICMP NDP packets are always sent with a hop limit of 255. If no hop limit is specified, a hop limit of 64 is used.
 - `nodes`: A list of nodes (which are structured in the same way) which are behind the current one in the simulated network.
+
+If you want to use the setugid feature, you can add the following to the configuration:
+```yaml
+setugid:
+  user: crazytrace
+  group: crazytrace
+```
+After initialization, crazytrace switches to the user `crazytrace` and the group `crazytrace`.
 
 The configuration is written in YAML.
 
