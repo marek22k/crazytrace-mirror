@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-.PHONY: all setup addresssanitizer leaksanitizer undefinedsanitizer clean compile coverage install debian check cppcheck flawfinder lizard clangtidy reuse-annotate reuse-download reuse-lint reuse-fix reuse test clangformat
+.PHONY: all setup addresssanitizer leaksanitizer undefinedsanitizer clean compile coverage install debian freebsd check cppcheck flawfinder lizard clangtidy reuse-annotate reuse-download reuse-lint reuse-fix reuse test clangformat
 
 all: setup compile
 
@@ -33,15 +33,15 @@ coverage: setupcoverage test
 install: setup compile
 	meson install -C build
 
+debian:
+	dpkg-buildpackage -b
+
 freebsd:
 	meson setup --prefix=/usr/local -Dinstall_documentation=true -Denable_setugid=true build
 	meson install -C build --destdir freebsd-staging
 	cp --force --link freebsd/configuration.yaml build/freebsd-staging/usr/local/etc/crazytrace.yaml
 	pkg create --metadata freebsd/metadata --root-dir build/freebsd-staging --out-dir .
 	rm -fR build/freebsd-staging
-
-debian:
-	dpkg-buildpackage -b
 
 check: flawfinder cppcheck scanbuild clangtidy lizard reuse mdl
 
