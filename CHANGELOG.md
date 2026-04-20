@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## Release 1.0.10
+
+- Fix bug in the rc script
+
 ## Release 1.0.9
 
 - Include the documentation with the installation

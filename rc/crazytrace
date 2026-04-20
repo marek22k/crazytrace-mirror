@@ -16,7 +16,7 @@ load_rc_config $name
 
 pidfile=/var/run/crazytrace.pid
 command="/usr/sbin/daemon"
-command_args="
+command_args="\
     --syslog \
     --syslog-facility daemon \
     --syslog-tag "$name" \

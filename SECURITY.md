@@ -11,8 +11,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
 | Version | Supported |
 | --- | --- |
 | git | :white_check_mark: |
-| 1.0.9 | :white_check_mark: |
-| < 1.0.9 | :x: |
+| 1.0.10 | :white_check_mark: |
+| < 1.0.10 | :x: |
 
 ## Reporting a Vulnerability
 
