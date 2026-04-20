@@ -34,7 +34,7 @@ install: setup compile
 	meson install -C build
 
 freebsd:
-	meson setup --prefix=/usr/local -Dinstall_documentation=true
+	meson setup --prefix=/usr/local -Dinstall_documentation=true -Denable_setugid=true build
 	meson install -C build --destdir freebsd-staging
 	pkg create --metadata freebsd --root-dir build/freebsd-staging --out-dir .
 	rm -fR build/freebsd-staging
