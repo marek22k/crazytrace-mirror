@@ -20,7 +20,7 @@
 #include "nodecontainer.hpp"
 #include "posix_wrapper.hpp"
 #include "seccomp.hpp"
-#include "tun_tap.hpp"
+#include <tuntap++.hh>
 
 int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
 {
@@ -152,14 +152,14 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
 
         constexpr std::size_t mtu = 1500;
         BOOST_LOG_TRIVIAL(debug) << "Create TUN device.";
-        tun_tap_device::tun_tap dev(config.get_device_name(),
-                                    tun_tap_device::tun_tap_mode::tap);
+        tuntap::tuntap dev(TUNTAP_MODE_ETHERNET);
+        dev.name(config.get_device_name());
         BOOST_LOG_TRIVIAL(debug) << "Set MTU to " << mtu << ".";
-        dev.set_mtu(mtu);
+        dev.mtu(mtu);
         BOOST_LOG_TRIVIAL(debug) << "Set the TUN device up.";
         dev.up();
 
-        const int tap_dev_fd = PosixWrapper::dup(dev.native_handler());
+        const int tap_dev_fd = PosixWrapper::dup(dev.native_handle());
 
         boost::asio::io_context io;
 #ifdef BOOST_PROCESS_V1

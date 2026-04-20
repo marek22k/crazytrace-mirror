@@ -37,8 +37,7 @@ sources = files(
     'src/nodereply.cpp',
     'src/noderequest.cpp',
     'src/randomgenerator.cpp',
-    'src/seccomp.cpp',
-    'src/tun_tap.cpp'
+    'src/seccomp.cpp'
 )
 headers = files(
     'src/capability_managment.hpp',
@@ -56,8 +55,7 @@ headers = files(
     'src/nodereply.hpp',
     'src/noderequest.hpp',
     'src/randomgenerator.hpp',
-    'src/seccomp.hpp',
-    'src/tun_tap.hpp',
+    'src/seccomp.hpp'
 )
 tests_sources = files(
     'tests/loglevel_test.cpp',
@@ -123,6 +121,14 @@ if get_option('enable_setugid')
     cpp_compiler.has_type('struct passwd', prefix: '#include <pwd.h>', required: true)
     cpp_compiler.has_type('struct group', prefix: '#include <grp.h>', required: true)
     add_project_arguments('-DHAVE_SETUGID', language: 'cpp')
+endif
+
+libtuntappp_dep = dependency('libtuntap++', required: false, include_type: 'system')
+if not libtuntappp_dep.found()
+    libtuntappp_dep = cpp_compiler.find_library('libtuntap++', has_headers: ['tuntap++.hh'], required: false)
+    if not libtuntappp_dep.found()
+        libtuntappp_dep = cpp_compiler.find_library('tuntap++', has_headers: ['tuntap++.hh'], required: true)
+    endif
 endif
 
 libtuntap_dep = dependency('libtuntap', required: false, include_type: 'system')
@@ -388,7 +394,7 @@ if get_option('install_documentation')
     endforeach
 endif
 
-deps = [libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep, seccomp_dep, threads_dep]
+deps = [libtuntappp_dep, libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep, seccomp_dep, threads_dep]
 
 if gtest_dep.found()
     gtest = executable('gtest', sources + tests_sources, dependencies: [gtest_dep] + deps, include_directories: ['src/'])
