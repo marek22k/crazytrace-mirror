@@ -216,15 +216,15 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
 #ifdef HAVE_CAPSICUM
         Capsicum::enter();
         Capsicum::limit_stdio();
-        Capsicum::limit_rights(dev.native_handler(),
+        Capsicum::limit_rights(dev.native_handle(),
                                CAP_EVENT,
                                CAP_FCNTL,
                                CAP_IOCTL,
                                CAP_READ,
                                CAP_WRITE);
-        Capsicum::limit_fcntls(dev.native_handler(),
+        Capsicum::limit_fcntls(dev.native_handle(),
                                CAP_FCNTL_GETFL | CAP_FCNTL_SETFL);
-        Capsicum::limit_ioctls(dev.native_handler(),
+        Capsicum::limit_ioctls(dev.native_handle(),
                                {FIONBIO, FIONREAD, SIOCATMARK});
 
         if (Capsicum::in_capability_mode())
