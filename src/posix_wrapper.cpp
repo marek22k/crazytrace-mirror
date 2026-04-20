@@ -17,7 +17,7 @@ int PosixWrapper::dup(const int oldfd)
 }
 
 #ifdef HAVE_SETUGID
-void PosixWrapper::setuid(const uid_t uid)
+void PosixWrapper::set_uid(const uid_t uid)
 {
     const int result = ::setuid(uid);
     if (result != 0)
@@ -27,7 +27,7 @@ void PosixWrapper::setuid(const uid_t uid)
     }
 }
 
-void PosixWrapper::setgid(const gid_t uid)
+void PosixWrapper::set_gid(const gid_t uid)
 {
     const int result = ::setgid(uid);
     if (result != 0)
@@ -55,7 +55,8 @@ gid_t PosixWrapper::groupname_to_gid(const std::string& groupname)
 {
     // This function is called in a single-threaded manner in crazytrace.
     // Therefore, it may be thread-unsafe.
-    struct group * entry = ::getgrnam(groupname.c_str());
+    struct group * entry =
+        ::getgrnam(groupname.c_str()); // NOLINT(concurrency-mt-unsafe)
     if (entry == nullptr)
     {
         throw std::system_error(
