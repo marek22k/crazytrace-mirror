@@ -189,11 +189,11 @@ bool crazytrace::Configuration::has_setguid() const noexcept
 
 const std::string& crazytrace::Configuration::get_user() const
 {
-    return this->_user.value(); // NOLINT(bugprone-unchecked-optional-acces)
+    return this->_user.value(); // NOLINT(bugprone-unchecked-optional-access)
 }
 
 const std::string& crazytrace::Configuration::get_group() const
 {
-    return this->_group.value(); // NOLINT(bugprone-unchecked-optional-acces)
+    return this->_group.value(); // NOLINT(bugprone-unchecked-optional-access)
 }
 #endif
