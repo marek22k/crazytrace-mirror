@@ -37,7 +37,7 @@ namespace crazytrace
                 get_postup_commands() const noexcept;
 
 #ifdef HAVE_SETUGID
-            [[nodiscard]] bool has_setguid() const noexcept;
+            [[nodiscard]] bool has_setugid() const noexcept;
             [[nodiscard]] const std::string& get_user() const;
             [[nodiscard]] const std::string& get_group() const;
 #endif

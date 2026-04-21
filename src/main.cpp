@@ -169,7 +169,7 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
 #endif
 
 #ifdef HAVE_SETUGID
-        if (config.has_setguid())
+        if (config.has_setugid())
         {
             const std::string& username = config.get_user();
             const auto uid = PosixWrapper::username_to_uid(username);

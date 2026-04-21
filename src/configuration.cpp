@@ -182,7 +182,7 @@ const PostupCommands&
 }
 
 #ifdef HAVE_SETUGID
-bool crazytrace::Configuration::has_setguid() const noexcept
+bool crazytrace::Configuration::has_setugid() const noexcept
 {
     return this->_user.has_value() && this->_group.has_value();
 }
