@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## Release 1.0.12
+
+- Improve performance by using vector instead of string
+
 ## Release 1.0.11
 
 - Replace the own C++ wrapper for libtuntap with the official C++ wrapper for libtuntap
