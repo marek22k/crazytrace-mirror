@@ -23,7 +23,8 @@ TEST(NodeReplyTest, NoReply)
 
     try
     {
-        [[maybe_unused]] const std::vector<unsigned char> reply_packet = reply.to_packet();
+        [[maybe_unused]] const std::vector<unsigned char> reply_packet =
+            reply.to_packet();
         FAIL();
     }
     catch (const std::exception& e)
@@ -110,7 +111,7 @@ TEST(NodeReplyTest, IcmpEchoReply)
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
     const std::vector<unsigned char> expected_packet(serialized_packet.begin(),
-                                      serialized_packet.end());
+                                                     serialized_packet.end());
 
     /* Tests */
     try
@@ -195,7 +196,7 @@ TEST(NodeReplyTest, IcmpTimeExceededIcmpEchoRequest)
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
     const std::vector<unsigned char> expected_packet(serialized_packet.begin(),
-                                      serialized_packet.end());
+                                                     serialized_packet.end());
 
     /* Tests */
     try
@@ -267,7 +268,7 @@ TEST(NodeReplyTest, IcmpPortUnreachable)
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
     const std::vector<unsigned char> expected_packet(serialized_packet.begin(),
-                                      serialized_packet.end());
+                                                     serialized_packet.end());
 
     /* Tests */
     try
@@ -337,7 +338,7 @@ TEST(NodeReplyTest, IcmpTimeExceededUdp)
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
     const std::vector<unsigned char> expected_packet(serialized_packet.begin(),
-                                      serialized_packet.end());
+                                                     serialized_packet.end());
 
     /* Tests */
     try
@@ -399,7 +400,7 @@ TEST(NodeReplyTest, IcmpNdp)
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
     const std::vector<unsigned char> expected_packet(serialized_packet.begin(),
-                                      serialized_packet.end());
+                                                     serialized_packet.end());
 
     /* Tests */
     try

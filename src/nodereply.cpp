@@ -102,8 +102,8 @@ std::vector<unsigned char> crazytrace::NodeReply::to_packet() const
 
             Tins::PDU::serialization_type serialized_packet =
                 packet.serialize();
-            const std::vector<unsigned char> raw_packet(serialized_packet.begin(),
-                                         serialized_packet.end());
+            const std::vector<unsigned char> raw_packet(
+                serialized_packet.begin(), serialized_packet.end());
             return raw_packet;
         }
         case NodeReplyType::ICMP_TIME_EXCEEDED_ICMP_ECHO_REQUEST:
@@ -163,8 +163,8 @@ std::vector<unsigned char> crazytrace::NodeReply::to_packet() const
 
                     const Tins::PDU::serialization_type serialized_packet =
                         packet.serialize();
-                    const std::vector<unsigned char> raw_packet(serialized_packet.begin(),
-                                                 serialized_packet.end());
+                    const std::vector<unsigned char> raw_packet(
+                        serialized_packet.begin(), serialized_packet.end());
                     return raw_packet;
                 }
                 case NodeReplyType::ICMP_PORT_UNREACHABLE:
@@ -185,8 +185,8 @@ std::vector<unsigned char> crazytrace::NodeReply::to_packet() const
 
                     const Tins::PDU::serialization_type serialized_packet =
                         packet.serialize();
-                    const std::vector<unsigned char> raw_packet(serialized_packet.begin(),
-                                                 serialized_packet.end());
+                    const std::vector<unsigned char> raw_packet(
+                        serialized_packet.begin(), serialized_packet.end());
                     return raw_packet;
                 }
                 default:
@@ -217,8 +217,8 @@ std::vector<unsigned char> crazytrace::NodeReply::to_packet() const
 
             const Tins::PDU::serialization_type serialized_packet =
                 packet.serialize();
-            const std::vector<unsigned char> raw_packet(serialized_packet.begin(),
-                                         serialized_packet.end());
+            const std::vector<unsigned char> raw_packet(
+                serialized_packet.begin(), serialized_packet.end());
             return raw_packet;
         }
         default:

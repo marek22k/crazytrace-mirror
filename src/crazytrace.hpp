@@ -28,8 +28,9 @@ namespace crazytrace
         private:
             void _handle_error(
                 const boost::system::error_code& error) const noexcept;
-            void _handle_packet(const boost::system::error_code error,
-                                const std::vector<unsigned char>& packet_data) noexcept;
+            void _handle_packet(
+                const boost::system::error_code error,
+                const std::vector<unsigned char>& packet_data) noexcept;
 
             std::shared_ptr<crazytrace::NodeContainer> _nodecontainer;
             tun_tap_device::DeviceClient<1520> _client;

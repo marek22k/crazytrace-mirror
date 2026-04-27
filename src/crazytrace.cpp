@@ -32,8 +32,9 @@ void Crazytrace::_handle_error(
         << "Error in handle_packet: " << error.message() << std::endl;
 }
 
-void Crazytrace::_handle_packet(const boost::system::error_code,
-                                const std::vector<unsigned char>& packet_data) noexcept
+void Crazytrace::_handle_packet(
+    const boost::system::error_code,
+    const std::vector<unsigned char>& packet_data) noexcept
 {
     BOOST_LOG_TRIVIAL(trace)
         << "Received packet of size: " << packet_data.size() << std::endl;
@@ -53,7 +54,8 @@ void Crazytrace::_handle_packet(const boost::system::error_code,
             {
                 BOOST_LOG_TRIVIAL(debug) << request;
                 BOOST_LOG_TRIVIAL(debug) << reply;
-                const std::vector<unsigned char> reply_packet = reply.to_packet();
+                const std::vector<unsigned char> reply_packet =
+                    reply.to_packet();
                 this->_client.write(
                     reply_packet,
                     [](const boost::system::error_code&,
