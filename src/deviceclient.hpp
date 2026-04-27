@@ -12,7 +12,9 @@
 
 namespace tun_tap_device
 {
-    template<unsigned long BUFFER_SIZE> class DeviceClient
+    template<unsigned long BUFFER_SIZE>
+        requires(BUFFER_SIZE > 0, BUFFER_SIZE <= 65535)
+    class DeviceClient
     {
         public:
             explicit DeviceClient(
@@ -67,6 +69,9 @@ namespace tun_tap_device
                         }
                         else
                         {
+                            static_assert(
+                                BUFFER_SIZE <
+                                std::numeric_limits<std::ptrdiff_t>::max());
                             const std::vector<unsigned char> packet(
                                 this->_buffer.data(),
                                 std::next(this->_buffer.data(),
