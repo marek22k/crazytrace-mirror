@@ -42,7 +42,7 @@ namespace tun_tap_device
                     this->_device,
                     boost::asio::buffer(*sdata),
                     [sdata, write_handler, write_error_handler](
-                        boost::system::error_code ec, size_t bytes_transferred)
+                        boost::system::error_code ec, std::size_t bytes_transferred)
                     {
                         if (ec)
                             write_error_handler(ec);
@@ -57,7 +57,7 @@ namespace tun_tap_device
                 this->_device.async_read_some(
                     boost::asio::buffer(this->_buffer),
                     [this](boost::system::error_code ec,
-                           size_t bytes_transferred)
+                           std::size_t bytes_transferred)
                     {
                         if (ec)
                         {
@@ -65,10 +65,10 @@ namespace tun_tap_device
                         }
                         else
                         {
-                            const std::vector<unsigned char> packet(this->_buffer.data(), this->_buffer.data() + bytes_transferred);
+                            const std::vector<unsigned char> packet(this->_buffer.data(), std::next(this->_buffer.data(), static_cast<std::ptrdiff_t>(bytes_transferred)));
                             this->read(); // flawfinder: ignore
 
-                            this->_packet_handler(ec, std::move(packet));
+                            this->_packet_handler(ec, packet);
                         }
                     });
             }
