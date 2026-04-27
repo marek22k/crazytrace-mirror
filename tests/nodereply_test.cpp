@@ -23,7 +23,7 @@ TEST(NodeReplyTest, NoReply)
 
     try
     {
-        [[maybe_unused]] const std::string reply_packet = reply.to_packet();
+        [[maybe_unused]] const std::vector<unsigned char> reply_packet = reply.to_packet();
         FAIL();
     }
     catch (const std::exception& e)
@@ -95,7 +95,7 @@ TEST(NodeReplyTest, IcmpEchoReply)
                     source_address);
     reply.set_hoplimit(hoplimit);
     reply.icmp_echo_reply(icmp_identifier, icmp_sequence, payload);
-    const std::string actual_packet = reply.to_packet();
+    const std::vector<unsigned char> actual_packet = reply.to_packet();
 
     /* Expected packet */
     Tins::EthernetII packet = Tins::EthernetII(destination_mac, source_mac) /
@@ -109,7 +109,7 @@ TEST(NodeReplyTest, IcmpEchoReply)
     inner_icmpv6.inner_pdu(Tins::RawPDU(payload));
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
-    const std::string expected_packet(serialized_packet.begin(),
+    const std::vector<unsigned char> expected_packet(serialized_packet.begin(),
                                       serialized_packet.end());
 
     /* Tests */
@@ -170,7 +170,7 @@ TEST(NodeReplyTest, IcmpTimeExceededIcmpEchoRequest)
     reply.set_hoplimit(hoplimit);
     reply.icmp_echo_reply(icmp_identifier, icmp_sequence, payload);
     reply.packet_reassembly(original_destination_address);
-    const std::string actual_packet = reply.to_packet();
+    const std::vector<unsigned char> actual_packet = reply.to_packet();
 
     /* Expected packet */
     Tins::IPv6 embedded_packet =
@@ -194,7 +194,7 @@ TEST(NodeReplyTest, IcmpTimeExceededIcmpEchoRequest)
     inner_icmpv6.inner_pdu(Tins::RawPDU(serialized_embedded_packet));
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
-    const std::string expected_packet(serialized_packet.begin(),
+    const std::vector<unsigned char> expected_packet(serialized_packet.begin(),
                                       serialized_packet.end());
 
     /* Tests */
@@ -243,7 +243,7 @@ TEST(NodeReplyTest, IcmpPortUnreachable)
     reply.set_hoplimit(hoplimit);
     reply.udp_response(payload, udp_dport, udp_sport);
     reply.packet_reassembly(original_destination_address);
-    const std::string actual_packet = reply.to_packet();
+    const std::vector<unsigned char> actual_packet = reply.to_packet();
 
     /* Expected packet */
     Tins::IPv6 embedded_packet =
@@ -266,7 +266,7 @@ TEST(NodeReplyTest, IcmpPortUnreachable)
     inner_icmpv6.inner_pdu(Tins::RawPDU(serialized_embedded_packet));
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
-    const std::string expected_packet(serialized_packet.begin(),
+    const std::vector<unsigned char> expected_packet(serialized_packet.begin(),
                                       serialized_packet.end());
 
     /* Tests */
@@ -315,7 +315,7 @@ TEST(NodeReplyTest, IcmpTimeExceededUdp)
     reply.set_hoplimit(hoplimit);
     reply.udp_response(payload, udp_dport, udp_sport);
     reply.packet_reassembly(original_destination_address);
-    const std::string actual_packet = reply.to_packet();
+    const std::vector<unsigned char> actual_packet = reply.to_packet();
 
     /* Expected packet */
     Tins::IPv6 embedded_packet =
@@ -336,7 +336,7 @@ TEST(NodeReplyTest, IcmpTimeExceededUdp)
     inner_icmpv6.inner_pdu(Tins::RawPDU(serialized_embedded_packet));
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
-    const std::string expected_packet(serialized_packet.begin(),
+    const std::vector<unsigned char> expected_packet(serialized_packet.begin(),
                                       serialized_packet.end());
 
     /* Tests */
@@ -377,7 +377,7 @@ TEST(NodeReplyTest, IcmpNdp)
                     destination_address,
                     source_mac,
                     source_address);
-    const std::string actual_packet = reply.to_packet();
+    const std::vector<unsigned char> actual_packet = reply.to_packet();
 
     /* Expected packet */
     Tins::EthernetII packet =
@@ -398,7 +398,7 @@ TEST(NodeReplyTest, IcmpNdp)
     inner_icmpv6.add_option(address_option);
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
-    const std::string expected_packet(serialized_packet.begin(),
+    const std::vector<unsigned char> expected_packet(serialized_packet.begin(),
                                       serialized_packet.end());
 
     /* Tests */

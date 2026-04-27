@@ -48,7 +48,7 @@ namespace crazytrace
             void packet_reassembly(
                 Tins::IPv6Address original_destination_address);
 
-            [[nodiscard]] std::string to_packet() const;
+            [[nodiscard]] std::vector<unsigned char> to_packet() const;
             [[nodiscard]] NodeReplyType get_type() const noexcept;
 
             bool operator==(const NodeReply& other) const;

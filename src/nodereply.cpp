@@ -83,7 +83,7 @@ void crazytrace::NodeReply::packet_reassembly(
     this->_original_destination_address = original_destination_address;
 }
 
-std::string crazytrace::NodeReply::to_packet() const
+std::vector<unsigned char> crazytrace::NodeReply::to_packet() const
 {
     switch (this->_type)
     {
@@ -102,7 +102,7 @@ std::string crazytrace::NodeReply::to_packet() const
 
             Tins::PDU::serialization_type serialized_packet =
                 packet.serialize();
-            const std::string raw_packet(serialized_packet.begin(),
+            const std::vector<unsigned char> raw_packet(serialized_packet.begin(),
                                          serialized_packet.end());
             return raw_packet;
         }
@@ -163,7 +163,7 @@ std::string crazytrace::NodeReply::to_packet() const
 
                     const Tins::PDU::serialization_type serialized_packet =
                         packet.serialize();
-                    const std::string raw_packet(serialized_packet.begin(),
+                    const std::vector<unsigned char> raw_packet(serialized_packet.begin(),
                                                  serialized_packet.end());
                     return raw_packet;
                 }
@@ -185,7 +185,7 @@ std::string crazytrace::NodeReply::to_packet() const
 
                     const Tins::PDU::serialization_type serialized_packet =
                         packet.serialize();
-                    const std::string raw_packet(serialized_packet.begin(),
+                    const std::vector<unsigned char> raw_packet(serialized_packet.begin(),
                                                  serialized_packet.end());
                     return raw_packet;
                 }
@@ -217,7 +217,7 @@ std::string crazytrace::NodeReply::to_packet() const
 
             const Tins::PDU::serialization_type serialized_packet =
                 packet.serialize();
-            const std::string raw_packet(serialized_packet.begin(),
+            const std::vector<unsigned char> raw_packet(serialized_packet.begin(),
                                          serialized_packet.end());
             return raw_packet;
         }
