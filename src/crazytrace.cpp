@@ -14,7 +14,7 @@ Crazytrace::Crazytrace(boost::asio::any_io_executor ex,
         std::move(ex),
         native_handler,
         [this](const boost::system::error_code& error,
-               const std::vector<unsigned char> packet)
+               const std::vector<unsigned char>& packet)
         {
             this->_handle_packet(error, packet);
         },
