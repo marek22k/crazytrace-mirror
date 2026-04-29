@@ -94,6 +94,7 @@ Optional libraries:
 - [libcap-ng](https://people.redhat.com/sgrubb/libcap-ng/): Used to discard unnecessary capabilities and restrict the program.
 - [libseccomp](https://github.com/seccomp/libseccomp): Used to block potentially dangerous system calls.
 - [landlock](https://landlock.io/): Used to restrict access.
+- [Capsicum](https://www.freebsd.org/cgi/man.cgi?query=capsicum&sektion=4): Used to restrict access and to block potentially dangerous system calls.
 
 Here is how the program works:
 
