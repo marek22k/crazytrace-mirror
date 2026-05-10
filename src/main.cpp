@@ -12,6 +12,7 @@
 #include <boost/asio.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/version.hpp>
+#include <tuntap++.hh>
 #include "capability_managment.hpp"
 #include "capsicum.hpp"
 #include "configuration.hpp"
@@ -20,7 +21,6 @@
 #include "nodecontainer.hpp"
 #include "posix_wrapper.hpp"
 #include "seccomp.hpp"
-#include <tuntap++.hh>
 
 int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
 {

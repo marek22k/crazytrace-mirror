@@ -91,6 +91,8 @@ IncludeCategories:
     Priority:        61
   - Regex:           '^<yaml-cpp/.*>'
     Priority:        62
+  - Regex:           '^<tuntap.*>'
+    Priority:        63
   - Regex:           '^<cap-ng\.h>'
     Priority:        66
   - Regex:           '^<seccomp\.h>'
