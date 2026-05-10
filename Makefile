@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-.PHONY: all setup addresssanitizer leaksanitizer undefinedsanitizer clean compile coverage install debian freebsd check cppcheck flawfinder lizard clangtidy reuse-annotate reuse-download reuse-lint reuse-fix reuse test clangformat
+.PHONY: all setup addresssanitizer leaksanitizer undefinedsanitizer clean compile coverage install debian freebsd check cppcheck flawfinder lizard clangtidy scanbuild mdl reuse-annotate reuse-download reuse-lint reuse-fix reuse test clangformat
 
 all: setup compile
 
