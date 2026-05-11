@@ -9,6 +9,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ## Release 1.0.12
 
 - Improve performance by using vector instead of string
+- Improve security when using setugid sandboxing: The GID is now changed first, followed by the UID, and supplementary groups are removed.
 
 ## Release 1.0.11
 

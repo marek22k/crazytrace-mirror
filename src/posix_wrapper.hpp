@@ -10,6 +10,7 @@
 #include <unistd.h>
 
 #ifdef HAVE_SETUGID
+    #include <array>
     #include <grp.h>
     #include <pwd.h>
 #endif
@@ -23,6 +24,7 @@ namespace PosixWrapper
     void set_gid(const gid_t gid);
     [[nodiscard]] uid_t username_to_uid(const std::string& username);
     [[nodiscard]] gid_t groupname_to_gid(const std::string& groupname);
+    void drop_supplementary_groups();
 #endif
 } // namespace PosixWrapper
 
