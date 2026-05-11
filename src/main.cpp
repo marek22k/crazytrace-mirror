@@ -54,7 +54,7 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
         // see also
         // https://lists.boost.org/archives/list/boost-users@lists.boost.org/thread/YJ5RTK25HLPFEZ3XVBBFQDJOSPIIOBNA/
         // and https://sourceforge.net/p/asio/mailman/message/59260797/
-        // due to complexity use seccomp blacklist
+        // due to complexity use seccomp blocklist
         seccomp_context.kill_chown();
         seccomp_context.kill_clock();
         seccomp_context.kill_cpu_emulation();

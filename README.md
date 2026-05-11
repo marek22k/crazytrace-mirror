@@ -48,7 +48,7 @@ Furthermore, libcap-ng performs a "lock": If supported, NoNewPriv and securebits
 ### Seccomp
 
 crazytrace uses various libraries. These libraries use syscalls. However, it is not documented which ones they use. Creating a whitelist - especially one that is distribution-independent - has therefore proven difficult.
-For this reason, seccomp is used to blacklist syscalls that crazytrace does not need.
+For this reason, seccomp is used to blocklist syscalls that crazytrace does not need.
 
 ### Landlock
 
