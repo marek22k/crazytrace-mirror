@@ -188,8 +188,7 @@ if cpp_compiler.has_header('linux/landlock.h')
                 .scoped = 0
             };
         ''',
-        name: 'Landlock supports scoped access control',
-        required: true
+        name: 'Landlock supports scoped access control'
     )
 
     cpp_compiler.compiles(
@@ -200,8 +199,7 @@ if cpp_compiler.has_header('linux/landlock.h')
                 .parent_fd = 0
             };
         ''',
-        name: 'Landlock has landlock_path_beneath_attr',
-        required: true
+        name: 'Landlock has landlock_path_beneath_attr'
     )
 
     cpp_compiler.compiles(
@@ -212,8 +210,7 @@ if cpp_compiler.has_header('linux/landlock.h')
                 .port = 0
             };
         ''',
-        name: 'Landlock has landlock_net_port_attr',
-        required: true
+        name: 'Landlock has landlock_net_port_attr'
     )
 
     landlock_macros = [
@@ -247,7 +244,7 @@ if cpp_compiler.has_header('linux/landlock.h')
     ]
 
     foreach macro : landlock_macros
-        cpp_compiler.compiles('#include <linux/landlock.h>\nint number = ' + macro + ';', name: macro + ' number is available', required: true)
+        cpp_compiler.compiles('#include <linux/landlock.h>\nint number = ' + macro + ';', name: macro + ' number is available')
     endforeach
 
     if cpp_compiler.compiles('#include <linux/landlock.h>\nint number = LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON;', name: 'LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON number is available')
