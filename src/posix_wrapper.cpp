@@ -67,7 +67,7 @@ gid_t PosixWrapper::groupname_to_gid(const std::string& groupname)
 
 void PosixWrapper::drop_supplementary_groups()
 {
-    std::array<gid_t, 0> empty;
+    std::array<gid_t, 0> empty{};
     if (::setgroups(0, empty.data()) != 0)
     {
         throw std::system_error(
