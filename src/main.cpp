@@ -41,7 +41,6 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
                 LANDLOCK_ACCESS_FS_REFER,
             LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP);
         landlock_ruleset_init.restrict_self();
-    #endif
 #endif
 
 #ifdef HAVE_SECCOMP
@@ -77,7 +76,7 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
         if (args.size() != 2)
             throw std::runtime_error("A configuration file must be specified.");
 
-        const std::string filename(args.at(1));
+        const std::string filename(args[1]);
         const crazytrace::Configuration config(filename);
         config.get_log_level().apply();
 
@@ -197,7 +196,7 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
         // https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
         landlock_ruleset_loop.add_path_beneath_rule(
             LANDLOCK_ACCESS_FS_WRITE_FILE | LANDLOCK_ACCESS_FS_READ_FILE,
-            dev.native_handler());
+            dev.native_handle());
         landlock_ruleset_loop.restrict_self();
 #endif
 #ifdef HAVE_SECCOMP
