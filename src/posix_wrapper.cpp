@@ -27,9 +27,9 @@ void PosixWrapper::set_uid(const uid_t uid)
     }
 }
 
-void PosixWrapper::set_gid(const gid_t uid)
+void PosixWrapper::set_gid(const gid_t gid)
 {
-    const int result = ::setgid(uid);
+    const int result = ::setgid(gid);
     if (result != 0)
     {
         throw std::system_error(

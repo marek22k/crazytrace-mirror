@@ -20,7 +20,7 @@ namespace PosixWrapper
 
 #ifdef HAVE_SETUGID
     void set_uid(const uid_t uid);
-    void set_gid(const gid_t uid);
+    void set_gid(const gid_t gid);
     [[nodiscard]] uid_t username_to_uid(const std::string& username);
     [[nodiscard]] gid_t groupname_to_gid(const std::string& groupname);
 #endif
