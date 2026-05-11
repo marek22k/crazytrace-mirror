@@ -1,0 +1,23 @@
+#!/bin/sh
+
+if [ -n "${PKG_ROOTDIR}" ] && [ "${PKG_ROOTDIR}" != "/" ]; then
+  PW="/usr/sbin/pw -R ${PKG_ROOTDIR}"
+else
+  PW=/usr/sbin/pw
+fi
+
+echo "===> Creating groups"
+if ! ${PW} groupshow crazytrace >/dev/null 2>&1; then
+  echo "Creating group 'crazytrace'"
+  ${PW} groupadd crazytrace || exit $?
+else
+  echo "Using existing group 'crazytrace'"
+fi
+
+echo "===> Creating users"
+if ! ${PW} usershow crazytrace >/dev/null 2>&1; then
+  echo "Creating user 'crazytrace'"
+  ${PW} useradd crazytrace -g crazytrace -c "crazytrace daemon" -d /nonexistent -s /usr/sbin/nologin || exit $?
+else
+  echo "Using existing user 'crazytrace'"
+fi

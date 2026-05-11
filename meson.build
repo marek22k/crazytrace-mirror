@@ -5,8 +5,8 @@
 project(
     'crazytrace',
     'cpp',
-    version: '1.0.5',
-    license: ['GPL-3.0-or-later'],
+    version: '1.0.7',
+    license: 'GPL-3.0-or-later',
     default_options: [
         'buildtype=release',
         'optimization=2',
@@ -30,30 +30,32 @@ sources = files(
     'src/crazytrace.cpp',
     'src/landlock.cpp',
     'src/loglevel.cpp',
+    'src/posix_wrapper.cpp',
     'src/postup_commands.cpp',
     'src/nodecontainer.cpp',
     'src/nodeinfo.cpp',
     'src/nodereply.cpp',
     'src/noderequest.cpp',
     'src/randomgenerator.cpp',
-    'src/seccomp.cpp',
-    'src/tun_tap.cpp'
+    'src/seccomp.cpp'
 )
 headers = files(
     'src/capability_managment.hpp',
+    'src/capsicum.hpp',
     'src/configuration.hpp',
     'src/crazytrace.hpp',
     'src/deviceclient.hpp',
+    'src/ip_ranges.hpp',
     'src/landlock.hpp',
     'src/loglevel.hpp',
+    'src/posix_wrapper.hpp',
     'src/postup_commands.hpp',
     'src/nodecontainer.hpp',
     'src/nodeinfo.hpp',
     'src/nodereply.hpp',
     'src/noderequest.hpp',
     'src/randomgenerator.hpp',
-    'src/seccomp.hpp',
-    'src/tun_tap.hpp'
+    'src/seccomp.hpp'
 )
 tests_sources = files(
     'tests/loglevel_test.cpp',
@@ -64,6 +66,13 @@ tests_sources = files(
     'tests/noderequest_test.cpp',
     'tests/randomgenerator_test.cpp'
 )
+markdown_files = files(
+    'BUILDING.md',
+    'CHANGELOG.md',
+    'CONTRIBUTING.md',
+    'README.md',
+    'SECURITY.md'
+)
 all_sources = main_file + sources + headers + tests_sources
 
 if get_option('native')
@@ -72,14 +81,62 @@ if get_option('native')
     add_project_arguments(cpp_compiler.get_supported_arguments(native_flags), language: 'cpp')
 endif
 
-if not cpp_compiler.has_header('unistd.h') or \
-   not cpp_compiler.has_function('dup', prefix: '#include <unistd.h>')
-    error('crazytrace requires unistd.h and the dup function')
+# see https://best.openssf.org/Compiler-Hardening-Guides/Compiler-Options-Hardening-Guide-for-C-and-C++.html
+hardening_compiler_flags = [
+    '-Wformat=2', # Strict printf/scanf format checks
+    '-Wconversion', # Warnings for potentially lossy implicit conversions
+    '-Wsign-conversion',
+    '-Wtrampolines', # Warn about stack trampolines (conflicts with non‑executable stack)
+    '-Wbidi-chars=any', # Enable warnings for possibly misleading Unicode bidirectional control characters
+    '-fstrict-flex-arrays=3', # Flexible arrays can only be declared with [].
+    '-fcf-protection=full', # Prevent certain attacks by enabling additional protection against unexpected control flow jumps. Minimal performance loss, as often implemented on the hardware side.
+    '-mbranch-protection=standard'
+]
+add_project_arguments(cpp_compiler.get_supported_arguments(hardening_compiler_flags), language: 'cpp')
+
+hardening_linker_flags = [
+    '-Wl,-z,noexecstack', # Mark the stack in memory as non-executable
+    '-Wl,-z,nodlopen', # Prevent loading this code via dlopen()
+    '-Wl,-z,relro', # Make relocation data read‑only after startup
+    '-Wl,-z,now' # Force the resolution of symbols from dynamic libraries at program startup
+]
+add_project_link_arguments(cpp_compiler.get_supported_link_arguments(hardening_linker_flags), language: 'cpp')
+
+if get_option('debug')
+    # see https://sourceware.org/bugzilla/show_bug.cgi?id=27375
+    add_project_arguments(cpp_compiler.get_supported_arguments(['-gdwarf-4']), language: 'cpp')
+endif
+
+if host_machine.system() == 'freebsd'
+    # see https://github.com/exult/exult/commit/202264bcf37d4edc8eafdaf53e1a910c8cf181a7
+    add_project_arguments('-isystem/usr/local/include', language: 'cpp')
+endif
+
+cpp_compiler.has_header('unistd.h', required: true)
+cpp_compiler.has_function('dup', prefix: '#include <unistd.h>', required: true)
+
+if get_option('enable_setugid')
+    cpp_compiler.has_function('setuid', prefix: '#include <unistd.h>', required: true)
+    cpp_compiler.has_function('setgid', prefix: '#include <unistd.h>', required: true)
+    cpp_compiler.has_type('struct passwd', prefix: '#include <pwd.h>', required: true)
+    cpp_compiler.has_type('struct group', prefix: '#include <grp.h>', required: true)
+    add_project_arguments('-DHAVE_SETUGID', language: 'cpp')
+endif
+
+libtuntappp_dep = dependency('libtuntap++', required: false, include_type: 'system')
+if not libtuntappp_dep.found()
+    libtuntappp_dep = cpp_compiler.find_library('libtuntap++', has_headers: ['tuntap++.hh'], required: false)
+    if not libtuntappp_dep.found()
+        libtuntappp_dep = cpp_compiler.find_library('tuntap++', has_headers: ['tuntap++.hh'], required: true)
+    endif
 endif
 
 libtuntap_dep = dependency('libtuntap', required: false, include_type: 'system')
 if not libtuntap_dep.found()
-    libtuntap_dep = cpp_compiler.find_library('libtuntap', has_headers: ['tuntap.h'], required: true)
+    libtuntap_dep = cpp_compiler.find_library('libtuntap', has_headers: ['tuntap.h'], required: false)
+    if not libtuntap_dep.found()
+        libtuntap_dep = cpp_compiler.find_library('tuntap', has_headers: ['tuntap.h'], required: true)
+    endif
 endif
 
 # Workaround for https://github.com/boostorg/process/issues/494#issuecomment-3392312248
@@ -110,14 +167,103 @@ if cpp_compiler.has_header('linux/landlock.h')
 
     foreach function : landlock_functions
         if not cpp_compiler.has_function(function, prefix: '#include <linux/landlock.h>')
-            if not cpp_compiler.has_header('sys/syscall.h')
-                error('Missing function ' + function + ' and no sys/syscall.h available.')
-            endif
+            cpp_compiler.has_header('unistd.h', required: true)
+            cpp_compiler.has_function('syscall', prefix: '#include <unistd.h>', required: true)
+            cpp_compiler.has_header('sys/syscall.h', required: true)
+            syscall_number_macro = 'SYS_' + function
+            cpp_compiler.compiles('#include <sys/syscall.h>\nint number = ' + syscall_number_macro + ';', name: syscall_number_macro + ' number is available', required: true)
 
             macro = 'NO_' + function.to_upper()
             add_project_arguments('-D' + macro, language: 'cpp')
         endif
     endforeach
+
+    # see also https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
+    cpp_compiler.compiles(
+        '''
+            #include <linux/landlock.h>
+            struct landlock_ruleset_attr attr = {
+                .handled_access_fs = 0,
+                .handled_access_net = 0,
+                .scoped = 0
+            };
+        ''',
+        name: 'Landlock supports scoped access control',
+        required: true
+    )
+
+    cpp_compiler.compiles(
+        '''
+            #include <linux/landlock.h>
+            struct landlock_path_beneath_attr attr = {
+                .allowed_access = 0,
+                .parent_fd = 0
+            };
+        ''',
+        name: 'Landlock has landlock_path_beneath_attr',
+        required: true
+    )
+
+    cpp_compiler.compiles(
+        '''
+            #include <linux/landlock.h>
+            struct landlock_net_port_attr attr = {
+                .allowed_access = 0,
+                .port = 0
+            };
+        ''',
+        name: 'Landlock has landlock_net_port_attr',
+        required: true
+    )
+
+    landlock_macros = [
+        'LANDLOCK_RULE_PATH_BENEATH',
+        'LANDLOCK_RULE_NET_PORT',
+
+        'LANDLOCK_CREATE_RULESET_VERSION',
+
+        'LANDLOCK_ACCESS_FS_EXECUTE',
+        'LANDLOCK_ACCESS_FS_WRITE_FILE',
+        'LANDLOCK_ACCESS_FS_READ_FILE',
+        'LANDLOCK_ACCESS_FS_TRUNCATE',
+        'LANDLOCK_ACCESS_FS_READ_DIR',
+        'LANDLOCK_ACCESS_FS_REMOVE_DIR',
+        'LANDLOCK_ACCESS_FS_REMOVE_FILE',
+        'LANDLOCK_ACCESS_FS_MAKE_CHAR',
+        'LANDLOCK_ACCESS_FS_MAKE_DIR',
+        'LANDLOCK_ACCESS_FS_MAKE_REG',
+        'LANDLOCK_ACCESS_FS_MAKE_SOCK',
+        'LANDLOCK_ACCESS_FS_MAKE_FIFO',
+        'LANDLOCK_ACCESS_FS_MAKE_BLOCK',
+        'LANDLOCK_ACCESS_FS_MAKE_SYM',
+        'LANDLOCK_ACCESS_FS_REFER',
+        'LANDLOCK_ACCESS_FS_IOCTL_DEV',
+
+        'LANDLOCK_ACCESS_NET_BIND_TCP',
+        'LANDLOCK_ACCESS_NET_CONNECT_TCP',
+
+        'LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET',
+        'LANDLOCK_SCOPE_SIGNAL'
+    ]
+
+    foreach macro : landlock_macros
+        cpp_compiler.compiles('#include <linux/landlock.h>\nint number = ' + macro + ';', name: macro + ' number is available', required: true)
+    endforeach
+
+    if cpp_compiler.compiles('#include <linux/landlock.h>\nint number = LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON;', name: 'LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON number is available')
+        add_project_arguments('-DHAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON', language: 'cpp')
+    endif
+endif
+
+if cpp_compiler.has_header('capsicum_helpers.h') and cpp_compiler.has_header('sys/capsicum.h')
+    add_project_arguments('-DHAVE_CAPSICUM', language: 'cpp')
+endif
+
+threads_dep = declare_dependency()
+if host_machine.system() == 'freebsd'
+    # see https://github.com/exult/exult/issues/436
+    #     https://github.com/exult/exult/blob/38e8b8d140102ea9ec3632f618af7e73a43955df/configure.ac
+    threads_dep = dependency('threads')
 endif
 
 libtins_dep = dependency('libtins', include_type: 'system')
@@ -136,6 +282,7 @@ if cppcheck.found()
         # Problems with detecting system libraries
         '--suppress=missingIncludeSystem',
         '--suppress=unmatchedSuppression',
+        '--suppress=functionStatic',
 
         '--enable=warning,style,information,missingInclude',
         '--error-exitcode=1',
@@ -168,10 +315,18 @@ lizard = find_program('lizard', required: false)
 if lizard.found()
     run_target('lizard', command: [
         lizard,
-        '--CCN', '15',
+        '--CCN', '25',
         '--length', '400',
         '--arguments', '10',
         all_sources
+    ])
+endif
+
+mdl = find_program('mdl', required: false)
+if mdl.found()
+    run_target('mdl', command: [
+        mdl,
+        markdown_files
     ])
 endif
 
@@ -207,14 +362,39 @@ if get_option('install_systemd_unit')
     )
 endif
 
-if get_option('install_apparmor_profile')
+if get_option('install_rc_script')
     install_data(
-        'apparmor/usr.bin.crazytrace',
-        install_dir: 'etc/apparmor.d'
+        'rc/crazytrace',
+        install_dir: 'etc/rc.d'
     )
 endif
 
-deps = [libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep, seccomp_dep]
+if get_option('install_apparmor_profile')
+    install_data(
+        'apparmor/usr.bin.crazytrace',
+        install_dir: '/etc/apparmor.d'
+    )
+endif
+
+if get_option('install_documentation')
+    documentation_files = [
+        'BUILDING.md',
+        'CHANGELOG.md',
+        'CONTRIBUTING.md',
+        'README.md',
+        'SECURITY.md',
+        'LICENSE.txt'
+    ]
+
+    foreach file : documentation_files
+        install_data(
+            file,
+            install_dir: 'share/doc/crazytrace'
+        )
+    endforeach
+endif
+
+deps = [libtuntappp_dep, libtuntap_dep, boost_dep, libtins_dep, yamlcpp_dep, libcapng_dep, seccomp_dep, threads_dep]
 
 if gtest_dep.found()
     gtest = executable('gtest', sources + tests_sources, dependencies: [gtest_dep] + deps, include_directories: ['src/'])

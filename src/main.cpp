@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright (C) 2024-2025 Marek Küthe <m.k@mk16.de>
+// SPDX-FileCopyrightText: Copyright (C) 2024-2026 Marek Küthe <m.k@mk16.de>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,16 +12,17 @@
 #include <boost/asio.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/version.hpp>
-#include <unistd.h>
+#include <tuntap++.hh>
 #include "capability_managment.hpp"
+#include "capsicum.hpp"
 #include "configuration.hpp"
 #include "crazytrace.hpp"
 #include "landlock.hpp"
 #include "nodecontainer.hpp"
+#include "posix_wrapper.hpp"
 #include "seccomp.hpp"
-#include "tun_tap.hpp"
 
-int main(int argc, char * argv[])
+int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
 {
     try
     {
@@ -40,6 +41,7 @@ int main(int argc, char * argv[])
                 LANDLOCK_ACCESS_FS_REFER,
             LANDLOCK_ACCESS_NET_BIND_TCP | LANDLOCK_ACCESS_NET_CONNECT_TCP);
         landlock_ruleset_init.restrict_self();
+    #endif
 #endif
 
 #ifdef HAVE_SECCOMP
@@ -62,7 +64,9 @@ int main(int argc, char * argv[])
         seccomp_context.kill_rawio();
         seccomp_context.kill_reboot();
         seccomp_context.kill_resources();
+    #ifndef HAVE_SETUGID
         seccomp_context.kill_setuid();
+    #endif
         seccomp_context.kill_swap();
         seccomp_context.kill_sync();
         seccomp_context.kill_system_service();
@@ -73,8 +77,8 @@ int main(int argc, char * argv[])
         if (args.size() != 2)
             throw std::runtime_error("A configuration file must be specified.");
 
-        const std::string filename(args[1]);
-        const Configuration config(filename);
+        const std::string filename(args.at(1));
+        const crazytrace::Configuration config(filename);
         config.get_log_level().apply();
 
         BOOST_LOG_TRIVIAL(info)
@@ -117,12 +121,24 @@ int main(int argc, char * argv[])
 #ifdef HAVE_LANDLOCK
         BOOST_LOG_TRIVIAL(info) << "Landlock: true";
         BOOST_LOG_TRIVIAL(info)
-            << "Landlock ABI version: " << LandlockRuleset::abi_version();
+            << "Landlock ABI version: " << LandlockRuleset::get_abi_version();
 #else
         BOOST_LOG_TRIVIAL(info) << "Landlock: false";
 #endif
 
-        const std::shared_ptr<NodeContainer> nodecontainer =
+#ifdef HAVE_CAPSICUM
+        BOOST_LOG_TRIVIAL(info) << "capsicum: true";
+#else
+        BOOST_LOG_TRIVIAL(info) << "capsicum: false";
+#endif
+
+#ifdef HAVE_SETUGID
+        BOOST_LOG_TRIVIAL(info) << "setugid: true";
+#else
+        BOOST_LOG_TRIVIAL(info) << "setugid: false";
+#endif
+
+        const std::shared_ptr<crazytrace::NodeContainer> nodecontainer =
             config.get_node_container();
 
         std::ostringstream nodes_verbose;
@@ -131,11 +147,14 @@ int main(int argc, char * argv[])
 
         constexpr std::size_t mtu = 1500;
         BOOST_LOG_TRIVIAL(debug) << "Create TUN device.";
-        tun_tap dev(config.get_device_name(), tun_tap_mode::tap);
+        tuntap::tuntap dev(TUNTAP_MODE_ETHERNET);
+        dev.name(config.get_device_name());
         BOOST_LOG_TRIVIAL(debug) << "Set MTU to " << mtu << ".";
-        dev.set_mtu(mtu);
+        dev.mtu(mtu);
         BOOST_LOG_TRIVIAL(debug) << "Set the TUN device up.";
         dev.up();
+
+        const int tap_dev_fd = PosixWrapper::dup(dev.native_handle());
 
         boost::asio::io_context io;
 #ifdef BOOST_PROCESS_V1
@@ -144,6 +163,22 @@ int main(int argc, char * argv[])
         config.get_postup_commands().execute_commands(io.get_executor());
 #endif
 
+#ifdef HAVE_SETUGID
+        if (config.has_setugid())
+        {
+            const std::string& username = config.get_user();
+            const auto uid = PosixWrapper::username_to_uid(username);
+            PosixWrapper::set_uid(uid);
+            BOOST_LOG_TRIVIAL(info)
+                << "setuid: " << username << " (" << uid << ")";
+
+            const std::string& groupname = config.get_group();
+            const auto gid = PosixWrapper::groupname_to_gid(groupname);
+            PosixWrapper::set_gid(gid);
+            BOOST_LOG_TRIVIAL(info)
+                << "setgid: " << groupname << " (" << gid << ")";
+        }
+#endif
 #ifdef HAVE_LIBCAPNG
         CapabilityManagment::drop_all_capabilies();
 #endif
@@ -170,15 +205,44 @@ int main(int argc, char * argv[])
         seccomp_context.load();
         seccomp_context.release();
 #endif
+#ifdef HAVE_CAPSICUM
+        Capsicum::enter();
+        Capsicum::limit_stdio();
+        Capsicum::limit_rights(dev.native_handle(),
+                               CAP_EVENT,
+                               CAP_FCNTL,
+                               CAP_IOCTL,
+                               CAP_READ,
+                               CAP_WRITE);
+        Capsicum::limit_fcntls(dev.native_handle(),
+                               CAP_FCNTL_GETFL | CAP_FCNTL_SETFL);
+        Capsicum::limit_ioctls(dev.native_handle(),
+                               {FIONBIO, FIONREAD, SIOCATMARK});
 
-        const Crazytrace ct(
-            io.get_executor(), ::dup(dev.native_handler()), nodecontainer);
+        if (Capsicum::in_capability_mode())
+        {
+            BOOST_LOG_TRIVIAL(info) << "capsicum capabiliy mode: true";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "capsicum capabiliy mode: false";
+        }
+#endif
+
+        const crazytrace::Crazytrace ct(
+            io.get_executor(), tap_dev_fd, nodecontainer);
 
         io.run();
     }
     catch (const std::exception& e)
     {
         BOOST_LOG_TRIVIAL(fatal) << "Error: " << e.what() << std::endl
+                                 << "Exit program.";
+        std::exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
+    }
+    catch (...)
+    {
+        BOOST_LOG_TRIVIAL(fatal) << "Unknown error caught." << std::endl
                                  << "Exit program.";
         std::exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
     }

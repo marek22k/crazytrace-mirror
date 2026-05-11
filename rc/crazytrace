@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# PROVIDE: crazytrace
+# REQUIRE: LOGIN NETWORKING
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name=crazytrace
+rcvar=crazytrace_enable
+
+load_rc_config $name
+
+: ${crazytrace_enable:="NO"}
+: ${crazytrace_config:="/usr/local/etc/crazytrace.yaml"}
+
+pidfile=/var/run/crazytrace.pid
+command="/usr/sbin/daemon"
+command_args="\
+    --syslog \
+    --syslog-facility daemon \
+    --syslog-tag "$name" \
+    /usr/local/bin/crazytrace \
+    "$crazytrace_config"
+"
+
+run_rc_command "$1"

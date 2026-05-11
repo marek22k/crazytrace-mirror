@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: Copyright (C) 2026 Marek Küthe <m.k@mk16.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+crazytrace is a network simulation program designed to test how traceroute implementations respond when a hop along the path replies with different addresses. It can also be used to build network topologies when it is sufficient for the hops to respond to pings.
+
+crazytrace uses various libraries to provide its functionality. These are available under different licenses. Below is a list.
+- libtuntap: ISC, https://github.com/LaKabane/libtuntap
+- libtins:  BSD-2-Clause, https://github.com/mfontanini/libtins/
+- yaml-cpp: MIT, https://github.com/jbeder/yaml-cpp
+- boost: BSL-1.0, https://www.boost.org/
+
+Depending on the build configuration, the following libraries are also used:
+- libcap-ng: LGPL-2.1-or-later, https://github.com/stevegrubb/libcap-ng/
+- libseccomp: LGPL-2.1-or-later, https://github.com/seccomp/libseccomp/
+- landlock: https://landlock.io/
+- capsicum
+
+crazytrace itself is available under the GPL-3.0-or-later license. Each file is REUSE-compliant and includes a SPDX header.

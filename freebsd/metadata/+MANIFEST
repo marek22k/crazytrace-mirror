@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: Copyright (C) 2026 Marek Küthe <m.k@mk16.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name = "crazytrace"
+version = "1.0.12"
+origin = "net/crazytrace"
+comment = "a network simulation program"
+desc = <<EOD
+Simple network simulator to test ping and traceroute implementations
+What happens if a traceroute with the same TTL/hop limit is received from two different source addresses? How will they react?
+crazytrace is a network simulation program that can be used to see how different ping and traceroute implementations react when the sender address is different than expected.
+EOD
+maintainer = "m.k@mk16.de"
+www = "https://codeberg.org/mark22k/crazytrace"
+prefix = "/usr/local"
+licenselogic = "and";
+licenses = ["GPL-3.0-or-later", "ISC", "BSD-2-Clause"];
+users = ["crazytrace"]
+groups = ["crazytrace"]
+
+deps {
+    yaml-cpp: {origin: "devel/yaml-cpp", version: "0.9.0"}
+    boost-libs: {origin: "devel/boost-libs", version: "1.89.0_2"}
+}
+
+files {
+    /usr/local/bin/crazytrace = "0755";
+    /usr/local/etc/crazytrace.yaml = "0644";
+    /usr/local/etc/rc.d/crazytrace = "0755";
+    /usr/local/share/doc/crazytrace/BUILDING.md = "0644";
+    /usr/local/share/doc/crazytrace/CHANGELOG.md = "0644";
+    /usr/local/share/doc/crazytrace/CONTRIBUTING.md = "0644";
+    /usr/local/share/doc/crazytrace/README.md = "0644";
+    /usr/local/share/doc/crazytrace/SECURITY.md = "0644";
+    /usr/local/share/doc/crazytrace/LICENSE.txt = "0644";
+}

@@ -6,6 +6,47 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## Release 1.0.12
+
+- Improve performance by using vector instead of string
+
+## Release 1.0.11
+
+- Replace the own C++ wrapper for libtuntap with the official C++ wrapper for libtuntap
+
+## Release 1.0.10
+
+- Fix bug in the rc script
+
+## Release 1.0.9
+
+- Include the documentation with the installation
+- Allows one to set the UID and GID of the process
+
+## Release 1.0.8
+
+- Add FreeBSD support
+- Add Capsicum sandboxing support
+- Removal of an incorrect compiler warning
+- Catch all errors, even the highly unlikely ones.
+- Use functions with bounds checking
+
+## Release 1.0.7
+
+- Remove potentially bug-suppressing flags
+
+## Release 1.0.6
+
+- Improvement of landlock sandboxing
+- Validation of the return value of the POSIX dup function
+- Improvement of error messages
+- Prevent routing of IPv6 link-local addresses
+- Fix path to license file
+- Correction of the copyright date
+- Improve performance
+- Improve security
+- Improve type safety
+
 ## Release 1.0.5
 
 - Adding capability management on Linux for improved security

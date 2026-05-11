@@ -1,10 +1,12 @@
-// SPDX-FileCopyrightText: Copyright (C) 2024-2025 Marek Küthe <m.k@mk16.de>
+// SPDX-FileCopyrightText: Copyright (C) 2024-2026 Marek Küthe <m.k@mk16.de>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "nodecontainer.hpp"
 
-NodeReply NodeContainer::get_reply(const NodeRequest& request)
+using namespace crazytrace;
+
+NodeReply crazytrace::NodeContainer::get_reply(const NodeRequest& request)
 {
     switch (request.get_type())
     {
@@ -47,7 +49,8 @@ NodeReply NodeContainer::get_reply(const NodeRequest& request)
                         reply.icmp_echo_reply(request.get_icmp_identifier(),
                                               request.get_icmp_sequence(),
                                               request.get_payload());
-                        reply.set_hoplimit(reply_hoplimit);
+                        reply.set_hoplimit(
+                            static_cast<uint8_t>(reply_hoplimit));
                         return reply;
                     }
                     case NodeRequestType::UDP:
@@ -62,7 +65,8 @@ NodeReply NodeContainer::get_reply(const NodeRequest& request)
                                            request.get_udp_sport());
                         reply.packet_reassembly(
                             request.get_destination_address());
-                        reply.set_hoplimit(reply_hoplimit);
+                        reply.set_hoplimit(
+                            static_cast<uint8_t>(reply_hoplimit));
                         return reply;
                     }
                     default:
@@ -76,8 +80,9 @@ NodeReply NodeContainer::get_reply(const NodeRequest& request)
             else
             {
                 /* hoplimit exceeded */
-                const int reached_node_number =
-                    static_cast<int>(route.size()) - request.get_hoplimit();
+                const unsigned int reached_node_number =
+                    static_cast<unsigned int>(route.size()) -
+                    request.get_hoplimit();
                 const std::shared_ptr<NodeInfo>& reached_node =
                     route.at(reached_node_number);
 
@@ -101,7 +106,8 @@ NodeReply NodeContainer::get_reply(const NodeRequest& request)
                                               request.get_payload());
                         reply.packet_reassembly(
                             request.get_destination_address());
-                        reply.set_hoplimit(reply_hoplimit);
+                        reply.set_hoplimit(
+                            static_cast<uint8_t>(reply_hoplimit));
                         return reply;
                     }
                     case NodeRequestType::UDP:
@@ -116,7 +122,8 @@ NodeReply NodeContainer::get_reply(const NodeRequest& request)
                                            request.get_udp_sport());
                         reply.packet_reassembly(
                             request.get_destination_address());
-                        reply.set_hoplimit(reply_hoplimit);
+                        reply.set_hoplimit(
+                            static_cast<uint8_t>(reply_hoplimit));
                         return reply;
                     }
                     default:
@@ -164,12 +171,12 @@ NodeReply NodeContainer::get_reply(const NodeRequest& request)
     return NodeReply(NodeReplyType::NOREPLY);
 }
 
-void NodeContainer::add_node(std::shared_ptr<NodeInfo> node) noexcept
+void crazytrace::NodeContainer::add_node(std::shared_ptr<NodeInfo> node)
 {
     this->_nodes.push_back(node);
 }
 
-std::size_t NodeContainer::max_depth() const
+std::size_t crazytrace::NodeContainer::max_depth() const
 {
     std::size_t max = 0;
     for (const auto& node : this->_nodes)
@@ -180,7 +187,7 @@ std::size_t NodeContainer::max_depth() const
     return max;
 }
 
-std::vector<std::shared_ptr<NodeInfo>> NodeContainer::get_route_to(
+std::vector<std::shared_ptr<NodeInfo>> crazytrace::NodeContainer::get_route_to(
     const Tins::IPv6Address& destination_address) const
 {
     for (const auto& node : this->_nodes)
@@ -204,7 +211,7 @@ std::vector<std::shared_ptr<NodeInfo>> NodeContainer::get_route_to(
     return {};
 }
 
-void NodeContainer::print(std::ostream& os) const
+void crazytrace::NodeContainer::print(std::ostream& os) const
 {
     os << *this << std::endl;
     if (!this->_nodes.empty())
@@ -217,7 +224,7 @@ void NodeContainer::print(std::ostream& os) const
     }
 }
 
-bool NodeContainer::operator==(const NodeContainer& other) const
+bool crazytrace::NodeContainer::operator==(const NodeContainer& other) const
 {
     return std::ranges::equal(this->_nodes, // flawfinder: ignore
                               other._nodes,
@@ -227,7 +234,8 @@ bool NodeContainer::operator==(const NodeContainer& other) const
                               });
 }
 
-std::ostream& operator<<(std::ostream& os, const NodeContainer& nodecontainer)
+std::ostream& crazytrace::operator<<(std::ostream& os,
+                                     const NodeContainer& nodecontainer)
 {
     os << "NodeContainer: " << nodecontainer._nodes.size() << " childnodes";
     return os;

@@ -8,6 +8,8 @@
 #include <tins/tins.h>
 #include "nodeinfo.hpp"
 
+using namespace crazytrace;
+
 class NodeInfoChildrenTest : public testing::Test
 {
     protected:

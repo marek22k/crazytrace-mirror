@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright (C) 2024-2025 Marek Küthe <m.k@mk16.de>
+// SPDX-FileCopyrightText: Copyright (C) 2025 Marek Küthe <m.k@mk16.de>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,7 +7,8 @@
 
 #ifdef HAVE_SECCOMP
 
-    #include <stdexcept>
+    #include <system_error>
+    #include <cerrno>
     #include <cstdint>
     #include <seccomp.h>
     #include <sys/syscall.h>

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright (C) 2024-2025 Marek Küthe <m.k@mk16.de>
+// SPDX-FileCopyrightText: Copyright (C) 2025 Marek Küthe <m.k@mk16.de>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,10 +7,11 @@
 #ifdef HAVE_SECCOMP
 
 SeccompFilterContext::SeccompFilterContext(uint32_t def_action) :
-    ctx(seccomp_init(def_action))
+    ctx(::seccomp_init(def_action))
 {
     if (this->ctx == nullptr)
-        throw std::runtime_error("Failed to initialize seccomp.");
+        throw std::system_error(
+            errno, std::generic_category(), "Failed to initialize seccomp.");
 }
 
 void SeccompFilterContext::rule_add(uint32_t action, int syscall) const
@@ -18,7 +19,7 @@ void SeccompFilterContext::rule_add(uint32_t action, int syscall) const
     if (!this->is_useable())
         throw std::runtime_error("seccomp filter context not useable.");
 
-    seccomp_rule_add(this->ctx, action, syscall, 0);
+    ::seccomp_rule_add(this->ctx, action, syscall, 0);
 }
 
 void SeccompFilterContext::allow(int syscall) const
@@ -537,12 +538,6 @@ void SeccompFilterContext::kill_privileged() const
     #ifdef SYS_setreuid32
     this->kill(SCMP_SYS(setreuid32)); // flawfinder: ignore
     #endif
-    #ifdef SYS_setuid
-    this->kill(SCMP_SYS(setuid)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_setuid32
-    this->kill(SCMP_SYS(setuid32)); // flawfinder: ignore
-    #endif
     #ifdef SYS_umount2
     this->kill(SCMP_SYS(umount2)); // flawfinder: ignore
     #endif
@@ -897,8 +892,9 @@ void SeccompFilterContext::load() const
     if (!this->is_useable())
         throw std::runtime_error("seccomp filter context not useable.");
 
-    if (seccomp_load(this->ctx) != 0)
-        throw std::runtime_error("Failed to load seccomp filter.");
+    if (::seccomp_load(this->ctx) != 0)
+        throw std::system_error(
+            errno, std::generic_category(), "Failed to load seccomp filter.");
 }
 
 void SeccompFilterContext::reset(uint32_t def_action) const
@@ -906,8 +902,9 @@ void SeccompFilterContext::reset(uint32_t def_action) const
     if (!this->is_useable())
         throw std::runtime_error("seccomp filter context not useable.");
 
-    if (seccomp_reset(this->ctx, def_action) != 0)
-        throw std::runtime_error("Failed to reset seccomp filter.");
+    if (::seccomp_reset(this->ctx, def_action) != 0)
+        throw std::system_error(
+            errno, std::generic_category(), "Failed to reset seccomp filter.");
 }
 
 void SeccompFilterContext::release()
@@ -915,7 +912,7 @@ void SeccompFilterContext::release()
     if (!this->is_useable())
         throw std::runtime_error("seccomp filter context not useable.");
 
-    seccomp_release(this->ctx);
+    ::seccomp_release(this->ctx);
     this->ctx = nullptr;
 }
 

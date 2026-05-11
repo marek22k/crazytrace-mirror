@@ -5,9 +5,13 @@
 #include <gtest/gtest.h>
 #include <memory>
 #include <sstream>
+#include <stdexcept>
+#include <cstdint>
 #include <tins/tins.h>
 #include "nodecontainer.hpp"
 #include "nodeinfo.hpp"
+
+using namespace crazytrace;
 
 class NodeContainerTest : public testing::Test
 {
@@ -73,9 +77,9 @@ class NodeContainerTest : public testing::Test
                                 const Tins::HWAddress<6>& destination_mac,
                                 const Tins::IPv6Address& source_address,
                                 const Tins::IPv6Address& destination_address,
-                                const int hoplimit,
-                                const int icmp_identifier,
-                                const int icmp_sequence,
+                                const uint8_t hoplimit,
+                                const uint16_t icmp_identifier,
+                                const uint16_t icmp_sequence,
                                 const Tins::RawPDU::payload_type& payload)
         {
             Tins::EthernetII packet =
@@ -91,8 +95,13 @@ class NodeContainerTest : public testing::Test
 
             const Tins::PDU::serialization_type serialized_packet =
                 packet.serialize();
-            const Tins::EthernetII final_packet(serialized_packet.data(),
-                                                serialized_packet.size());
+            if (serialized_packet.size() > std::numeric_limits<uint32_t>::max())
+                throw std::invalid_argument(
+                    "serialized_packet.size() > "
+                    "std::numeric_limits<uint32_t>::max()");
+            const Tins::EthernetII final_packet(
+                serialized_packet.data(),
+                static_cast<uint32_t>(serialized_packet.size()));
 
             return final_packet;
         }
@@ -102,9 +111,9 @@ class NodeContainerTest : public testing::Test
                                const Tins::HWAddress<6>& destination_mac,
                                const Tins::IPv6Address& source_address,
                                const Tins::IPv6Address& destination_address,
-                               const int hoplimit,
-                               const int udp_dport,
-                               const int udp_sport,
+                               const uint8_t hoplimit,
+                               const uint16_t udp_dport,
+                               const uint16_t udp_sport,
                                const Tins::RawPDU::payload_type& payload)
         {
             Tins::EthernetII packet =
@@ -118,8 +127,13 @@ class NodeContainerTest : public testing::Test
 
             const Tins::PDU::serialization_type serialized_packet =
                 packet.serialize();
-            const Tins::EthernetII final_packet(serialized_packet.data(),
-                                                serialized_packet.size());
+            if (serialized_packet.size() > std::numeric_limits<uint32_t>::max())
+                throw std::invalid_argument(
+                    "serialized_packet.size() > "
+                    "std::numeric_limits<uint32_t>::max()");
+            const Tins::EthernetII final_packet(
+                serialized_packet.data(),
+                static_cast<uint32_t>(serialized_packet.size()));
 
             return final_packet;
         }
@@ -128,7 +142,7 @@ class NodeContainerTest : public testing::Test
             create_ndp_request(const Tins::HWAddress<6>& source_mac,
                                const Tins::IPv6Address& source_address,
                                const Tins::IPv6Address& target_address,
-                               const int hoplimit)
+                               const uint8_t hoplimit)
         {
             Tins::EthernetII packet =
                 Tins::EthernetII(Tins::HWAddress<6>("33:33:ff:48:b2:ae"),
@@ -143,8 +157,13 @@ class NodeContainerTest : public testing::Test
 
             const Tins::PDU::serialization_type serialized_packet =
                 packet.serialize();
-            const Tins::EthernetII final_packet(serialized_packet.data(),
-                                                serialized_packet.size());
+            if (serialized_packet.size() > std::numeric_limits<uint32_t>::max())
+                throw std::invalid_argument(
+                    "serialized_packet.size() > "
+                    "std::numeric_limits<uint32_t>::max()");
+            const Tins::EthernetII final_packet(
+                serialized_packet.data(),
+                static_cast<uint32_t>(serialized_packet.size()));
 
             return final_packet;
         }
@@ -448,8 +467,10 @@ TEST_F(NodeContainerTest, GetNoReplyForUnknownPacket)
                               Tins::IP(destination_address, source_address);
 
     const Tins::PDU::serialization_type serialized_packet = packet.serialize();
-    const Tins::EthernetII final_packet(serialized_packet.data(),
-                                        serialized_packet.size());
+    ASSERT_LE(serialized_packet.size(), std::numeric_limits<uint32_t>::max());
+    const Tins::EthernetII final_packet(
+        serialized_packet.data(),
+        static_cast<uint32_t>(serialized_packet.size()));
 
     const NodeRequest echo_request(final_packet);
     const NodeReply echo_reply = container1->get_reply(echo_request);

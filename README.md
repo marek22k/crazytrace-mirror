@@ -33,19 +33,77 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Security
 
+On Linux, crazytrace uses three sandboxing technologies or restriction technologies: Capabilities, seccomp and landlock, systemd, and AppArmor.
+On FreeBSD, crazytrace uses Capsicum, and if necessary, it can set its UID and GID in phase 2.
+These serve to limit the extent of compromise if crazytrace is compromised by an attack.
+
+libcap-ng, seccomp, and landlock are used in two phases in crazytrace:
+
+1. In the first phase, which lasts only a few milliseconds, crazytrace is initialized: The configuration file is read, the TAP device is created, and the post-up commands are started.
+2. In the second phase, an IO loop is entered. In this loop, crazytrace only reads from the TAP device and responds.
+
+### Capabilities
+
+In Linux, capabilities are used to restrict what a program is allowed to do, especially when interacting with the system. crazytrace requires two capabilities: `CAP_NET_ADMIN` and `CAP_SETPCAP`.
+`CAP_NET_ADMIN` is required to create the TAP device and, if necessary, for the post-up commands.
+`CAP_SETPCAP` is required to restrict its own capabilities.
+systemd and AppArmor ensure on Linux that crazytrace does not receive any other capabilities.
+crazytrace uses libcap-ng to drop all unnecessarily granted capabilities in phase 1. Once dropped, these cannot be re-granted. The post-up commands only receive the `CAP_NET_ADMIN` capability, but not the `CAP_SETPCAP` capability. In phase 2, all capabilities are dropped.
+Furthermore, libcap-ng performs a "lock": If supported, NoNewPriv and securebits are set.
+
+### Seccomp
+
+crazytrace uses various libraries. These libraries use syscalls. However, it is not documented which ones they use. Creating a whitelist - especially one that is distribution-independent - has therefore proven difficult.
+For this reason, seccomp is used to blacklist syscalls that crazytrace does not need.
+
+### Landlock
+
+Landlock can restrict what a program can access. In phase 1, crazytrace is restricted by landlock so that it never blocks necessary accesses.
+In phase 2, all accesses are blocked. This is possible because crazytrace has been fully initialized in phase 1 and landlock only restricts new accesses. Therefore: The TAP device can be opened in phase 1 and continue to be used in phase 2.
+
+Landlock offers backward compatibility with older kernels through a dynamic ABI query. However, to reduce maintenance effort, a certain Landlock version is required. This should be based on Debian.
+
+### AppArmor
+
+AppArmor restricts crazytrace by determining what crazytrace is allowed to do. Unnecessary operations are therefore blocked by AppArmor.
+
+### systemd
+
+crazytrace comes with a hardened systemd unit that restricts many accesses not used by crazytrace.
+
 See [SECURITY.md](SECURITY.md).
+
+### Capsicum
+
+crazytrace restricts its permissions using Capsicum. The default input and output are hardened, and only the necessary permissions are granted to the TAP device's file descriptor.
+After that, crazytrace switches to capability mode and does not request any new permissions.
+
+### setugid
+
+crazytrace must be run with permissions to manage the network configuration. To achieve this, crazytrace can, for example, be started as a privileged user. It is unsafe to run crazytrace as a privileged user for longer than necessary. Therefore, crazytrace can change the user and group using the setuid and setgid commands. This can be specified in the configuration file.
+If crazytrace is started via systemd, this is not necessary, as systemd creates a dynamic (temporary) user for crazytrace that has only the necessary permissions.
 
 ## How it works?
 
 crazytrace uses several libraries and tricks to create a virtual TAP adapter behind which the simulated network is hidden.
 
+Libraries used:
+
 - [libtuntap](https://github.com/LaKabane/libtuntap/): This library is used to create and close the TAP device.
 - [libtins](https://libtins.github.io/): This library is used for packet parsing and crafting.
 - [yaml-cpp](https://github.com/jbeder/yaml-cpp/): This library is used to read the configuration file in YAML format.
-- [Boost.log](https://www.boost.org/): This library is used as a logger. Various log levels can be set in the configuration file.
+- [Boost.Log](https://www.boost.org/): This library is used as a logger. Various log levels can be set in the configuration file.
 - [Boost.Asio](https://www.boost.org/): This library is used to communicate with the socket of the TAP device and to receive and send several packets asynchronously.
 
+Optional libraries:
+
+- [libcap-ng](https://people.redhat.com/sgrubb/libcap-ng/): Used to discard unnecessary capabilities and restrict the program.
+- [libseccomp](https://github.com/seccomp/libseccomp): Used to block potentially dangerous system calls.
+- [landlock](https://landlock.io/): Used to restrict access.
+- [Capsicum](https://www.freebsd.org/cgi/man.cgi?query=capsicum&sektion=4): Used to restrict access and to block potentially dangerous system calls.
+
 Here is how the program works:
+
 1. reading the configuration file
 2. setting the log level
 3. output of the libtuntap version
@@ -55,17 +113,19 @@ Here is how the program works:
 7. starting the network simulator
 
 The following is how the network simulator works when a packet is received:
+
 1. reading the packet with tins
 2. reading the packet into a NodeRequest
 3. generate a NodeReply using the configuration
 4. check whether a reply should be sent
-4a. If no, abort
-5. if yes, create a NodeReply packet using libtins
-6. write the packet to the socket of the TAP device
+    1. If no, abort
+    2. if yes, create a NodeReply packet using libtins
+5. write the packet to the socket of the TAP device
 
 ## Configuration file
 
 The following is a example configuration file:
+
 ```yaml
 ---
 log_level: info
@@ -90,6 +150,7 @@ This would generate the following topology:
 ![Topology](topology.png)
 
 The log level can have one of the following values:
+
 - `trace`
 - `debug`
 - `info`
@@ -104,16 +165,26 @@ The device name is the name of the TAP interface that crazytrace creates.
 The post-up commands are a series of commands that are executed by the command processor of the operating system after the TAP interface has been created. These commands are executed with the same rights as crazytrace. They receive no input. Their output is ignored. crazytrace aborts if one of the commands has not been successfully completed.
 
 A list of nodes then appears in the configuration file. These can have the following attributes:
+
 - `mac`: The nodes in the first level must have a MAC address. crazytrace acts as if these nodes were directly on the TAP interface. All child nodes of these are behind them, so that no MAC address is required for communication.
 - `addresses`: A list of IP addresses that the node should have. It responds to all of them and replies with a random one.
 - `hoplimit`: Hop limit with which the response is to be sent. ICMP NDP packets are always sent with a hop limit of 255. If no hop limit is specified, a hop limit of 64 is used.
 - `nodes`: A list of nodes (which are structured in the same way) which are behind the current one in the simulated network.
+
+If you want to use the setugid feature, you can add the following to the configuration:
+```yaml
+setugid:
+  user: crazytrace
+  group: crazytrace
+```
+After initialization, crazytrace switches to the user `crazytrace` and the group `crazytrace`.
 
 The configuration is written in YAML.
 
 ### Which MAC addresses can I use without any problems?
 
 The following belong to the locally administered range and can be used without any problems:
+
 ```
 x2-xx-xx-xx-xx-xx
 x6-xx-xx-xx-xx-xx
@@ -134,7 +205,10 @@ crazytrace is configured via a configuration file. The path to this file is give
 ### Create a new release
 
 To create a new release the following is necessary:
+
 - Create a changelog entry
 - Create a changelog entry for the Debian package
+- Bump the version in the Arch PKGBUILD
+- Bump the version in the FreeBSD +MANIFEST
 - Update the SECURITY.md
 - Create a new git tag

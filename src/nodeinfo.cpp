@@ -4,50 +4,55 @@
 
 #include "nodeinfo.hpp"
 
-NodeInfo::NodeInfo() : _hoplimit(64), _randomgenerator(0), _addressadded(false)
+using namespace crazytrace;
+
+crazytrace::NodeInfo::NodeInfo() :
+    _hoplimit(64),
+    _randomgenerator(0),
+    _addressadded(false)
 {
 }
 
-int NodeInfo::get_hoplimit() const noexcept
+uint8_t crazytrace::NodeInfo::get_hoplimit() const noexcept
 {
     return this->_hoplimit;
 }
 
-void NodeInfo::set_mac_address(Tins::HWAddress<6> mac_address) noexcept
+void crazytrace::NodeInfo::set_mac_address(
+    Tins::HWAddress<6> mac_address) noexcept
 {
     this->_mac_address = mac_address;
 }
 
-const Tins::HWAddress<6>& NodeInfo::get_mac_address() const noexcept
+const Tins::HWAddress<6>& crazytrace::NodeInfo::get_mac_address() const noexcept
 {
     return this->_mac_address;
 }
 
-bool NodeInfo::has_address(const Tins::IPv6Address& address)
+bool crazytrace::NodeInfo::has_address(const Tins::IPv6Address& address)
 {
     return std::ranges::binary_search(this->_addresses, address);
 }
 
-void NodeInfo::set_hoplimit(int hoplimit)
+void crazytrace::NodeInfo::set_hoplimit(uint8_t hoplimit)
 {
-    if (hoplimit < 0 || hoplimit > 255)
-        throw std::invalid_argument(
-            "Hop limit outside the permitted value range");
+    static_assert(std::numeric_limits<decltype(this->_hoplimit)>::min() == 0);
+    static_assert(std::numeric_limits<decltype(this->_hoplimit)>::max() == 255);
     this->_hoplimit = hoplimit;
 }
 
-void NodeInfo::add_node(std::shared_ptr<NodeInfo> node)
+void crazytrace::NodeInfo::add_node(std::shared_ptr<NodeInfo> node)
 {
     this->_nodes.push_back(node);
 }
 
-void NodeInfo::add_address(Tins::IPv6Address address)
+void crazytrace::NodeInfo::add_address(Tins::IPv6Address address)
 {
     this->_addressadded = true;
     this->_addresses.push_back(address);
 }
 
-const Tins::IPv6Address& NodeInfo::get_address()
+const Tins::IPv6Address& crazytrace::NodeInfo::get_address()
 {
     if (this->_addressadded)
     {
@@ -68,7 +73,7 @@ const Tins::IPv6Address& NodeInfo::get_address()
     return this->_addresses.at(address_number);
 }
 
-std::size_t NodeInfo::max_depth() const
+std::size_t crazytrace::NodeInfo::max_depth() const
 {
     std::size_t max = 0;
     for (const auto& node : this->_nodes)
@@ -79,8 +84,8 @@ std::size_t NodeInfo::max_depth() const
     return max + 1;
 }
 
-std::vector<std::shared_ptr<NodeInfo>>
-    NodeInfo::get_route_to(const Tins::IPv6Address& destination_address) const
+std::vector<std::shared_ptr<NodeInfo>> crazytrace::NodeInfo::get_route_to(
+    const Tins::IPv6Address& destination_address) const
 {
     for (const auto& node : this->_nodes)
     {
@@ -103,7 +108,7 @@ std::vector<std::shared_ptr<NodeInfo>>
     return {};
 }
 
-void NodeInfo::print(std::ostream& os, int layer) const
+void crazytrace::NodeInfo::print(std::ostream& os, unsigned int layer) const
 {
     const std::string tabs(layer, '\t');
 
@@ -118,7 +123,7 @@ void NodeInfo::print(std::ostream& os, int layer) const
     }
 }
 
-bool NodeInfo::operator==(const NodeInfo& other) const
+bool crazytrace::NodeInfo::operator==(const NodeInfo& other) const
 {
     return this->_addresses == other._addresses &&
            this->_mac_address == other._mac_address &&
@@ -131,9 +136,10 @@ bool NodeInfo::operator==(const NodeInfo& other) const
                               });
 }
 
-std::ostream& operator<<(std::ostream& os, NodeInfo const & nodeinfo)
+std::ostream& crazytrace::operator<<(std::ostream& os,
+                                     NodeInfo const & nodeinfo)
 {
-    os << "NodeInfo: hoplimit=" << nodeinfo._hoplimit;
+    os << "NodeInfo: hoplimit=" << static_cast<unsigned>(nodeinfo._hoplimit);
     for (const auto& address : nodeinfo._addresses)
     {
         os << " " << address;

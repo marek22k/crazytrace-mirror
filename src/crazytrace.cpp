@@ -4,6 +4,8 @@
 
 #include "crazytrace.hpp"
 
+using namespace crazytrace;
+
 Crazytrace::Crazytrace(boost::asio::any_io_executor ex,
                        int native_handler,
                        std::shared_ptr<NodeContainer> nodecontainer) :
@@ -12,7 +14,7 @@ Crazytrace::Crazytrace(boost::asio::any_io_executor ex,
         std::move(ex),
         native_handler,
         [this](const boost::system::error_code& error,
-               const std::string& packet)
+               const std::vector<unsigned char>& packet)
         {
             this->_handle_packet(error, packet);
         },
@@ -30,8 +32,9 @@ void Crazytrace::_handle_error(
         << "Error in handle_packet: " << error.message() << std::endl;
 }
 
-void Crazytrace::_handle_packet(const boost::system::error_code,
-                                const std::string_view packet_data) noexcept
+void Crazytrace::_handle_packet(
+    const boost::system::error_code,
+    const std::vector<unsigned char>& packet_data) noexcept
 {
     BOOST_LOG_TRIVIAL(trace)
         << "Received packet of size: " << packet_data.size() << std::endl;
@@ -40,7 +43,8 @@ void Crazytrace::_handle_packet(const boost::system::error_code,
     {
         const std::vector<uint8_t> raw_data(packet_data.begin(),
                                             packet_data.end());
-        const Tins::EthernetII packet(raw_data.data(), raw_data.size());
+        const Tins::EthernetII packet(raw_data.data(),
+                                      static_cast<uint32_t>(raw_data.size()));
 
         const NodeRequest request(packet);
         if (request.get_type() != NodeRequestType::UNKNOWN)
@@ -50,7 +54,8 @@ void Crazytrace::_handle_packet(const boost::system::error_code,
             {
                 BOOST_LOG_TRIVIAL(debug) << request;
                 BOOST_LOG_TRIVIAL(debug) << reply;
-                const std::string reply_packet = reply.to_packet();
+                const std::vector<unsigned char> reply_packet =
+                    reply.to_packet();
                 this->_client.write(
                     reply_packet,
                     [](const boost::system::error_code&,
