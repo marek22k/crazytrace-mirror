@@ -517,12 +517,6 @@ void SeccompFilterContext::kill_privileged() const
     #ifdef SYS_setfsuid32
     this->kill(SCMP_SYS(setfsuid32)); // flawfinder: ignore
     #endif
-    #ifdef SYS_setgroups
-    this->kill(SCMP_SYS(setgroups)); // flawfinder: ignore
-    #endif
-    #ifdef SYS_setgroups32
-    this->kill(SCMP_SYS(setgroups32)); // flawfinder: ignore
-    #endif
     #ifdef SYS_sethostname
     this->kill(SCMP_SYS(sethostname)); // flawfinder: ignore
     #endif
