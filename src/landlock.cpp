@@ -7,7 +7,8 @@
 #ifdef HAVE_LANDLOCK
 
 LandlockRuleset::LandlockRuleset(uint64_t handled_access_fr,
-                                 uint64_t handled_access_net)
+                                 uint64_t handled_access_net) :
+    abi_version(LandlockRuleset::get_abi_version())
 {
     if (this->abi_version < 6)
         throw std::runtime_error("Landlock is too old.");
