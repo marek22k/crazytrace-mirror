@@ -171,7 +171,7 @@ if cpp_compiler.has_header('linux/landlock.h')
             cpp_compiler.has_function('syscall', prefix: '#include <unistd.h>', required: true)
             cpp_compiler.has_header('sys/syscall.h', required: true)
             syscall_number_macro = 'SYS_' + function
-            cpp_compiler.compiles('#include <sys/syscall.h>\nint number = ' + syscall_number_macro + ';', name: syscall_number_macro + ' number is available', required: true)
+            cpp_compiler.compiles('#include <sys/syscall.h>\nint number = ' + syscall_number_macro + ';', name: syscall_number_macro + ' number is available')
 
             macro = 'NO_' + function.to_upper()
             add_project_arguments('-D' + macro, language: 'cpp')
