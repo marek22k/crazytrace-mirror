@@ -253,13 +253,13 @@ TEST_F(NodeContainerTest, Comparison)
     c1_child_node1->set_mac_address(Tins::HWAddress<6>("52:54:00:b2:fa:7f"));
     c1_child_node1->add_address(Tins::IPv6Address("fd00::11"));
     c1_child_node1->add_address(Tins::IPv6Address("fd00::12"));
-    container.add_node(c1_child_node1);
+    container.add_node(std::move(c1_child_node1));
 
     auto c1_child_node2 = std::make_shared<NodeInfo>();
     c1_child_node2->set_hoplimit(30);
     c1_child_node2->set_mac_address(Tins::HWAddress<6>("52:54:00:b2:fa:7e"));
     c1_child_node2->add_address(Tins::IPv6Address("fd00::21"));
-    container.add_node(c1_child_node2);
+    container.add_node(std::move(c1_child_node2));
 
     auto c1_child_node3 = std::make_shared<NodeInfo>();
     c1_child_node3->set_mac_address(Tins::HWAddress<6>("52:54:00:b2:fa:7d"));
@@ -267,17 +267,17 @@ TEST_F(NodeContainerTest, Comparison)
 
     auto c1_child_node3_child1 = std::make_shared<NodeInfo>();
     c1_child_node3_child1->add_address(Tins::IPv6Address("fd00::3:1"));
-    c1_child_node3->add_node(c1_child_node3_child1);
+    c1_child_node3->add_node(std::move(c1_child_node3_child1));
 
     auto c1_child_node3_child2 = std::make_shared<NodeInfo>();
     c1_child_node3_child2->add_address(Tins::IPv6Address("fd00::3:2"));
 
     auto c1_child_node3_child2_child1 = std::make_shared<NodeInfo>();
     c1_child_node3_child2_child1->add_address(Tins::IPv6Address("fd00::3:2:1"));
-    c1_child_node3_child2->add_node(c1_child_node3_child2_child1);
+    c1_child_node3_child2->add_node(std::move(c1_child_node3_child2_child1));
+    c1_child_node3->add_node(std::move(c1_child_node3_child2));
 
-    c1_child_node3->add_node(c1_child_node3_child2);
-    container.add_node(c1_child_node3);
+    container.add_node(std::move(c1_child_node3));
 
     EXPECT_EQ(*container1, container);
     EXPECT_NE(*container2, container);

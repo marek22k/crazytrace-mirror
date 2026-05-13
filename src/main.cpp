@@ -48,7 +48,7 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
         // see also
         // https://lists.boost.org/archives/list/boost-users@lists.boost.org/thread/YJ5RTK25HLPFEZ3XVBBFQDJOSPIIOBNA/
         // and https://sourceforge.net/p/asio/mailman/message/59260797/
-        // due to complexity use seccomp blacklist
+        // due to complexity use seccomp blocklist
         seccomp_context.kill_chown();
         seccomp_context.kill_clock();
         seccomp_context.kill_cpu_emulation();
@@ -165,17 +165,22 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
 #ifdef HAVE_SETUGID
         if (config.has_setugid())
         {
-            const std::string& username = config.get_user();
-            const auto uid = PosixWrapper::username_to_uid(username);
-            PosixWrapper::set_uid(uid);
-            BOOST_LOG_TRIVIAL(info)
-                << "setuid: " << username << " (" << uid << ")";
+            // https://www.bencteux.fr/posts/privilege_order/
+            // https://www.surrendercontrol.com/2016/08/taossa-chapter-9.html
+
+            PosixWrapper::drop_supplementary_groups();
 
             const std::string& groupname = config.get_group();
             const auto gid = PosixWrapper::groupname_to_gid(groupname);
             PosixWrapper::set_gid(gid);
             BOOST_LOG_TRIVIAL(info)
                 << "setgid: " << groupname << " (" << gid << ")";
+
+            const std::string& username = config.get_user();
+            const auto uid = PosixWrapper::username_to_uid(username);
+            PosixWrapper::set_uid(uid);
+            BOOST_LOG_TRIVIAL(info)
+                << "setuid: " << username << " (" << uid << ")";
         }
 #endif
 #ifdef HAVE_LIBCAPNG
