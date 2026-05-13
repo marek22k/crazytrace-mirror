@@ -18,7 +18,7 @@ TEST(LogLevelTest, Set)
 
     try
     {
-        const LogLevel test("test");
+        [[maybe_unused]] const LogLevel test("test");
         FAIL();
     }
     catch (const std::exception& e)
