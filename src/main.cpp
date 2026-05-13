@@ -207,10 +207,10 @@ int main(int argc, char * argv[]) // NOLINT(bugprone-exception-escape)
         // see also
         // https://lore.kernel.org/landlock/20251119212707.71275873@ciel/T/
     #ifdef HAVE_LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
-        landlock_ruleset_init.restrict_self(
+        landlock_ruleset_loop.restrict_self(
             LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON);
     #else
-        landlock_ruleset_init.restrict_self();
+        landlock_ruleset_loop.restrict_self();
     #endif
 #endif
 #ifdef HAVE_SECCOMP
