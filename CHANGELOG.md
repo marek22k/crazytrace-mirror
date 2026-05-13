@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## Release 1.0.14
+
+- Due to an bug, the program was not further restricted in Phase 2 of the sandboxing process with Landlock
+
 ## Release 1.0.13
 
 - Improve security when using setugid sandboxing: The GID is now changed first, followed by the UID, and supplementary groups are removed.

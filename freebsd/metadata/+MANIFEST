@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 name = "crazytrace"
-version = "1.0.13"
+version = "1.0.14"
 origin = "net/crazytrace"
 comment = "a network simulation program"
 desc = <<EOD
