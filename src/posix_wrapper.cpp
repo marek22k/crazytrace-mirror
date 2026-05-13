@@ -70,8 +70,9 @@ void PosixWrapper::drop_supplementary_groups()
     std::array<gid_t, 0> empty{};
     if (::setgroups(0, empty.data()) != 0)
     {
-        throw std::system_error(
-            errno, std::generic_category(), "Could not drop supplementary groups.");
+        throw std::system_error(errno,
+                                std::generic_category(),
+                                "Could not drop supplementary groups.");
     }
 }
 #endif
